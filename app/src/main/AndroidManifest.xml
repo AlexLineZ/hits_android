@@ -12,7 +12,7 @@
         android:theme="@style/Theme.Hits_android"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".StartActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Hits_android">
@@ -22,6 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.example.hits_android.MainActivity" />
     </application>
 
 </manifest>
