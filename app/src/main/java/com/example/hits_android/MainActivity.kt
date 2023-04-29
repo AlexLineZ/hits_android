@@ -27,6 +27,17 @@ import kotlin.math.roundToInt
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        var first = Block("first", Color.Green, 0.0)
+        var second = Block("second", Color.Red, 40.0 * 8)
+        var third = Block("third", Color.Blue, 80.0 * 8)
+
+        var blockList = mutableListOf<Block>()
+
+        blockList.add(first)
+        blockList.add(second)
+        blockList.add(third)
+
         setContent {
             Hits_androidTheme {
                 // A surface container using the 'background' color from the theme
@@ -35,33 +46,53 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
                     //Greeting("Android")
-                    Blocks()
+                    Blocks(blockList)
                 }
             }
         }
     }
 }
 
+@Composable
+fun display(blocks: MutableList<Block>) {
+    var blocksCopy = blocks.toMutableList()
+
+    for (a in 0 .. blocksCopy.size - 1) {
+        for (b in a + 1 .. blocksCopy.size - 1) {
+            if (blocksCopy[a].getHeight() > blocksCopy[b].getHeight()) {
+                var temp = blocksCopy[a]
+                blocksCopy[a] = blocksCopy[b]
+                blocksCopy[b] = temp
+            }
+        }
+    }
+
+    Text(
+        text = blocksCopy[0].getName()
+    )
+}
 // Группа перетаскиваемых блоков
 @Composable
-fun Blocks() {
+fun Blocks(blocks: MutableList<Block>) {
     Column (
         modifier = Modifier
             .fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(25.dp),
+        verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        DraggableBox("blok1", Color.Red)
-        DraggableBox("blok2", Color.Yellow)
-        DraggableBox("blok3", Color.Green)
+        for (i in 0..blocks.size - 1){
+            blocks[i] = DraggableBox(blocks[i])
+        }
+
+        display(blocks)
     }
 }
 
 // Перетаскиваемый блок
 @Composable
-fun DraggableBox(caption: String, bgColor: Color) {
-    var offsetX by remember { mutableStateOf(0f) }
-    var offsetY by remember { mutableStateOf(0f) }
+fun DraggableBox(block: Block) : Block {
+    var offsetX by remember { mutableStateOf(0.0) }
+    var offsetY by remember { mutableStateOf(0.0) }
 
     Box (
         Modifier
@@ -72,25 +103,29 @@ fun DraggableBox(caption: String, bgColor: Color) {
                 )
             }
             .pointerInput(Unit) {
-                detectDragGestures {change, dragAmount ->
+                detectDragGestures { change, dragAmount ->
                     change.consumeAllChanges()
                     offsetX += dragAmount.x
                     offsetY += dragAmount.y
                 }
             }
-            .background(color = bgColor)
+            .background(color = block.getColor())
             .padding(25.dp)
             .size(250.dp, 40.dp)
     ) {
         Text (
             modifier = Modifier.align(Alignment.Center),
-            text = caption,
+            text = block.getName(),
             fontSize = 30.sp,
             color = Color(0xFFFFEEFF),
             textAlign = TextAlign.Right,
             fontWeight = FontWeight.Bold
                 )
     }
+
+    block.changePosition(offsetX, offsetY)
+
+    return block
 }
 
 @Composable

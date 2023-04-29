@@ -26,6 +26,7 @@ import com.example.hits_android.ui.theme.Hits_androidTheme
 class StartActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             Hits_androidTheme {
                 Box(
