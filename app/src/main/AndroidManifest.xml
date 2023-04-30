@@ -23,6 +23,7 @@
             </intent-filter>
         </activity>
         <activity android:name="com.example.hits_android.MainActivity" />
+        <activity android:name="com.example.hits_android.TestActivity" />
     </application>
 
 </manifest>

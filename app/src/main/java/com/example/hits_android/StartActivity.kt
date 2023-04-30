@@ -33,7 +33,7 @@ class StartActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize()
                 ) {
                     Button(onClick = {
-                        val intent = Intent(this@StartActivity, MainActivity::class.java)
+                        val intent = Intent(this@StartActivity, TestActivity::class.java)
                         startActivity(intent)
                     },
                     modifier = Modifier.background(Color.Gray)
