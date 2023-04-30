@@ -9,8 +9,10 @@ import androidx.compose.foundation.gestures.calculatePan
 import androidx.compose.foundation.gestures.calculateZoom
 import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -50,9 +52,7 @@ fun ZoomableComposable() {
 
     // In the example below, we make the Column composable zoomable
     // by leveraging the Modifier.pointerInput modifier
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
+    Box(
         modifier = Modifier
             .pointerInput(Unit) {
                 forEachGesture {
@@ -70,19 +70,40 @@ fun ZoomableComposable() {
             }
     ) {
         // painterResource method loads an image resource asynchronously
-        val imagepainter = painterResource(id = R.drawable.ic_launcher_background)
+//        val imagepainter = painterResource(id = R.drawable.ic_launcher_background)
         // We use the graphicsLayer modifier to modify the scale & translation
         // of the image.
         // This is read from the state properties that we created above.
+//        Image(
+//            modifier = Modifier.fillMaxSize().graphicsLayer(
+//                scaleX = scale,
+//                scaleY = scale,
+//                translationX = offsetX,
+//                translationY = offsetY
+//            ),
+//            painter = imagepainter,
+//            contentDescription = "androids launcher default launcher background image"
+//        )
+
         Image(
-            modifier = Modifier.fillMaxSize().graphicsLayer(
+            painter = painterResource(id = R.drawable.maxresdefault),
+            contentDescription = "sas",
+            modifier = Modifier.fillMaxSize().graphicsLayer (
                 scaleX = scale,
                 scaleY = scale,
-                translationX = offsetX,
-                translationY = offsetY
-            ),
-            painter = imagepainter,
-            contentDescription = "androids launcher default launcher background image"
+                translationX = offsetX + 10,
+                translationY = offsetY + 200
+            )
+        )
+        Image(
+            painter = painterResource(id = R.drawable.maxresdefault),
+            contentDescription = "sis",
+            modifier = Modifier.fillMaxSize().graphicsLayer (
+                scaleX = scale,
+                scaleY = scale,
+                translationX = offsetX - 800,
+                translationY = offsetY - 500
+            )
         )
     }
 }
