@@ -1,17 +1,23 @@
 package com.example.hits_android
 
 import android.os.Bundle
+import android.view.Surface
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.calculatePan
 import androidx.compose.foundation.gestures.calculateZoom
+import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,10 +26,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.hits_android.ui.theme.Hits_androidTheme
 
 class TestActivity : ComponentActivity() {
@@ -31,7 +42,7 @@ class TestActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             Hits_androidTheme {
-                ZoomableComposable()
+                BoxWithConstraints()
             }
         }
     }
@@ -39,19 +50,10 @@ class TestActivity : ComponentActivity() {
 
 @Composable
 fun ZoomableComposable() {
-    // Reacting to state changes is the core behavior of Compose.
-    // We use the state composable that is used for holding a
-    // state value in this composable for representing the current
-    // value scale(for zooming in the image)
-    // & translation(for panning across the image).
-    // Any composable that reads the value of counter will
-    // be recomposed any time the value changes.
-    var scale by remember { mutableStateOf(1f) }
+    var scale by remember { mutableStateOf(10f) }
     var offsetX by remember { mutableStateOf(0f) }
     var offsetY by remember { mutableStateOf(0f) }
 
-    // In the example below, we make the Column composable zoomable
-    // by leveraging the Modifier.pointerInput modifier
     Box(
         modifier = Modifier
             .pointerInput(Unit) {
@@ -68,42 +70,18 @@ fun ZoomableComposable() {
                     }
                 }
             }
+            .graphicsLayer (
+                scaleX = scale,
+                scaleY = scale,
+                translationX = offsetX,
+                translationY = offsetY
+            )
+            .background(Color.LightGray)
     ) {
-        // painterResource method loads an image resource asynchronously
-//        val imagepainter = painterResource(id = R.drawable.ic_launcher_background)
-        // We use the graphicsLayer modifier to modify the scale & translation
-        // of the image.
-        // This is read from the state properties that we created above.
-//        Image(
-//            modifier = Modifier.fillMaxSize().graphicsLayer(
-//                scaleX = scale,
-//                scaleY = scale,
-//                translationX = offsetX,
-//                translationY = offsetY
-//            ),
-//            painter = imagepainter,
-//            contentDescription = "androids launcher default launcher background image"
-//        )
-
         Image(
             painter = painterResource(id = R.drawable.maxresdefault),
             contentDescription = "sas",
-            modifier = Modifier.fillMaxSize().graphicsLayer (
-                scaleX = scale,
-                scaleY = scale,
-                translationX = offsetX + 10,
-                translationY = offsetY + 200
-            )
-        )
-        Image(
-            painter = painterResource(id = R.drawable.maxresdefault),
-            contentDescription = "sis",
-            modifier = Modifier.fillMaxSize().graphicsLayer (
-                scaleX = scale,
-                scaleY = scale,
-                translationX = offsetX - 800,
-                translationY = offsetY - 500
-            )
+            modifier = Modifier.fillMaxSize()
         )
     }
 }
@@ -111,5 +89,63 @@ fun ZoomableComposable() {
 @Preview
 @Composable
 fun ZoomableComposablePreview() {
-    ZoomableComposable()
+    BoxWithConstraints()
 }
+
+@Composable
+fun BoxWithConstraints() {
+    var offsetX by remember { mutableStateOf(0f) }
+    var offsetY by remember { mutableStateOf(0f) }
+    var scale by remember { mutableStateOf(1f) }
+    val maxScale = 40f
+
+    Box(
+        Modifier
+            .fillMaxSize()
+            .pointerInput(Unit) {
+                detectTransformGestures { _, pan, zoom, _ ->
+                    scale *= zoom
+                    scale = scale.coerceIn(0.1f, maxScale)
+                    offsetX += pan.x
+                    offsetY += pan.y
+                }
+            }
+            .graphicsLayer (
+                scaleX = scale,
+                scaleY = scale,
+                translationX = offsetX,
+                translationY = offsetY
+            )
+            .background(Color.LightGray)
+    ) {
+        DragableInJetpackComposeTheme()
+        DragableInJetpackComposeTheme()
+        DragableInJetpackComposeTheme()
+        DragableInJetpackComposeTheme()
+    }
+}
+
+@Composable
+fun DragableInJetpackComposeTheme() {
+    // A surface container using the 'background' color from the theme
+        Box(
+        ){
+            val d = LocalDensity.current
+            var offsetX by remember { mutableStateOf(0f) }
+            var offsetY by remember { mutableStateOf(0f) }
+            Box(
+                modifier = Modifier
+                    .offset((offsetX / d.density).dp, (offsetY / d.density).dp)
+                    .background(Color.Red)
+                    .size(100.dp)
+                    .pointerInput(Unit) {
+                        detectDragGestures { change, dragAmount ->
+                            print(dragAmount)
+                            change.consumeAllChanges()
+                            offsetX += dragAmount.x
+                            offsetY += dragAmount.y
+                        }
+                    }
+            ){}
+        }
+    }
