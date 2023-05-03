@@ -29,6 +29,7 @@ import com.example.compose.Hits_androidTheme
 import kotlin.math.roundToInt
 
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

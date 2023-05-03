@@ -1,5 +1,6 @@
 package com.example.hits_android
 
+import android.media.Image
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -77,34 +78,34 @@ fun Sandbox() {
                     offsetY += pan.y
                 }
             }
-            .graphicsLayer (
+            .graphicsLayer(
                 scaleX = scale,
                 scaleY = scale,
                 translationX = offsetX,
                 translationY = offsetY
             )
     ) {
-        DragableBlock(Color.LightGray)
-        DragableBlock(Color.Blue)
-        DragableBlock(Color.Gray)
-        DragableBlock(Color.Green)
+        DragableBlock()
+        DragableBlock()
+        DragableBlock()
+        DragableBlock()
+        DragableBlock()
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun DragableBlock(color: Color) {
+fun DragableBlock() {
     val haptic = LocalHapticFeedback.current
     var offsetX by remember { mutableStateOf(0f) }
     var offsetY by remember{ mutableStateOf(0f) }
 
     Box(modifier = Modifier
         .offset {
-            IntOffset(x=offsetX.roundToInt(),y=offsetY.roundToInt())
+            IntOffset(x = offsetX.roundToInt(), y = offsetY.roundToInt())
         }
         .size(100.dp)
-        .background(color)
-        .pointerInput(Unit){
+        .pointerInput(Unit) {
             detectDragGesturesAfterLongPress(
                 onDragStart = { haptic.performHapticFeedback(HapticFeedbackType.LongPress) }
             ) { change, dragAmount ->
