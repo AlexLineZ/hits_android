@@ -1,5 +1,6 @@
 package com.example.hits_android
 
+
 import android.media.Image
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -16,7 +17,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,19 +28,32 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.asComposePath
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.PathParser
 import cafe.adriel.voyager.core.screen.Screen
 import com.example.compose.Hits_androidTheme
+import com.example.hits_android.model.BlocksModel
+import net.engawapg.lib.zoomable.rememberZoomState
+import net.engawapg.lib.zoomable.zoomable
 import kotlin.math.roundToInt
+import androidx.compose.foundation.Canvas as Canvas
 
 class MainScreen:Screen {
 
@@ -47,6 +63,7 @@ class MainScreen:Screen {
             Surface() {
                 Sandbox()
                 BottomBar()
+
             }
         }
     }
@@ -85,11 +102,7 @@ fun Sandbox() {
                 translationY = offsetY
             )
     ) {
-        DragableBlock()
-        DragableBlock()
-        DragableBlock()
-        DragableBlock()
-        DragableBlock()
+
     }
 }
 
@@ -98,7 +111,7 @@ fun Sandbox() {
 fun DragableBlock() {
     val haptic = LocalHapticFeedback.current
     var offsetX by remember { mutableStateOf(0f) }
-    var offsetY by remember{ mutableStateOf(0f) }
+    var offsetY by remember { mutableStateOf(0f) }
 
     Box(modifier = Modifier
         .offset {
@@ -114,12 +127,8 @@ fun DragableBlock() {
                 offsetY += dragAmount.y
             }
         }
-    ){
-        Image(
-            painter = painterResource(R.drawable.maxresdefault),
-            contentDescription = "Papanya",
-            contentScale = ContentScale.Crop
-        )
+    ) {
+
     }
 }
 
@@ -131,7 +140,7 @@ fun BottomBar() {
         Column(
             Modifier.align(Alignment.BottomStart)
         ) {
-            LazyRow () {
+            LazyRow() {
                 items(count = 20) {
                     Image(
                         painter = painterResource(R.drawable.maxresdefault),
