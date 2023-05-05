@@ -12,8 +12,6 @@ import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
-
-
 interface Block {
     val blockName: String
     var previousID: Int
@@ -26,7 +24,7 @@ interface Block {
 
 class MainBlock(
     override var previousID: Int = -1,
-    override var nextID:Int = -1,
+    override var nextID: Int = -1,
     override val key: String,
     override val title:String = "Main",
     override val isDragOverLocked:Boolean = true
