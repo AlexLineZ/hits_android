@@ -11,18 +11,29 @@ class InitializeBlock(
     override val title:String = "Init",
     override val isDragOverLocked:Boolean = true
 ): Block {
+
     override val blockName = "initBlock"
 
     var name: String = ""
     var type: String = ""
     var value: String = ""
 
+    // Тестирование блоков без UI
+    fun textBlock(n: String, t: String, v: String){
+        name = n
+        type = t
+        value = v
+    }
+
     override fun runCodeBlock() {
         if (variables[name] != null){
             throw Exception("Чел, ты пересоздаешь переменную на блоке ${(nextID - 1)}");
         }
         else {
-            variables[name] = ParsingFunctions(LexicalComponents(value).getTokensFromCode()).parseExpression()!!
+            var sss = ParsingFunctions(LexicalComponents(value).getTokensFromCode())
+            var idk = sss.parseExpression()
+            variables[name] = idk!!
+            //variables[name] = value
         }
     }
 }

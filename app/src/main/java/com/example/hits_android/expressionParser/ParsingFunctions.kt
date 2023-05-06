@@ -1,8 +1,10 @@
 package com.example.hits_android.expressionParser
 
+import com.example.hits_android.blocks.Scope
 import java.util.*
 
 val variables = mutableMapOf<String, Any>()
+var scopes = Scope()
 
 class ParsingFunctions(private val tokens: List<Token>){
     private var index = 0
@@ -10,6 +12,7 @@ class ParsingFunctions(private val tokens: List<Token>){
     private val nextToken = arrayOf( //массив ожидаемых токенов в выражении
         Name.RAND.value,
         Name.NUMBER.value,
+        Name.SPACE.value,
         Name.VARIABLE.value,
         Name.L_SQUARE_BRACKET.value,
         Name.R_SQUARE_BRACKET.value,

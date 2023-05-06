@@ -167,10 +167,10 @@ private fun VerticalReorderList(
                             .clip(RoundedCornerShape(24.dp))
                             .background(Color.LightGray.copy(alpha = alpha.value))
                             .clickable (
-                            onClick = {
-                                Log.d("s", "${vm.dogs.size}")
-                            }
-                        )
+                                onClick = {
+                                    Log.d("s", "${vm.dogs.size}")
+                                }
+                            )
                     ) {
                         Text(
                             text = item.title,
@@ -199,10 +199,10 @@ fun MainBlockComposable(block: Block) {
 private fun BottomBar(
     vm: ReorderListViewModel
 ) {
-LazyRow(
-    horizontalArrangement = Arrangement.spacedBy(8.dp),
-) {
-    items(vm.cats, { item -> item.key }) { item ->
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        items(vm.cats, { item -> item.key }) { item ->
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
