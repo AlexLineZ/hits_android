@@ -1,18 +1,9 @@
 package com.example.hits_android.expressionParser
 
 enum class Name (val value: String) {
-    FOR("for"),
     RAND("rand()"),
-    IF("if"),
-    ELSE("else"),
-    OUTPUT("output"),
-    WHILE("while"),
-    VAR("var"),
     SPACE("space"),
     NEW_STRING("\n"),
-    INT("Int"),
-    ARRAY("Array"),
-    STR("STR"),
     PLUS("+"),
     MINUS("-"),
     MULTIPLY("*"),
