@@ -20,6 +20,7 @@ interface Block {
     val title: String
     val isDragOverLocked:Boolean
     fun runCodeBlock()
+    fun getNameOfBlock():String
 }
 
 class MainBlock(
@@ -33,5 +34,10 @@ class MainBlock(
 
     override fun runCodeBlock() {
 
+    }
+
+    // Возврат названия блока
+    override fun getNameOfBlock(): String {
+        return blockName
     }
 }

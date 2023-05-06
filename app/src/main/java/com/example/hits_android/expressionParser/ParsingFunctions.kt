@@ -6,7 +6,7 @@ import java.util.*
 val variables = mutableMapOf<String, Any>()
 var scopes = Scope()
 
-class ParsingFunctions(private val tokens: List<Token>){
+class ParsingFunctions(private var tokens: List<Token>){
     private var index = 0
 
     private val nextToken = arrayOf( //массив ожидаемых токенов в выражении
@@ -142,6 +142,7 @@ class ParsingFunctions(private val tokens: List<Token>){
     private fun getTokenOrError(vararg target: String): Token{
         val token = findToken(*target)
         if (token == null){
+            tokens = tokens
             throw Error("Cringe")
         }
         else {

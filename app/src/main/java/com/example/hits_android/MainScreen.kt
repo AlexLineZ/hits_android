@@ -1,7 +1,9 @@
 package com.example.hits_android
 
 
+import android.os.Bundle
 import android.util.Log
+import androidx.activity.ComponentActivity
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -49,9 +51,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import com.example.compose.Hits_androidTheme
-import com.example.hits_android.blocks.Block
 //import com.example.hits_android.blocks.InitializeBlock
-import com.example.hits_android.blocks.MainBlock
 import com.example.hits_android.model.ReorderListViewModel
 import org.burnoutcrew.reorderable.ReorderableItem
 import org.burnoutcrew.reorderable.detectReorderAfterLongPress
@@ -59,6 +59,9 @@ import org.burnoutcrew.reorderable.rememberReorderableLazyListState
 import org.burnoutcrew.reorderable.reorderable
 import kotlin.math.roundToInt
 import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.modifier.modifierLocalOf
+import com.example.hits_android.blocks.*
+import com.example.hits_android.expressionParser.variables
 
 class MainScreen:Screen {
     @Composable
@@ -84,6 +87,35 @@ fun Sandbox(
     var scale by remember { mutableStateOf(1f) }
     val maxScale = 40f
 
+    var initBlock = InitializeBlock(-1, -1, "Init", "Init", true)
+    initBlock.testBlock("a", "Int", "10 - 1;")
+
+    var beginBlock = BeginBlock(-1, -1, "beignBlock", "beignBlock", true)
+
+    var bBlock = InitializeBlock(-1, -1, "Init", "Init", true)
+    bBlock.testBlock("b", "Int", "10;")
+
+    var endBlock = EndBlock(-1, -1, "endBlock", "endBlock", true)
+
+    var assignmentBlock = AssignmentBlock(-1, -1, "assignmentBlock", "assignmentBlock", true)
+    assignmentBlock.testBlock("a", "a + 8;")
+
+    var condBlock = IfBlock(-1, -1, "If", "If", true)
+    condBlock.testBlock("a > 200;")
+
+    var a0 = BeginBlock(-1, -1, "beginBlock", "beginBlock", true)
+
+    var a1 = AssignmentBlock(-1, -1, "assignmentBlock", "assignmentBlock", true)
+    a1.testBlock("a", "a + 200;")
+
+    var a2 = EndBlock(-1, -1, "endBlock", "endBlock", true)
+
+    // Исполнение кода
+    while (blockIndex < blockList.size) {
+        blockList[blockIndex].runCodeBlock()
+    }
+
+    println(blockList[--blockIndex].getNameOfBlock())
     Box(
         Modifier
             .fillMaxHeight(0.9f)
@@ -122,6 +154,10 @@ fun Sandbox(
             }
         ) {
             VerticalReorderList(vm = vm)
+
+            Text(
+                text = variables["a"].toString()
+            )
         }
     }
 }
