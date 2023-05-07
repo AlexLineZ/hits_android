@@ -86,7 +86,7 @@ fun Sandbox(
     var offsetY by remember { mutableStateOf(0f) }
     var scale by remember { mutableStateOf(1f) }
     val maxScale = 40f
-    
+
     Box(
         Modifier
             .fillMaxHeight(0.9f)
