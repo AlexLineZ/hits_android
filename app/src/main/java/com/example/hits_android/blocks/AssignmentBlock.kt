@@ -12,7 +12,6 @@ class AssignmentBlock(
     override val title:String = "Assign",
     override val isDragOverLocked:Boolean = true
 ): Block {
-
     // Название блока
     companion object {
         val BLOCK_NAME = "assignmentBlock"

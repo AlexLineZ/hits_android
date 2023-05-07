@@ -4,35 +4,27 @@ import com.example.hits_android.expressionParser.LexicalComponents
 import com.example.hits_android.expressionParser.ParsingFunctions
 import com.example.hits_android.expressionParser.variables
 
-// Блок создания новой переменной
-class InitializeBlock(
+// Блок создания новой переменной типа Int
+class InitializeIntBlock(
     override var previousID: Int = -1,
     override var nextID: Int = -1,
     override val key: String,
-    override val title:String = "Init",
+    override val title:String = "InitInt",
     override val isDragOverLocked:Boolean = true
 ): Block {
     // Название блока
     companion object {
-        val BLOCK_NAME = "initBlock"
+        val BLOCK_NAME = "initIntBlock"
     }
     override val blockName = BLOCK_NAME
-
-    var name: String = ""  // Название переменной
-    var type: String = ""  // Тип переменной
-    var value: String = "" // Значение переменной
 
     // Добавление блока в список блоков
     init {
         blockList.add(this)
     }
 
-    // Тестирование блоков без UI
-    fun testBlock(n: String, t: String, v: String){
-        name = n
-        type = t
-        value = v
-    }
+    var name: String = ""  // Название переменной
+    var value: String = "" // Значение переменной
 
     // Создание новой переменной
     override fun runCodeBlock() {
@@ -40,23 +32,19 @@ class InitializeBlock(
         if (variables[name] != null){
             throw Exception("Чел, ты пересоздаешь переменную");
         }
+
         // Создание переменной типа Int
-        else if (type == "Int") {
-            val expression = ParsingFunctions(LexicalComponents(value).getTokensFromCode())
-            variables[name] = expression.parseExpression()!!
-        }
-        // Создание переменной типа Array
-        else if (type == "Array") {
-            val expression = ParsingFunctions(LexicalComponents(value).getTokensFromCode())
-            variables[name] = Array(expression.parseExpression() as Int) {0}
-        }
-        // Использование иного типа данных
-        else {
-            throw Error("Неизвестный тип")
-        }
+        val expression = ParsingFunctions(LexicalComponents(value).getTokensFromCode())
+        variables[name] = expression.parseExpression()!!
 
         // Выполнение следующего блока
         blockIndex++
+    }
+
+    // Тестирование блоков без UI
+    fun testBlock(n: String, v: String){
+        name = n
+        value = v
     }
 
     // Возврат названия блока
