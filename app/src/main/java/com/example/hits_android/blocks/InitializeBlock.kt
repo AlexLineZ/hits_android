@@ -42,12 +42,12 @@ class InitializeBlock(
         }
         // Создание переменной типа Int
         else if (type == "Int") {
-            var expression = ParsingFunctions(LexicalComponents(value).getTokensFromCode())
+            val expression = ParsingFunctions(LexicalComponents(value).getTokensFromCode())
             variables[name] = expression.parseExpression()!!
         }
         // Создание переменной типа Array
         else if (type == "Array") {
-            var expression = ParsingFunctions(LexicalComponents(value).getTokensFromCode())
+            val expression = ParsingFunctions(LexicalComponents(value).getTokensFromCode())
             variables[name] = Array(expression.parseExpression() as Int) {0}
         }
         // Использование иного типа данных
