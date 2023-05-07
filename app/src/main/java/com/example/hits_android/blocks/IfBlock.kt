@@ -38,9 +38,12 @@ class IfBlock(
         // Если условие верно
         if (conditionState == 1) {
             // Выполнение тела if
-            while (blockList[blockIndex - 1].getNameOfBlock() != EndBlock.BLOCK_NAME) {
+            while (blockList[blockIndex].getNameOfBlock() != EndBlock.BLOCK_NAME) {
                 blockList[blockIndex].runCodeBlock()
             }
+
+            // Удаление переменных, которые были созданы внутри тела if
+            blockList[blockIndex].runCodeBlock()
 
             // Пропуск else
             if (blockList[blockIndex].getNameOfBlock() == ElseBlock.BLOCK_NAME) {

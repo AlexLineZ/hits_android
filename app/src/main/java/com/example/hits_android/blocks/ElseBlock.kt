@@ -25,9 +25,12 @@ class ElseBlock(
         blockIndex++
 
         // Выполнение тела блока else
-        while (blockList[blockIndex - 1].getNameOfBlock() != EndBlock.BLOCK_NAME) {
+        while (blockList[blockIndex].getNameOfBlock() != EndBlock.BLOCK_NAME) {
             blockList[blockIndex].runCodeBlock()
         }
+
+        // Удаление переменных, которые были созданы внутри тела else
+        blockList[blockIndex].runCodeBlock()
     }
 
     // Возврат названия блока
