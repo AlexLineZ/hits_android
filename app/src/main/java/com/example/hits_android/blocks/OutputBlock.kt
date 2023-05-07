@@ -2,6 +2,7 @@ package com.example.hits_android.blocks
 
 import com.example.hits_android.expressionParser.LexicalComponents
 import com.example.hits_android.expressionParser.ParsingFunctions
+import com.example.hits_android.expressionParser.variables
 
 // Блок вывода
 class OutputBlock(
@@ -27,13 +28,21 @@ class OutputBlock(
 
     // Вывод в консоль
     override fun runCodeBlock() {
-        when(val result = ParsingFunctions(LexicalComponents(expression).getTokensFromCode()).parseExpression()){
+        val exp = ParsingFunctions(LexicalComponents(expression).getTokensFromCode())
+        val result = exp.parseExpression()!!
+
+        when(result){
             null -> println("ඞ Empty")
             else -> println("ඞ $result")
         }
 
         // Выполнение следующего блока
         blockIndex++
+    }
+
+    // Тестирование блока без UI
+    fun testBlock(exp: String) {
+        expression = exp
     }
 
     // Возврат названия блока

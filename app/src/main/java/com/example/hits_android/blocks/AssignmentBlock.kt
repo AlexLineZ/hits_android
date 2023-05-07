@@ -29,12 +29,33 @@ class AssignmentBlock(
 
     // Присваивание переменной нового значения
     override fun runCodeBlock() {
-        if (variables[variableName] != null){
-            var expression = ParsingFunctions(LexicalComponents(newValue).getTokensFromCode())
+        // Индекс и название массива
+        var arrayIndex = -1
+        var arrName = ""
+
+        // Нахождение индекса массива
+        if ('[' in variableName) {
+            val index = variableName.slice((variableName.indexOf('[') + 1)..(variableName.indexOf(']') - 1))
+            val indexExpression = ParsingFunctions(LexicalComponents(index + ";").getTokensFromCode())
+
+            arrayIndex = (indexExpression).parseExpression()!!
+            arrName = variableName.slice(0..variableName.indexOf('[') - 1)
+        }
+
+        // Проверка существования переменной
+        if (variables[variableName] == null && variables[arrName] == null) {
+            throw Exception("Чел, ты хочешь присвоить той переменной, которой нет...")
+        }
+
+        // Присвоение значения переменной типа Int
+        if (arrayIndex == -1) {
+            val expression = ParsingFunctions(LexicalComponents(newValue).getTokensFromCode())
             variables[variableName] = expression.parseExpression()!!
         }
+        // Присвоение значения элементу массива
         else {
-            throw Exception("Чел, ты хочешь присвоить той переменной, которой нет...")
+            val expression = ParsingFunctions(LexicalComponents(newValue).getTokensFromCode())
+            (variables[arrName] as Array<Int>)[arrayIndex] = expression.parseExpression()!!
         }
 
         // Выполнение следующего блока

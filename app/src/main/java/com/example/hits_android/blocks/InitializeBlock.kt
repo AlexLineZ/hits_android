@@ -36,12 +36,23 @@ class InitializeBlock(
 
     // Создание новой переменной
     override fun runCodeBlock() {
+        // Пересоздание переменной
         if (variables[name] != null){
             throw Exception("Чел, ты пересоздаешь переменную");
         }
-        else {
+        // Создание переменной типа Int
+        else if (type == "Int") {
             var expression = ParsingFunctions(LexicalComponents(value).getTokensFromCode())
             variables[name] = expression.parseExpression()!!
+        }
+        // Создание переменной типа Array
+        else if (type == "Array") {
+            var expression = ParsingFunctions(LexicalComponents(value).getTokensFromCode())
+            variables[name] = Array(expression.parseExpression() as Int) {0}
+        }
+        // Использование иного типа данных
+        else {
+            throw Error("Неизвестный тип")
         }
 
         // Выполнение следующего блока
