@@ -1,6 +1,7 @@
 package com.example.hits_android
 
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -10,22 +11,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.gestures.detectTransformGestures
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -59,7 +48,13 @@ import org.burnoutcrew.reorderable.rememberReorderableLazyListState
 import org.burnoutcrew.reorderable.reorderable
 import kotlin.math.roundToInt
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.ui.modifier.modifierLocalOf
+import androidx.compose.ui.window.Dialog
 import com.example.hits_android.blocks.*
 import com.example.hits_android.expressionParser.variables
 
@@ -74,6 +69,7 @@ class MainScreen:Screen {
                     BottomBar(vm)
                 }
             }
+            MyScreen()
         }
     }
 }
@@ -224,5 +220,52 @@ private fun BottomBar(
                 Text(item.title)
             }
         }
+    }
+}
+
+@Composable
+fun MyAlertDialog() {
+    val onDismissRequest = {}
+
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        shape = RoundedCornerShape(16),
+        modifier = Modifier.heightIn(min = 200.dp),
+        title = { Text("Console") },
+        buttons = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                IconButton(
+                    onClick = onDismissRequest
+                ) {
+                    Icon(
+                        Icons.Filled.Close,
+                        contentDescription = "Закрыть"
+                    )
+                }
+            }
+        }
+    )
+}
+
+@Composable
+fun MyScreen() {
+    var dialogShown by remember { mutableStateOf(false) }
+
+    Box(
+        Modifier.fillMaxSize().padding(20.dp),
+        contentAlignment = Alignment.BottomEnd,
+    ) {
+        FloatingActionButton(
+            onClick = { dialogShown = true }
+        ) {
+            Icon(Icons.Filled.ArrowDropDown, contentDescription = null)
+        }
+    }
+
+    if (dialogShown) {
+        MyAlertDialog()
     }
 }
