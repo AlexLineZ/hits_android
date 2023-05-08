@@ -61,7 +61,6 @@ class MainScreen:Screen {
     }
 }
 
-
 @Composable
 fun Sandbox(
     vm: ReorderListViewModel
@@ -229,7 +228,7 @@ fun NavBar() {
             FloatingActionButton(onClick = {
                 //хуй
             }) {
-                Icon(imageVector = Icons.Default.Star, contentDescription = "Start")
+                Icon(imageVector = Icons.Default.PlayArrow, contentDescription = "Start")
             }
         },
         scaffoldState = scaffoldState,
@@ -308,8 +307,8 @@ fun NavBottomBar(navController: NavController) {
 private fun prepareBottomMenu(): List<BottomMenuItem> {
     val bottomMenuItemsList = arrayListOf<BottomMenuItem>()
 
-    bottomMenuItemsList.add(BottomMenuItem(label = "Coding", icon = Icons.Filled.List))
-    bottomMenuItemsList.add(BottomMenuItem(label = "Console", icon = Icons.Filled.Settings))
+    bottomMenuItemsList.add(BottomMenuItem(label = "Coding", icon = Icons.Default.Build))
+    bottomMenuItemsList.add(BottomMenuItem(label = "Console", icon = Icons.Default.DateRange))
 
     return bottomMenuItemsList
 }
