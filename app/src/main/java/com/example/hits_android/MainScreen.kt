@@ -226,7 +226,7 @@ fun NavBar() {
         bottomBar = { NavBottomBar(navController) },
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                //хуй
+                navController.navigate("Console")
             }) {
                 Icon(imageVector = Icons.Default.PlayArrow, contentDescription = "Start")
             }
