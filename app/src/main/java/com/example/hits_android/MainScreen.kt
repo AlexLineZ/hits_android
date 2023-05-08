@@ -4,11 +4,14 @@ package com.example.hits_android
 import android.annotation.SuppressLint
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.gestures.detectTransformGestures
+import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -45,7 +48,8 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -55,11 +59,13 @@ import com.example.hits_android.blocks.*
 class MainScreen:Screen {
     @Composable
     override fun Content() {
+        val vm = ReorderListViewModel()
         Hits_androidTheme {
             NavBar()
         }
     }
 }
+
 
 @Composable
 fun Sandbox(
@@ -188,12 +194,13 @@ private fun BottomBar(
 ) {
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
+
     ) {
         items(vm.cats, { item -> item.key }) { item ->
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .size(100.dp)
+                    .size(100.dp, 75.dp)
                     .clip(RoundedCornerShape(24.dp))
                     .background(Color.Red)
                     .clickable(
@@ -212,6 +219,7 @@ private fun BottomBar(
         }
     }
 }
+
 
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -242,8 +250,8 @@ fun NavBar() {
             composable("Coding") {
                 Surface() {
                     Column {
-                        Sandbox(vm)
                         BottomBar(vm)
+                        Sandbox(vm)
                     }
                 }
             }
@@ -251,17 +259,6 @@ fun NavBar() {
                 Console(navController)
             }
         }
-    }
-}
-
-@Composable
-fun Console(navController: NavController) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Console")
     }
 }
 
@@ -314,4 +311,20 @@ private fun prepareBottomMenu(): List<BottomMenuItem> {
 }
 
 data class BottomMenuItem(val label: String, val icon: ImageVector)
+
+@Composable
+fun Console(navController: NavController) {
+    val resultState = remember { mutableStateOf("") }
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("Console")
+    }
+    resultState.value = "Ваш результат:"
+    Text(text = resultState.value)
+}
+
+
 
