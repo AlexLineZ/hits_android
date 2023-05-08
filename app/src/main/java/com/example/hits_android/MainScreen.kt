@@ -2,11 +2,9 @@ package com.example.hits_android
 
 
 import android.annotation.SuppressLint
-import android.os.Bundle
 import android.util.Log
-import androidx.activity.ComponentActivity
+import android.widget.Toast
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
@@ -17,14 +15,11 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
@@ -32,10 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
@@ -48,31 +40,27 @@ import org.burnoutcrew.reorderable.rememberReorderableLazyListState
 import org.burnoutcrew.reorderable.reorderable
 import kotlin.math.roundToInt
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.ui.modifier.modifierLocalOf
-import androidx.compose.ui.window.Dialog
+import androidx.compose.material.icons.filled.*
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.hits_android.blocks.*
-import com.example.hits_android.expressionParser.variables
 
 class MainScreen:Screen {
     @Composable
     override fun Content() {
-        var vm = ReorderListViewModel()
         Hits_androidTheme {
-            Surface() {
-                Column {
-                    Sandbox(vm)
-                    BottomBar(vm)
-                }
-            }
-            MyScreen()
+            NavBar()
         }
     }
 }
+
 
 @Composable
 fun Sandbox(
@@ -125,6 +113,7 @@ fun Sandbox(
     }
 }
 
+
 @Composable
 private fun VerticalReorderList(
     vm: ReorderListViewModel
@@ -165,7 +154,7 @@ private fun VerticalReorderList(
                             .shadow(elevation, RoundedCornerShape(24.dp))
                             .clip(RoundedCornerShape(24.dp))
                             .background(Color.LightGray.copy(alpha = alpha.value))
-                            .clickable (
+                            .clickable(
                                 onClick = {
                                     Log.d("s", "${vm.dogs.size}")
                                 }
@@ -208,11 +197,13 @@ private fun BottomBar(
                     .size(100.dp)
                     .clip(RoundedCornerShape(24.dp))
                     .background(Color.Red)
-                    .clickable (
+                    .clickable(
                         onClick = {
-                            vm.dogs = vm.dogs.toMutableList().apply {
-                                add(vm.dogs.size - 1, MainBlock(key = "${vm.dogs.size}"))
-                            }
+                            vm.dogs = vm.dogs
+                                .toMutableList()
+                                .apply {
+                                    add(vm.dogs.size - 1, MainBlock(key = "${vm.dogs.size}"))
+                                }
                             Log.d("s", "${vm.dogs.size}")
                         }
                     )
@@ -223,49 +214,105 @@ private fun BottomBar(
     }
 }
 
-@Composable
-fun MyAlertDialog() {
-    val onDismissRequest = {}
 
-    AlertDialog(
-        onDismissRequest = onDismissRequest,
-        shape = RoundedCornerShape(16),
-        modifier = Modifier.heightIn(min = 200.dp),
-        title = { Text("Console") },
-        buttons = {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
-            ) {
-                IconButton(
-                    onClick = onDismissRequest
-                ) {
-                    Icon(
-                        Icons.Filled.Close,
-                        contentDescription = "Закрыть"
-                    )
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@Composable
+fun NavBar() {
+    val scaffoldState = rememberScaffoldState()
+    val navController = rememberNavController()
+    val vm = ReorderListViewModel()
+
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        bottomBar = { NavBottomBar(navController) },
+        floatingActionButton = {
+            FloatingActionButton(onClick = {
+                //хуй
+            }) {
+                Icon(imageVector = Icons.Default.Star, contentDescription = "Start")
+            }
+        },
+        scaffoldState = scaffoldState,
+        isFloatingActionButtonDocked = true,
+        floatingActionButtonPosition = FabPosition.Center
+    ) {
+        NavHost(
+            navController = navController,
+            startDestination = "Coding"
+        ) {
+            composable("Coding") {
+                Surface() {
+                    Column {
+                        Sandbox(vm)
+                        BottomBar(vm)
+                    }
                 }
             }
+            composable("Console") {
+                Console(navController)
+            }
         }
-    )
+    }
 }
 
 @Composable
-fun MyScreen() {
-    var dialogShown by remember { mutableStateOf(false) }
-
-    Box(
-        Modifier.fillMaxSize().padding(20.dp),
-        contentAlignment = Alignment.BottomEnd,
+fun Console(navController: NavController) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        FloatingActionButton(
-            onClick = { dialogShown = true }
-        ) {
-            Icon(Icons.Filled.ArrowDropDown, contentDescription = null)
-        }
-    }
-
-    if (dialogShown) {
-        MyAlertDialog()
+        Text("Console")
     }
 }
+
+@Composable
+fun NavBottomBar(navController: NavController) {
+    val bottomMenuItemsList = prepareBottomMenu()
+
+    var selectedItem by remember {
+        mutableStateOf("Coding")
+    }
+
+    BottomAppBar(
+        cutoutShape = CircleShape
+    ) {
+        bottomMenuItemsList.forEachIndexed { index, menuItem ->
+            if (index == 1) {
+                BottomNavigationItem(
+                    selected = false,
+                    onClick = {},
+                    icon = {},
+                    enabled = false
+                )
+            }
+
+            BottomNavigationItem(
+                selected = (selectedItem == menuItem.label),
+                onClick = {
+                    selectedItem = menuItem.label
+                    navController.navigate(menuItem.label)
+                },
+                icon = {
+                    Icon(
+                        imageVector = menuItem.icon,
+                        contentDescription = menuItem.label
+                    )
+                },
+                enabled = true
+            )
+        }
+    }
+}
+
+private fun prepareBottomMenu(): List<BottomMenuItem> {
+    val bottomMenuItemsList = arrayListOf<BottomMenuItem>()
+
+    bottomMenuItemsList.add(BottomMenuItem(label = "Coding", icon = Icons.Filled.List))
+    bottomMenuItemsList.add(BottomMenuItem(label = "Console", icon = Icons.Filled.Settings))
+
+    return bottomMenuItemsList
+}
+
+data class BottomMenuItem(val label: String, val icon: ImageVector)
+
