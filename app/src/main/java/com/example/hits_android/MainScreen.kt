@@ -16,11 +16,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,14 +42,19 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.hits_android.blocks.*
+import com.example.hits_android.expressionParser.variables
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 class MainScreen:Screen {
     @Composable
@@ -234,6 +234,7 @@ fun NavBar() {
         bottomBar = { NavBottomBar(navController) },
         floatingActionButton = {
             FloatingActionButton(onClick = {
+                TestProgram()
                 navController.navigate("Console")
             }) {
                 Icon(imageVector = Icons.Default.PlayArrow, contentDescription = "Start")
@@ -322,9 +323,99 @@ fun Console(navController: NavController) {
     ) {
         Text("Console")
     }
-    resultState.value = "Ваш результат:"
-    Text(text = resultState.value)
+
+    Text(text = variables["a"].toString())
 }
 
+fun TestProgram(){
+    variables.clear()
+    var s = InitializeIntBlock(-1, -1, "init", "init", true)
+    s.testBlock("size", "10;")
+
+    // Создание массива
+    var s0 = InitializeArrayBlock(-1, -1, "init", "init", true)
+    s0.testBlock("arr", "size;")
+
+    // Счётчик цикла
+    var s1 = InitializeIntBlock(-1, -1, "init", "init", true)
+    s1.testBlock("a", "0;")
+
+    // Заполнение массива
+    var s2 = WhileBlock(-1, -1, "while", "while", true)
+    s2.testBlock("a < size;")
+    var s3 = BeginBlock(-1, -1, "begin", "begin", true)
+
+    var s4 = AssignmentBlock(-1, -1, "assign", "assign", true)
+    s4.testBlock("arr[a]", "100 - a;")
+    var s5 = AssignmentBlock(-1, -1, "assign", "assign", true)
+    s5.testBlock("a", "a + 1;")
+
+    var s6 = EndBlock(-1, -1, "end", "end", true)
+
+    // Внешний цикл
+    var s7 = InitializeIntBlock(-1, -1, "init", "init", true)
+    s7.testBlock("first", "0;")
+
+    var s8 = WhileBlock(-1, -1, "init", "init", true)
+    s8.testBlock("first < size;")
+
+    var s9 = BeginBlock(-1, -1, "init", "init", true)
+
+    // Внутренний цикл
+    var s10 = InitializeIntBlock(-1, -1, "init", "init", true)
+    s10.testBlock("second", "first + 1;")
+
+    var s11 = WhileBlock(-1, -1, "init", "init", true)
+    s11.testBlock("second < size;")
+
+    var s12 = BeginBlock(-1, -1, "init", "init", true)
+
+    // Проверка
+    var s13 = IfBlock(-1, -1, "init", "init", true)
+    s13.testBlock("arr[first] > arr[second];")
+
+    var s14 = BeginBlock(-1, -1, "init", "init", true)
+
+    // Свап
+    var s15 = InitializeIntBlock(-1, -1, "init", "init", true)
+    s15.testBlock("temp", "arr[first];")
+    var s16 = AssignmentBlock(-1, -1, "init", "init", true)
+    s16.testBlock("arr[first]", "arr[second];")
+    var s17 = AssignmentBlock(-1, -1, "init", "init", true)
+    s17.testBlock("arr[second]", "temp;")
+
+    var s18 = EndBlock(-1, -1, "init", "init", true)
+
+    var s19 = AssignmentBlock(-1, -1, "init", "init", true)
+    s19.testBlock("second", "second + 1;")
+
+    var s20 = EndBlock(-1, -1, "init", "init", true)
+
+    var s21 = AssignmentBlock(-1, -1, "init", "init", true)
+    s21.testBlock("first", "first + 1;")
+
+    var s22 = EndBlock(-1, -1, "init", "init", true)
+
+    // Вывод результата
+    var s23 = InitializeIntBlock(-1, -1, "init", "init", true)
+    s23.testBlock("index", "0;")
+
+    var s24 = WhileBlock(-1, -1, "init", "init", true)
+    s24.testBlock("index < size;")
+
+    var s25 = BeginBlock(-1, -1, "init", "init", true)
+
+    var s26 = OutputBlock(-1, -1, "init", "init", true)
+    s26.testBlock("arr[index];")
+
+    var s27 = AssignmentBlock(-1, -1, "init", "init", true)
+    s27.testBlock("index", "index + 1;")
+
+    var s28 = EndBlock(-1, -1, "init", "init", true)
+
+    while (blockIndex < blockList.size) {
+        blockList[blockIndex].runCodeBlock()
+    }
+}
 
 
