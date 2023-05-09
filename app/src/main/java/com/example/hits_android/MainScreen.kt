@@ -56,6 +56,8 @@ import com.example.hits_android.expressionParser.variables
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
+private var index = 0
+
 class MainScreen:Screen {
     @Composable
     override fun Content() {
@@ -324,7 +326,7 @@ fun Console(navController: NavController) {
         Text("Console")
     }
 
-    Text(text = variables["a"].toString())
+    Text(text = index.toString() + " | " + variables["a"].toString())
 }
 
 fun TestProgram(){
@@ -416,6 +418,7 @@ fun TestProgram(){
     while (blockIndex < blockList.size) {
         blockList[blockIndex].runCodeBlock()
     }
+    index++
 }
 
 
