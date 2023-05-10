@@ -44,17 +44,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.hits_android.blocks.*
 import com.example.hits_android.expressionParser.variables
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+
 
 private var index = 0
 
@@ -317,20 +314,23 @@ data class BottomMenuItem(val label: String, val icon: ImageVector)
 
 @Composable
 fun Console(navController: NavController) {
-    val resultState = remember { mutableStateOf("") }
+    val viewModel = viewModel<FlowViewModel>()
+    val currentValue = viewModel.counterFlow.collectAsState(initial = "1")
+
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text("Console")
     }
 
-    Text(text = index.toString() + " | " + variables["a"].toString())
+    Text(currentValue.value)
 }
 
 fun TestProgram(){
     variables.clear()
+    consoleString = ""
     var s = InitializeIntBlock(-1, -1, "init", "init", true)
     s.testBlock("size", "10;")
 
@@ -420,5 +420,6 @@ fun TestProgram(){
     }
     index++
 }
+
 
 

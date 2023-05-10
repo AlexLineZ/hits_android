@@ -1,8 +1,12 @@
 package com.example.hits_android.blocks
 
+import androidx.lifecycle.ViewModel
 import com.example.hits_android.expressionParser.LexicalComponents
 import com.example.hits_android.expressionParser.ParsingFunctions
 import com.example.hits_android.expressionParser.variables
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flow
 
 // Блок вывода
 class OutputBlock(
@@ -29,11 +33,14 @@ class OutputBlock(
     // Вывод в консоль
     override fun runCodeBlock() {
         val exp = ParsingFunctions(LexicalComponents(expression).getTokensFromCode())
-        val result = exp.parseExpression()!!
+        val result = exp.parseExpression()
 
         when(result){
             null -> println("ඞ Empty")
-            else -> println("ඞ $result")
+            else -> {
+                println("ඞ $result")
+                FlowViewModel().setCurrentValue("ඞ $result\n")
+            }
         }
 
         // Выполнение следующего блока
@@ -48,5 +55,16 @@ class OutputBlock(
     // Возврат названия блока
     override fun getNameOfBlock(): String {
         return blockName
+    }
+}
+
+var consoleString = ""
+class FlowViewModel: ViewModel() {
+
+    fun setCurrentValue(newValue: String) {
+        consoleString += newValue
+    }
+    val counterFlow = flow {
+        emit(consoleString)
     }
 }
