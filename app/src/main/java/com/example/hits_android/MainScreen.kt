@@ -44,6 +44,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -327,7 +328,8 @@ fun Console(navController: NavController) {
             ) {
                 Text(
                     text = "Console",
-                    fontSize = 20.sp
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
                 )
 
             }
