@@ -32,11 +32,18 @@ class InitializeVarBlock(
             throw Exception("Чел, ты пересоздаешь переменную");
         }
 
-        // Создание переменной типа Int
-        if (type == Type.INT) {
-            val expression = ParsingFunctions(LexicalComponents(value).getTokensFromCode())
-            variables[name] = Variable(name, Type.INT, expression.parseExpression()!!.value)
+        // Вычисление значения переменной
+        val expression = ParsingFunctions(LexicalComponents(value).getTokensFromCode())
+        var newVariable = Variable(name, type, expression.parseExpression()!!.value)
+
+        // Обрезка дробной части у переменной типа Int
+        if (type == Type.INT && newVariable.value.toString().contains(".")) {
+            newVariable.value = newVariable.value.toString()
+                .slice(0.. newVariable.value.toString().indexOf('.') - 1)
         }
+
+        // Сохранение переменной
+        variables[name] = newVariable
 
         // Выполнение следующего блока
         blockIndex++

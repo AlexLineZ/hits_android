@@ -4,6 +4,7 @@ class Token(val type: TokenType, val text: String)
 
 val tokensList = mutableMapOf<String, TokenType>(
     "rand()"   to TokenType(Name.RAND,             Identifiers.RESERVED,         Regex("^rand\\(\\)")),
+    "double"   to TokenType(Name.DOUBLE,           Identifiers.LITERAL,          Regex("^(-?0|-?[1-9]\\d*(\\.\\d*))")),
     "number"   to TokenType(Name.NUMBER,           Identifiers.LITERAL,          Regex("^(-?0|-?[1-9]\\d*)")),
     "variable" to TokenType(Name.VARIABLE,         Identifiers.VARIABLE,         Regex("^\\w+")),
 

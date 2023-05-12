@@ -10,6 +10,14 @@ class Variable(var name: String, var type: String, var value: Any) {
                 (value.toString().toInt() + otherVariable.value.toString().toInt()).toString())
         }
 
+        // Сложение двух Double переменных или Int и Double
+        else if ((type == Type.DOUBLE && otherVariable.type == Type.DOUBLE) ||
+            (type == Type.INT && otherVariable.type == Type.DOUBLE) ||
+            (type == Type.DOUBLE && otherVariable.type == Type.INT)) {
+            return Variable("newVariable", Type.DOUBLE,
+                (value.toString().toDouble() + otherVariable.value.toString().toDouble()).toString())
+        }
+
         throw Error("Сложение переменных типов ${type} и ${otherVariable.type}")
     }
 
@@ -21,17 +29,28 @@ class Variable(var name: String, var type: String, var value: Any) {
                 (value.toString().toInt() - otherVariable.value.toString().toInt()).toString())
         }
 
+        // Вычитание двух Double переменных или Int и Double
+        else if ((type == Type.DOUBLE && otherVariable.type == Type.DOUBLE) ||
+            (type == Type.INT && otherVariable.type == Type.DOUBLE) ||
+            (type == Type.DOUBLE && otherVariable.type == Type.INT)) {
+            return Variable("newVariable", Type.DOUBLE,
+                (value.toString().toDouble() - otherVariable.value.toString().toDouble()).toString())
+        }
+
         throw Error("Вычитание переменных типов ${type} и ${otherVariable.type}")
     }
 
     // Сравнение переменных
     operator fun compareTo(otherVariable: Variable) : Int {
-        // Сравнение Int и Int
-        if (type == Type.INT && otherVariable.type == Type.INT) {
-            if (value.toString().toInt() > otherVariable.value.toString().toInt()) {
+        // Сравнение чисел
+        if ((type == Type.DOUBLE && otherVariable.type == Type.DOUBLE) ||
+            (type == Type.DOUBLE && otherVariable.type == Type.INT) ||
+            (type == Type.INT && otherVariable.type == Type.DOUBLE) ||
+            (type == Type.INT && otherVariable.type == Type.INT)) {
+            if (value.toString().toDouble() > otherVariable.value.toString().toDouble()) {
                 return 1
             }
-            else if (value.toString().toInt() == otherVariable.value.toString().toInt()){
+            else if (value.toString().toDouble() == otherVariable.value.toString().toDouble()){
                 return 0
             }
             else {
@@ -50,6 +69,14 @@ class Variable(var name: String, var type: String, var value: Any) {
                 (value.toString().toInt() * otherVariable.value.toString().toInt()).toString())
         }
 
+        // Умножение Double и Double или Double и Int
+        else if ((type == Type.DOUBLE && otherVariable.type == Type.DOUBLE) ||
+            (type == Type.INT && otherVariable.type == Type.DOUBLE) ||
+            (type == Type.DOUBLE && otherVariable.type == Type.INT)) {
+            return Variable("newVariable", Type.DOUBLE,
+                (value.toString().toDouble() * otherVariable.value.toString().toDouble()).toString())
+        }
+
         throw Error("Умножение переменных типов ${type} и ${otherVariable.type}")
     }
 
@@ -59,6 +86,14 @@ class Variable(var name: String, var type: String, var value: Any) {
         if (type == Type.INT && otherVariable.type == Type.INT) {
             return Variable("newVariable", Type.INT,
                 (value.toString().toInt() / otherVariable.value.toString().toInt()).toString())
+        }
+
+        // Деление Double и Double или Double и Int
+        else if ((type == Type.DOUBLE && otherVariable.type == Type.DOUBLE) ||
+            (type == Type.INT && otherVariable.type == Type.DOUBLE) ||
+            (type == Type.DOUBLE && otherVariable.type == Type.INT)) {
+            return Variable("newVariable", Type.DOUBLE,
+                (value.toString().toDouble() / otherVariable.value.toString().toDouble()).toString())
         }
 
         throw Error("Деление переменных типов ${type} и ${otherVariable.type}")
@@ -79,8 +114,11 @@ class Variable(var name: String, var type: String, var value: Any) {
     operator override fun equals(otherVariable: Any?) : Boolean {
 
         // Сравнение переменных типа Int
-        if (type == Type.INT && (otherVariable as Variable).type == Type.INT) {
-            if (value.toString().toInt() == (otherVariable as Variable).value.toString().toInt()) {
+        if ((type == Type.INT && (otherVariable as Variable).type == Type.INT) ||
+            (type == Type.INT && (otherVariable as Variable).type == Type.DOUBLE) ||
+            (type == Type.DOUBLE && (otherVariable as Variable).type == Type.INT) ||
+            (type == Type.DOUBLE && (otherVariable as Variable).type == Type.DOUBLE)) {
+            if (value.toString().toDouble() == (otherVariable as Variable).value.toString().toDouble()) {
                 return true
             }
             else {

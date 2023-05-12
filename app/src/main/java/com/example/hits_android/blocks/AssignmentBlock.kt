@@ -52,10 +52,14 @@ class AssignmentBlock(
             variables[variableName] = expression.parseExpression()!!
         }
         // Присвоение значения элементу массива
-//        else {
-//            val expression = ParsingFunctions(LexicalComponents(newValue).getTokensFromCode())
-//            (variables[arrName] as Array<Int>)[arrayIndex] = expression.parseExpression()!!
-//        }
+        else if ((variables[arrName]?.value as Array<*>)[0] is Int) {
+            val expression = ParsingFunctions(LexicalComponents(newValue).getTokensFromCode())
+            (variables[arrName]?.value as Array<Int>)[arrayIndex] = expression.parseExpression()!!.value.toString().toInt()
+        }
+        else {
+            val expression = ParsingFunctions(LexicalComponents(newValue).getTokensFromCode())
+            (variables[arrName]?.value as Array<Double>)[arrayIndex] = expression.parseExpression()!!.value.toString().toDouble()
+        }
 
         // Выполнение следующего блока
         blockIndex++

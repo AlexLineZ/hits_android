@@ -11,6 +11,7 @@ class ParsingFunctions(private var tokens: List<Token>){
 
     private val nextToken = arrayOf( //массив ожидаемых токенов в выражении
         Name.MOD.value,
+        Name.DOUBLE.value,
         Name.RAND.value,
         Name.NUMBER.value,
         Name.SPACE.value,
@@ -40,7 +41,7 @@ class ParsingFunctions(private var tokens: List<Token>){
         val resultStack = Stack<Variable>()  //стек для подсчета чисел
 
         //ищем ожидаемый токен начала выражения
-        var nowToken = getTokenOrError(Name.RAND.value, Name.NUMBER.value, Name.VARIABLE.value, Name.L_BRACKET.value)
+        var nowToken = getTokenOrError(Name.RAND.value, Name.DOUBLE.value, Name.NUMBER.value, Name.VARIABLE.value, Name.L_BRACKET.value)
 
         // до выполнять до тех пор, пока нет окончания условия выражение(то есть начало выполнения тела ({)
         // или окончания выражения в массиве (]) или окончания выражения (;)
@@ -68,9 +69,14 @@ class ParsingFunctions(private var tokens: List<Token>){
 //                resultStack.push((-1000..1000).random())
 //            }
 
-            //если текущий токен - это число
-            else if (nowToken.type.name == Name.NUMBER){
+            //если текущий токен - это число типа Int
+            else if (nowToken.type.name == Name.NUMBER) {
                 resultStack.push(Variable("", Type.INT, nowToken.text))
+            }
+
+            //если текущий токен - это число типа Double
+            else if (nowToken.type.name == Name.DOUBLE) {
+                resultStack.push(Variable("", Type.DOUBLE, nowToken.text))
             }
 
             //если текущий токен является переменной
@@ -80,10 +86,15 @@ class ParsingFunctions(private var tokens: List<Token>){
                 if (variables[nowToken.text] == null) {
                     throw Exception("Где-то не задал переменную, ищи сам")
                 }
-                //Если следующий токен - квадратная скобка, то закинуть элемент массива
-//                else if (findToken(Name.L_SQUARE_BRACKET.value) != null) {
-//                    resultStack.push((variables[nowToken.text] as Array<Int>)[parseExpression() as Int])
-//                }
+                //если следующий токен - квадратная скобка, то закинуть элемент массива
+                else if (findToken(Name.L_SQUARE_BRACKET.value) != null) {
+                    if ((variables[nowToken.text]?.value as Array<*>)[0] is Int) {
+                        resultStack.push(Variable("", "Int", (variables[nowToken.text]?.value as Array<Int>)[parseExpression()!!.value.toString().toInt()]))
+                    }
+                    else{
+                        resultStack.push(Variable("", "Double", (variables[nowToken.text]?.value as Array<Double>)[parseExpression()!!.value.toString().toInt()]))
+                    }
+                }
                 //в иных случаях закинуть значение переменной
                 else {
                     resultStack.push(variables[nowToken.text])

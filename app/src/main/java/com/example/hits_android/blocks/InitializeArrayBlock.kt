@@ -41,6 +41,15 @@ class InitializeArrayBlock(
                 Array(expression.parseExpression()!!.value.toString().toInt()) { 0 })
         }
 
+        // Создание массива с элементами типа Double
+        else if (arrayType == Type.DOUBLE) {
+            val expression = ParsingFunctions(LexicalComponents(arraySize).getTokensFromCode())
+            variables[arrayName] = Variable(
+                arrayName,
+                "ArrayDouble",
+                Array(expression.parseExpression()!!.value.toString().toInt()) { 0.0 })
+        }
+
         // Выполнение следующих блоков
         blockIndex++
     }

@@ -370,7 +370,7 @@ fun TestProgram(){
 
     // Создание массива
     var s0 = InitializeArrayBlock(-1, -1, "init", "init", true)
-    s0.testBlock("arr", Type.INT, "size;")
+    s0.testBlock("arr", Type.DOUBLE, "size;")
 
     // Счётчик цикла
     var s1 = InitializeVarBlock(-1, -1, "init", "init", true)
@@ -414,7 +414,7 @@ fun TestProgram(){
 
     // Свап
     var s15 = InitializeVarBlock(-1, -1, "init", "init", true)
-    s15.testBlock("temp", Type.INT, "arr[first];")
+    s15.testBlock("temp", Type.DOUBLE, "arr[first];")
     var s16 = AssignmentBlock(-1, -1, "init", "init", true)
     s16.testBlock("arr[first]", "arr[second];")
     var s17 = AssignmentBlock(-1, -1, "init", "init", true)
@@ -448,7 +448,6 @@ fun TestProgram(){
     s27.testBlock("index", "index + 1;")
 
     var s28 = EndBlock(-1, -1, "init", "init", true)
-
 
     while (blockIndex < blockList.size) {
         blockList[blockIndex].runCodeBlock()
