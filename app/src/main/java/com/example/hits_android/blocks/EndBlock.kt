@@ -8,7 +8,7 @@ class EndBlock(
     override var previousID: Int = -1,
     override var nextID: Int = -1,
     override val key: String,
-    override val title:String = "Assign",
+    override val title:String = "End",
     override val isDragOverLocked:Boolean = true
 ): Block {
     // Название блока

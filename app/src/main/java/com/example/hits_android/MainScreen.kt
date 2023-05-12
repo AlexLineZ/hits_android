@@ -65,6 +65,13 @@ class MainScreen:Screen {
     }
 }
 
+// нужно будет это убрать потом
+@Composable
+fun DropDownMenu() {
+    var isExpanded by remember { mutableStateOf(false)}
+    val list = listOf("Int", "Bool", "String")
+    var selectedItem by remember { mutableStateOf("Int")}
+}
 
 @Composable
 fun Sandbox(
@@ -122,13 +129,13 @@ fun Sandbox(
 private fun VerticalReorderList(
     vm: ReorderListViewModel
 ) {
-    val state = rememberReorderableLazyListState(onMove = vm::moveDog, canDragOver = vm::isDogDragOverEnabled)
+    val state = rememberReorderableLazyListState(onMove = vm::moveBlock, canDragOver = vm::isDogDragOverEnabled)
     LazyColumn(
         state = state.listState,
         modifier = Modifier.reorderable(state),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        items(vm.dogs, { item -> item.key }) { item ->
+        items(vm.codeBlocksList, { item -> item.key }) { item ->
             ReorderableItem(state, item.key) { dragging ->
                 val scale = animateFloatAsState(if (dragging) 1.1f else 1.0f)
                 val alpha = animateFloatAsState(if (dragging) 0.9f else 1.0f)
@@ -160,7 +167,7 @@ private fun VerticalReorderList(
                             .background(Color.LightGray.copy(alpha = alpha.value))
                             .clickable(
                                 onClick = {
-                                    Log.d("s", "${vm.dogs.size}")
+                                    Log.d("s", "${vm.codeBlocksList.size}")
                                 }
                             )
                     ) {
@@ -195,7 +202,7 @@ private fun BottomBar(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
 
     ) {
-        items(vm.cats, { item -> item.key }) { item ->
+        items(vm.blockSelectionList, { item -> item.key }) { item ->
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
@@ -204,12 +211,23 @@ private fun BottomBar(
                     .background(Color.Red)
                     .clickable(
                         onClick = {
-                            vm.dogs = vm.dogs
+                            vm.codeBlocksList = vm.codeBlocksList
                                 .toMutableList()
                                 .apply {
-                                    add(vm.dogs.size - 1, MainBlock(key = "${vm.dogs.size}"))
+                                    add(vm.codeBlocksList.size - 1,
+                                        when (item.key) {
+                                            "0" -> {
+                                                BeginBlock(key = "${vm.codeBlocksList.size}")
+                                            }
+                                            "1" -> {
+                                                EndBlock(key = "$${vm.codeBlocksList.size}")
+                                            }
+                                            else -> {
+                                                InitializeIntBlock(key = "$${vm.codeBlocksList.size}")
+                                            }
+                                        })
                                 }
-                            Log.d("s", "${vm.dogs.size}")
+                            Log.d("s", "${vm.codeBlocksList.size}")
                         }
                     )
             ) {

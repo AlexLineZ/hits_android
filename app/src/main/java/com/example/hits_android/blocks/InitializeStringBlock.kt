@@ -8,7 +8,7 @@ class InitializeStringBlock (
     override var nextID: Int = -1,
     override val key: String,
     override val title:String = "InitStr",
-    override val isDragOverLocked:Boolean = true
+    override val isDragOverLocked:Boolean = false
 ): Block {
     // Название блока
     companion object {

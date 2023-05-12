@@ -11,7 +11,7 @@ class InitializeIntBlock(
     override var nextID: Int = -1,
     override val key: String,
     override val title:String = "InitInt",
-    override val isDragOverLocked:Boolean = true
+    override val isDragOverLocked:Boolean = false
 ): Block {
     // Название блока
     companion object {

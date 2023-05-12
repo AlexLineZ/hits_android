@@ -5,21 +5,34 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.example.hits_android.blocks.BeginBlock
+import com.example.hits_android.blocks.EndBlock
+import com.example.hits_android.blocks.InitializeIntBlock
 import com.example.hits_android.blocks.MainBlock
 import org.burnoutcrew.reorderable.ItemPosition
 
 class ReorderListViewModel: ViewModel() {
-    var dogs by mutableStateOf(List(21) {
-        if(it != 0 && it != 9) MainBlock(key = "$it", isDragOverLocked = false) else MainBlock(key = "$it")
+    var codeBlocksList by mutableStateOf(List(10) {
+        when (it) {
+            0 -> {
+                BeginBlock(key = "$it")
+            }
+            9 -> {
+                EndBlock(key = "$it")
+            }
+            else -> {
+                InitializeIntBlock(key = "$it")
+            }
+        }
     })
-    var cats by mutableStateOf(List(20) { MainBlock(key = "$it") })
+    var blockSelectionList by mutableStateOf(List(20) { MainBlock(key = "$it") })
 
-    fun moveDog(from: ItemPosition, to: ItemPosition) {
-        dogs = dogs.toMutableList().apply {
+    fun moveBlock(from: ItemPosition, to: ItemPosition) {
+        codeBlocksList = codeBlocksList.toMutableList().apply {
             add(to.index, removeAt(from.index))
         }
-        Log.d("s", "${dogs.size}")
+        Log.d("s", "${codeBlocksList.size}")
     }
 
-    fun isDogDragOverEnabled(draggedOver: ItemPosition, dragging: ItemPosition) = dogs.getOrNull(draggedOver.index)?.isDragOverLocked != true
+    fun isDogDragOverEnabled(draggedOver: ItemPosition, dragging: ItemPosition) = codeBlocksList.getOrNull(draggedOver.index)?.isDragOverLocked != true
 }

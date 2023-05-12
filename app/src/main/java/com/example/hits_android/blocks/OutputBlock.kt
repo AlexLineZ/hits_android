@@ -14,7 +14,7 @@ class OutputBlock(
     override var nextID: Int = -1,
     override val key: String,
     override val title: String = "Print",
-    override val isDragOverLocked:Boolean = true
+    override val isDragOverLocked:Boolean = false
 ): Block {
     // Название блока
     companion object {
