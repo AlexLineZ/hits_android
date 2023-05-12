@@ -382,7 +382,7 @@ fun TestProgram(){
     var s3 = BeginBlock(-1, -1, "begin", "begin", true)
 
     var s4 = AssignmentBlock(-1, -1, "assign", "assign", true)
-    s4.testBlock("arr[a]", "100 - a;")
+    s4.testBlock("arr[a]", "100.1 - a + 0.1;")
     var s5 = AssignmentBlock(-1, -1, "assign", "assign", true)
     s5.testBlock("a", "a + 1;")
 
