@@ -1,9 +1,6 @@
 package com.example.hits_android.blocks
 
-import com.example.hits_android.expressionParser.LexicalComponents
-import com.example.hits_android.expressionParser.ParsingFunctions
-import com.example.hits_android.expressionParser.Variable
-import com.example.hits_android.expressionParser.variables
+import com.example.hits_android.expressionParser.*
 
 // Блок создания массива
 class InitializeArrayBlock(
@@ -25,6 +22,7 @@ class InitializeArrayBlock(
     }
 
     var arrayName = ""   // Название массива
+    var arrayType = ""   // Тип элементов массива
     var arraySize = ""   // Размер массива
 
     // Создание массива
@@ -34,17 +32,23 @@ class InitializeArrayBlock(
             throw Error("Чел, ты пересоздаешь переменную")
         }
 
-        // Создание массива
-        val expression = ParsingFunctions(LexicalComponents(arraySize).getTokensFromCode())
-        variables[arrayName] = Variable(arrayName, "ArrayInt", Array(expression.parseExpression()!!.value.toString().toInt()){0})
+        // Создание массива с элементами типа Int
+        if (arrayType == Type.INT) {
+            val expression = ParsingFunctions(LexicalComponents(arraySize).getTokensFromCode())
+            variables[arrayName] = Variable(
+                arrayName,
+                "ArrayInt",
+                Array(expression.parseExpression()!!.value.toString().toInt()) { 0 })
+        }
 
         // Выполнение следующих блоков
         blockIndex++
     }
 
     // Тестирование без UI
-    fun testBlock(name: String, size: String) {
+    fun testBlock(name: String, type: String, size: String) {
         arrayName = name
+        arrayType = type
         arraySize = size
     }
 

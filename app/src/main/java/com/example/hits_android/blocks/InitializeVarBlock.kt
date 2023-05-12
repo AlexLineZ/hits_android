@@ -1,9 +1,6 @@
 package com.example.hits_android.blocks
 
-import com.example.hits_android.expressionParser.LexicalComponents
-import com.example.hits_android.expressionParser.ParsingFunctions
-import com.example.hits_android.expressionParser.Variable
-import com.example.hits_android.expressionParser.variables
+import com.example.hits_android.expressionParser.*
 
 // Блок создания новой переменной типа Int
 class InitializeVarBlock(
@@ -25,6 +22,7 @@ class InitializeVarBlock(
     }
 
     var name: String = ""  // Название переменной
+    var type: String = ""  // Тип переменной
     var value: String = "" // Значение переменной
 
     // Создание новой переменной
@@ -35,16 +33,19 @@ class InitializeVarBlock(
         }
 
         // Создание переменной типа Int
-        val expression = ParsingFunctions(LexicalComponents(value).getTokensFromCode())
-        variables[name] = Variable(name, "Int", expression.parseExpression()!!.value)
+        if (type == Type.INT) {
+            val expression = ParsingFunctions(LexicalComponents(value).getTokensFromCode())
+            variables[name] = Variable(name, Type.INT, expression.parseExpression()!!.value)
+        }
 
         // Выполнение следующего блока
         blockIndex++
     }
 
     // Тестирование блоков без UI
-    fun testBlock(n: String, v: String){
+    fun testBlock(n: String, t: String, v: String){
         name = n
+        type = t
         value = v
     }
 

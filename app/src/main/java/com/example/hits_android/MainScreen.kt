@@ -366,15 +366,15 @@ fun TestProgram(){
 
     // Размер массива
     var s = InitializeVarBlock(-1, -1, "init", "init", true)
-    s.testBlock("size", "10;")
+    s.testBlock("size", Type.INT, "10;")
 
     // Создание массива
     var s0 = InitializeArrayBlock(-1, -1, "init", "init", true)
-    s0.testBlock("arr", "size;")
+    s0.testBlock("arr", Type.INT, "size;")
 
     // Счётчик цикла
     var s1 = InitializeVarBlock(-1, -1, "init", "init", true)
-    s1.testBlock("a", "0;")
+    s1.testBlock("a", Type.INT, "0;")
 
     // Заполнение массива
     var s2 = WhileBlock(-1, -1, "while", "while", true)
@@ -390,7 +390,7 @@ fun TestProgram(){
 
     // Внешний цикл
     var s7 = InitializeVarBlock(-1, -1, "init", "init", true)
-    s7.testBlock("first", "0;")
+    s7.testBlock("first", Type.INT, "0;")
 
     var s8 = WhileBlock(-1, -1, "init", "init", true)
     s8.testBlock("first < size;")
@@ -399,7 +399,7 @@ fun TestProgram(){
 
     // Внутренний цикл
     var s10 = InitializeVarBlock(-1, -1, "init", "init", true)
-    s10.testBlock("second", "first + 1;")
+    s10.testBlock("second", Type.INT, "first + 1;")
 
     var s11 = WhileBlock(-1, -1, "init", "init", true)
     s11.testBlock("second < size;")
@@ -414,7 +414,7 @@ fun TestProgram(){
 
     // Свап
     var s15 = InitializeVarBlock(-1, -1, "init", "init", true)
-    s15.testBlock("temp", "arr[first];")
+    s15.testBlock("temp", Type.INT, "arr[first];")
     var s16 = AssignmentBlock(-1, -1, "init", "init", true)
     s16.testBlock("arr[first]", "arr[second];")
     var s17 = AssignmentBlock(-1, -1, "init", "init", true)
@@ -434,7 +434,7 @@ fun TestProgram(){
 
     // Вывод результата
     var s23 = InitializeVarBlock(-1, -1, "init", "init", true)
-    s23.testBlock("index", "0;")
+    s23.testBlock("index", Type.INT, "0;")
 
     var s24 = WhileBlock(-1, -1, "init", "init", true)
     s24.testBlock("index < size;")
