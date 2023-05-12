@@ -38,7 +38,7 @@ class OutputBlock(
         when(result){
             null -> println("ඞ Empty")
             else -> {
-                println("ඞ $result")
+                println("ඞ ${result.value}")
                 FlowViewModel().setCurrentValue("ඞ $result\n")
             }
         }
