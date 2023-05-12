@@ -7,7 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.hits_android.blocks.BeginBlock
 import com.example.hits_android.blocks.EndBlock
-import com.example.hits_android.blocks.InitializeIntBlock
+import com.example.hits_android.blocks.InitializeVarBlock
 import com.example.hits_android.blocks.MainBlock
 import org.burnoutcrew.reorderable.ItemPosition
 
@@ -21,7 +21,7 @@ class ReorderListViewModel: ViewModel() {
                 EndBlock(key = "$it")
             }
             else -> {
-                InitializeIntBlock(key = "$it")
+                InitializeVarBlock(key = "$it")
             }
         }
     })

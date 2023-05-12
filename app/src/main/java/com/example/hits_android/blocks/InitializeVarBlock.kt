@@ -6,16 +6,16 @@ import com.example.hits_android.expressionParser.Variable
 import com.example.hits_android.expressionParser.variables
 
 // Блок создания новой переменной типа Int
-class InitializeIntBlock(
+class InitializeVarBlock(
     override var previousID: Int = -1,
     override var nextID: Int = -1,
     override val key: String,
-    override val title:String = "InitInt",
+    override val title:String = "InitVar",
     override val isDragOverLocked:Boolean = false
 ): Block {
     // Название блока
     companion object {
-        val BLOCK_NAME = "initIntBlock"
+        val BLOCK_NAME = "initVarBlock"
     }
     override val blockName = BLOCK_NAME
 
@@ -50,6 +50,6 @@ class InitializeIntBlock(
 
     // Возврат названия блока
     override fun getNameOfBlock(): String {
-        return value
+        return blockName
     }
 }

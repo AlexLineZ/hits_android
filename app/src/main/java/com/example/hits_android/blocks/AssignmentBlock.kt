@@ -37,7 +37,7 @@ class AssignmentBlock(
             val index = variableName.slice((variableName.indexOf('[') + 1)..(variableName.indexOf(']') - 1))
             val indexExpression = ParsingFunctions(LexicalComponents(index + ";").getTokensFromCode())
 
-            arrayIndex = (indexExpression).parseExpression()!!.value.toInt()
+            arrayIndex = (indexExpression).parseExpression()!!.value.toString().toInt()
             arrName = variableName.slice(0..variableName.indexOf('[') - 1)
         }
 

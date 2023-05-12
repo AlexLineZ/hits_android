@@ -3,15 +3,12 @@ package com.example.hits_android
 
 import android.annotation.SuppressLint
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.gestures.detectTransformGestures
-import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -52,6 +49,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.hits_android.blocks.*
+import com.example.hits_android.expressionParser.Type
 import com.example.hits_android.expressionParser.variables
 
 
@@ -223,7 +221,7 @@ private fun BottomBar(
                                                 EndBlock(key = "$${vm.codeBlocksList.size}")
                                             }
                                             else -> {
-                                                InitializeIntBlock(key = "$${vm.codeBlocksList.size}")
+                                                InitializeVarBlock(key = "$${vm.codeBlocksList.size}")
                                             }
                                         })
                                 }
@@ -363,17 +361,19 @@ fun Console(navController: NavController) {
 
 fun TestProgram(){
     variables.clear()
+    blockList.clear()
     consoleString = ""
 
-    var s = InitializeIntBlock(-1, -1, "init", "init", true)
-    s.testBlock("size", "40;")
+    // Размер массива
+    var s = InitializeVarBlock(-1, -1, "init", "init", true)
+    s.testBlock("size", "10;")
 
     // Создание массива
     var s0 = InitializeArrayBlock(-1, -1, "init", "init", true)
     s0.testBlock("arr", "size;")
 
     // Счётчик цикла
-    var s1 = InitializeIntBlock(-1, -1, "init", "init", true)
+    var s1 = InitializeVarBlock(-1, -1, "init", "init", true)
     s1.testBlock("a", "0;")
 
     // Заполнение массива
@@ -382,14 +382,14 @@ fun TestProgram(){
     var s3 = BeginBlock(-1, -1, "begin", "begin", true)
 
     var s4 = AssignmentBlock(-1, -1, "assign", "assign", true)
-    s4.testBlock("arr[a]", "rand();")
+    s4.testBlock("arr[a]", "100 - a;")
     var s5 = AssignmentBlock(-1, -1, "assign", "assign", true)
     s5.testBlock("a", "a + 1;")
 
     var s6 = EndBlock(-1, -1, "end", "end", true)
 
     // Внешний цикл
-    var s7 = InitializeIntBlock(-1, -1, "init", "init", true)
+    var s7 = InitializeVarBlock(-1, -1, "init", "init", true)
     s7.testBlock("first", "0;")
 
     var s8 = WhileBlock(-1, -1, "init", "init", true)
@@ -398,7 +398,7 @@ fun TestProgram(){
     var s9 = BeginBlock(-1, -1, "init", "init", true)
 
     // Внутренний цикл
-    var s10 = InitializeIntBlock(-1, -1, "init", "init", true)
+    var s10 = InitializeVarBlock(-1, -1, "init", "init", true)
     s10.testBlock("second", "first + 1;")
 
     var s11 = WhileBlock(-1, -1, "init", "init", true)
@@ -413,7 +413,7 @@ fun TestProgram(){
     var s14 = BeginBlock(-1, -1, "init", "init", true)
 
     // Свап
-    var s15 = InitializeIntBlock(-1, -1, "init", "init", true)
+    var s15 = InitializeVarBlock(-1, -1, "init", "init", true)
     s15.testBlock("temp", "arr[first];")
     var s16 = AssignmentBlock(-1, -1, "init", "init", true)
     s16.testBlock("arr[first]", "arr[second];")
@@ -433,7 +433,7 @@ fun TestProgram(){
     var s22 = EndBlock(-1, -1, "init", "init", true)
 
     // Вывод результата
-    var s23 = InitializeIntBlock(-1, -1, "init", "init", true)
+    var s23 = InitializeVarBlock(-1, -1, "init", "init", true)
     s23.testBlock("index", "0;")
 
     var s24 = WhileBlock(-1, -1, "init", "init", true)
@@ -448,6 +448,7 @@ fun TestProgram(){
     s27.testBlock("index", "index + 1;")
 
     var s28 = EndBlock(-1, -1, "init", "init", true)
+
 
     while (blockIndex < blockList.size) {
         blockList[blockIndex].runCodeBlock()

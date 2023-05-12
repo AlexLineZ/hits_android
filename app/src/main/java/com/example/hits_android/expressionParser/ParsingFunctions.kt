@@ -70,7 +70,7 @@ class ParsingFunctions(private var tokens: List<Token>){
 
             //если текущий токен - это число
             else if (nowToken.type.name == Name.NUMBER){
-                resultStack.push(Variable("", "Int", nowToken.text))
+                resultStack.push(Variable("", Type.INT, nowToken.text))
             }
 
             //если текущий токен является переменной
@@ -128,14 +128,14 @@ class ParsingFunctions(private var tokens: List<Token>){
             "*" -> return b * a
             "/" -> return b / a
             "%" -> return b % a
-            "!=" -> return if (b != a) Variable(" ", "Int", "1") else Variable("", "Int", "0")
-            "==" -> return if (b == a) Variable("", "Int", "1") else Variable("", "Int", "0")
-            ">=" -> return if (b >= a) Variable("", "Int", "1") else Variable("", "Int", "0")
-            "<=" -> return if (b <= a) Variable("", "Int", "1") else Variable("", "Int", "0")
-            ">" -> return if (b > a) Variable("", "Int", "1") else Variable("", "Int", "0")
-            "<" -> return if (b < a) Variable("", "Int", "1") else Variable("", "Int", "0")
-            "||" -> return if ((b.value != "0") || (a.value != "0")) Variable("", "Int", "1") else Variable("", "Int", "0")
-            "&&" -> return if ((b.value != "0") && (a.value != "0")) Variable("", "Int", "1") else Variable("", "Int", "0")
+            "!=" -> return if (b != a) Variable(" ", Type.INT, "1") else Variable("", Type.INT, "0")
+            "==" -> return if (b == a) Variable("", Type.INT, "1") else Variable("", Type.INT, "0")
+            ">=" -> return if (b >= a) Variable("", Type.INT, "1") else Variable("", Type.INT, "0")
+            "<=" -> return if (b <= a) Variable("", Type.INT, "1") else Variable("", Type.INT, "0")
+            ">" -> return if (b > a) Variable("", Type.INT, "1") else Variable("", Type.INT, "0")
+            "<" -> return if (b < a) Variable("", Type.INT, "1") else Variable("", Type.INT, "0")
+            "||" -> return if ((b.value != "0") || (a.value != "0")) Variable("", Type.INT, "1") else Variable("", Type.INT, "0")
+            "&&" -> return if ((b.value != "0") && (a.value != "0")) Variable("", Type.INT, "1") else Variable("", Type.INT, "0")
             else -> throw Error("OMG")
         }
     }
@@ -143,7 +143,6 @@ class ParsingFunctions(private var tokens: List<Token>){
     private fun getTokenOrError(vararg target: String): Token{
         val token = findToken(*target)
         if (token == null){
-            tokens = tokens
             throw Error("Cringe")
         }
         else {

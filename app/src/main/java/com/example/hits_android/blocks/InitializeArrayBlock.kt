@@ -2,6 +2,7 @@ package com.example.hits_android.blocks
 
 import com.example.hits_android.expressionParser.LexicalComponents
 import com.example.hits_android.expressionParser.ParsingFunctions
+import com.example.hits_android.expressionParser.Variable
 import com.example.hits_android.expressionParser.variables
 
 // Блок создания массива
@@ -34,8 +35,8 @@ class InitializeArrayBlock(
         }
 
         // Создание массива
-//        val expression = ParsingFunctions(LexicalComponents(arraySize).getTokensFromCode())
-//        variables[arrayName] = Array(expression.parseExpression()!!){0}
+        val expression = ParsingFunctions(LexicalComponents(arraySize).getTokensFromCode())
+        variables[arrayName] = Variable(arrayName, "ArrayInt", Array(expression.parseExpression()!!.value.toString().toInt()){0})
 
         // Выполнение следующих блоков
         blockIndex++

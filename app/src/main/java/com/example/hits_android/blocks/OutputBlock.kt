@@ -39,7 +39,7 @@ class OutputBlock(
             null -> println("ඞ Empty")
             else -> {
                 println("ඞ ${result.value}")
-                FlowViewModel().setCurrentValue("ඞ $result\n")
+                FlowViewModel().setCurrentValue("ඞ ${result.value}\n")
             }
         }
 
