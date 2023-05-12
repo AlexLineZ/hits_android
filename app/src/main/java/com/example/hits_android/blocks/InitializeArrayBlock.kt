@@ -34,8 +34,8 @@ class InitializeArrayBlock(
         }
 
         // Создание массива
-        val expression = ParsingFunctions(LexicalComponents(arraySize).getTokensFromCode())
-        variables[arrayName] = Array(expression.parseExpression()!!){0}
+//        val expression = ParsingFunctions(LexicalComponents(arraySize).getTokensFromCode())
+//        variables[arrayName] = Array(expression.parseExpression()!!){0}
 
         // Выполнение следующих блоков
         blockIndex++

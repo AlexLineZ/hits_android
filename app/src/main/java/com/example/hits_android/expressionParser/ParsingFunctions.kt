@@ -3,13 +3,14 @@ package com.example.hits_android.expressionParser
 import com.example.hits_android.blocks.Scope
 import java.util.*
 
-val variables = mutableMapOf<String, Any>()
+val variables = mutableMapOf<String, Variable>()
 var scopes = Scope()
 
 class ParsingFunctions(private var tokens: List<Token>){
     private var index = 0
 
     private val nextToken = arrayOf( //массив ожидаемых токенов в выражении
+        Name.MOD.value,
         Name.RAND.value,
         Name.NUMBER.value,
         Name.SPACE.value,
@@ -34,9 +35,9 @@ class ParsingFunctions(private var tokens: List<Token>){
         Name.L_FIG_BRACKET.value
     )
 
-    fun parseExpression(): Int? {
+    fun parseExpression(): Variable? {
         val operatorStack = Stack<String>() //создаем стек операторов
-        val resultStack = Stack<Int>()  //стек для подсчета чисел
+        val resultStack = Stack<Variable>()  //стек для подсчета чисел
 
         //ищем ожидаемый токен начала выражения
         var nowToken = getTokenOrError(Name.RAND.value, Name.NUMBER.value, Name.VARIABLE.value, Name.L_BRACKET.value)
@@ -62,14 +63,14 @@ class ParsingFunctions(private var tokens: List<Token>){
                 }
             }
 
-            // Если текущий токен - это случайное число
-            else if (nowToken.type.name == Name.RAND) {
-                resultStack.push((-1000..1000).random())
-            }
+//            // Если текущий токен - это случайное число
+//            else if (nowToken.type.name == Name.RAND) {
+//                resultStack.push((-1000..1000).random())
+//            }
 
             //если текущий токен - это число
             else if (nowToken.type.name == Name.NUMBER){
-                resultStack.push(nowToken.text.toInt())
+                resultStack.push(Variable("", "Int", nowToken.text))
             }
 
             //если текущий токен является переменной
@@ -80,12 +81,12 @@ class ParsingFunctions(private var tokens: List<Token>){
                     throw Exception("Где-то не задал переменную, ищи сам")
                 }
                 //Если следующий токен - квадратная скобка, то закинуть элемент массива
-                else if (findToken(Name.L_SQUARE_BRACKET.value) != null) {
-                    resultStack.push((variables[nowToken.text] as Array<Int>)[parseExpression() as Int])
-                }
+//                else if (findToken(Name.L_SQUARE_BRACKET.value) != null) {
+//                    resultStack.push((variables[nowToken.text] as Array<Int>)[parseExpression() as Int])
+//                }
                 //в иных случаях закинуть значение переменной
                 else {
-                    resultStack.push(variables[nowToken.text] as Int)
+                    resultStack.push(variables[nowToken.text])
                 }
             }
 
@@ -120,21 +121,21 @@ class ParsingFunctions(private var tokens: List<Token>){
         return resultStack.pop()
     }
 
-    private fun applyOperator(a: Int, b: Int, operator: String): Int {
+    private fun applyOperator(a: Variable, b: Variable, operator: String): Variable {
         when (operator) {
             "+" -> return b + a
             "-" -> return b - a
             "*" -> return b * a
             "/" -> return b / a
             "%" -> return b % a
-            "!=" -> return if (b != a) 1 else 0
-            "==" -> return if (b == a) 1 else 0
-            ">=" -> return if (b >= a) 1 else 0
-            "<=" -> return if (b <= a) 1 else 0
-            ">" -> return if (b > a) 1 else 0
-            "<" -> return if (b < a) 1 else 0
-            "||" -> return if ((b != 0) || (a != 0)) 1 else 0
-            "&&" -> return if ((b != 0) && (a != 0)) 1 else 0
+            "!=" -> return if (b != a) Variable(" ", "Int", "1") else Variable("", "Int", "0")
+            "==" -> return if (b == a) Variable("", "Int", "1") else Variable("", "Int", "0")
+            ">=" -> return if (b >= a) Variable("", "Int", "1") else Variable("", "Int", "0")
+            "<=" -> return if (b <= a) Variable("", "Int", "1") else Variable("", "Int", "0")
+            ">" -> return if (b > a) Variable("", "Int", "1") else Variable("", "Int", "0")
+            "<" -> return if (b < a) Variable("", "Int", "1") else Variable("", "Int", "0")
+            "||" -> return if ((b.value != "0") || (a.value != "0")) Variable("", "Int", "1") else Variable("", "Int", "0")
+            "&&" -> return if ((b.value != "0") && (a.value != "0")) Variable("", "Int", "1") else Variable("", "Int", "0")
             else -> throw Error("OMG")
         }
     }

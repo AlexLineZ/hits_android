@@ -36,7 +36,7 @@ class IfBlock(
         val conditionState = conditionExpression.parseExpression()!!
 
         // Если условие верно
-        if (conditionState == 1) {
+        if (conditionState.value == "1") {
             // Выполнение тела if
             while (blockList[blockIndex].getNameOfBlock() != EndBlock.BLOCK_NAME) {
                 blockList[blockIndex].runCodeBlock()

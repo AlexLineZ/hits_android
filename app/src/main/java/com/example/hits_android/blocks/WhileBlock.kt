@@ -39,7 +39,7 @@ class WhileBlock(
         var conditionState = conditionExpression.parseExpression()!!
 
         // Пока условие верно
-        while (conditionState == 1) {
+        while (conditionState.value == "1") {
             // Выполнение тела while
             while (blockList[blockIndex].getNameOfBlock() != EndBlock.BLOCK_NAME) {
                 blockList[blockIndex].runCodeBlock()

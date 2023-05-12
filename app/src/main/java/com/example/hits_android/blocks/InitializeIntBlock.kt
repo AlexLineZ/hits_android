@@ -2,6 +2,7 @@ package com.example.hits_android.blocks
 
 import com.example.hits_android.expressionParser.LexicalComponents
 import com.example.hits_android.expressionParser.ParsingFunctions
+import com.example.hits_android.expressionParser.Variable
 import com.example.hits_android.expressionParser.variables
 
 // Блок создания новой переменной типа Int
@@ -35,7 +36,7 @@ class InitializeIntBlock(
 
         // Создание переменной типа Int
         val expression = ParsingFunctions(LexicalComponents(value).getTokensFromCode())
-        variables[name] = expression.parseExpression()!!
+        variables[name] = Variable(name, "Int", expression.parseExpression()!!.value)
 
         // Выполнение следующего блока
         blockIndex++

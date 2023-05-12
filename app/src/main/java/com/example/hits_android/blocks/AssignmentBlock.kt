@@ -37,7 +37,7 @@ class AssignmentBlock(
             val index = variableName.slice((variableName.indexOf('[') + 1)..(variableName.indexOf(']') - 1))
             val indexExpression = ParsingFunctions(LexicalComponents(index + ";").getTokensFromCode())
 
-            arrayIndex = (indexExpression).parseExpression()!!
+            arrayIndex = (indexExpression).parseExpression()!!.value.toInt()
             arrName = variableName.slice(0..variableName.indexOf('[') - 1)
         }
 
@@ -52,10 +52,10 @@ class AssignmentBlock(
             variables[variableName] = expression.parseExpression()!!
         }
         // Присвоение значения элементу массива
-        else {
-            val expression = ParsingFunctions(LexicalComponents(newValue).getTokensFromCode())
-            (variables[arrName] as Array<Int>)[arrayIndex] = expression.parseExpression()!!
-        }
+//        else {
+//            val expression = ParsingFunctions(LexicalComponents(newValue).getTokensFromCode())
+//            (variables[arrName] as Array<Int>)[arrayIndex] = expression.parseExpression()!!
+//        }
 
         // Выполнение следующего блока
         blockIndex++
