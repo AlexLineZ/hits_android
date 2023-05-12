@@ -44,6 +44,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -52,8 +53,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.hits_android.blocks.*
 import com.example.hits_android.expressionParser.variables
 
-
-private var index = 0
 
 class MainScreen:Screen {
     @Composable
@@ -317,22 +316,37 @@ fun Console(navController: NavController) {
     val viewModel = viewModel<FlowViewModel>()
     val currentValue = viewModel.counterFlow.collectAsState(initial = "1")
 
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
+    LazyColumn(
+        modifier = Modifier.fillMaxSize()
     ) {
-        Text("Console")
-    }
+        item {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Console",
+                    fontSize = 20.sp
+                )
 
-    Text(currentValue.value)
+            }
+        }
+        item {
+            Text(
+                text = currentValue.value,
+                modifier = Modifier.padding(16.dp)
+            )
+        }
+    }
 }
 
 fun TestProgram(){
     variables.clear()
     consoleString = ""
+
     var s = InitializeIntBlock(-1, -1, "init", "init", true)
-    s.testBlock("size", "10;")
+    s.testBlock("size", "40;")
 
     // Создание массива
     var s0 = InitializeArrayBlock(-1, -1, "init", "init", true)
@@ -348,7 +362,7 @@ fun TestProgram(){
     var s3 = BeginBlock(-1, -1, "begin", "begin", true)
 
     var s4 = AssignmentBlock(-1, -1, "assign", "assign", true)
-    s4.testBlock("arr[a]", "100 - a;")
+    s4.testBlock("arr[a]", "rand();")
     var s5 = AssignmentBlock(-1, -1, "assign", "assign", true)
     s5.testBlock("a", "a + 1;")
 
@@ -418,7 +432,6 @@ fun TestProgram(){
     while (blockIndex < blockList.size) {
         blockList[blockIndex].runCodeBlock()
     }
-    index++
 }
 
 
