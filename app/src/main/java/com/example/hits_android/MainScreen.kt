@@ -242,23 +242,31 @@ private fun BottomBar(
 }
 
 
-val viewModel = FlowViewModel()
+
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun NavBar() {
     val scaffoldState = rememberScaffoldState()
     val navController = rememberNavController()
     val vm = ReorderListViewModel()
+    val viewModel: FlowViewModel = viewModel()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = { NavBottomBar(navController) },
         floatingActionButton = {
+            val isProgramRunning by viewModel.isProgramRunning.collectAsState()
+
             FloatingActionButton(onClick = {
-                navController.navigate("Console")
-                TestProgram()
+                if (isProgramRunning) {
+                    viewModel.stopProgram()
+                } else {
+                    viewModel.startProgram()
+                    navController.navigate("Console")
+                }
             }) {
-                Icon(imageVector = Icons.Default.PlayArrow, contentDescription = "Start")
+                val buttonIcon = if (isProgramRunning) Icons.Default.Close else Icons.Default.PlayArrow
+                Icon(imageVector = buttonIcon, contentDescription = "Start")
             }
         },
         scaffoldState = scaffoldState,
@@ -468,11 +476,6 @@ fun TestProgram(){
 
     var s28 = EndBlock(-1, -1, "init", "init", true)
 
-    GlobalScope.launch {
-        while (blockIndex < blockList.size) {
-            blockList[blockIndex].runCodeBlock()
-        }
-    }
 }
 
 
