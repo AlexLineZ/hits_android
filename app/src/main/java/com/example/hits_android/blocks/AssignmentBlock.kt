@@ -2,6 +2,7 @@ package com.example.hits_android.blocks
 
 import com.example.hits_android.expressionParser.LexicalComponents
 import com.example.hits_android.expressionParser.ParsingFunctions
+import com.example.hits_android.expressionParser.Type
 import com.example.hits_android.expressionParser.variables
 
 // Блок присвоения переменной нового значения
@@ -53,7 +54,8 @@ class AssignmentBlock(
         }
 
         // Присвоение значения элементу массива
-        else if ((variables[arrName]?.value as Array<*>)[0] is Int) {
+//        else if ((variables[arrName]?.value as Array<*>)[0] is Int) {
+        else if (variables[arrName]?.type == Type.INT) {
             val expression = ParsingFunctions(LexicalComponents(newValue).getTokensFromCode())
             (variables[arrName]?.value as Array<Int>)[arrayIndex] = expression.parseExpression()!!.value.toString().toInt()
         }
@@ -61,9 +63,20 @@ class AssignmentBlock(
             val expression = ParsingFunctions(LexicalComponents(newValue).getTokensFromCode())
             (variables[arrName]?.value as Array<Double>)[arrayIndex] = expression.parseExpression()!!.value.toString().toDouble()
         }
-        else {
+        else if (variables[arrName]?.type == Type.STRING){
             val expression = ParsingFunctions(LexicalComponents(newValue).getTokensFromCode())
             (variables[arrName]?.value as Array<String>)[arrayIndex] = expression.parseExpression()!!.value.toString()
+        }
+        else {
+            val expression = ParsingFunctions(LexicalComponents(newValue).getTokensFromCode())
+            val result = expression.parseExpression()!!.value.toString()
+
+            if (result == "0" || result == "false") {
+                (variables[arrName]?.value as Array<String>)[arrayIndex] = "0"
+            }
+            else {
+                (variables[arrName]?.value as Array<String>)[arrayIndex] = "1"
+            }
         }
 
         // Выполнение следующего блока

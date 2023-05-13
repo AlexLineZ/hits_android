@@ -44,8 +44,8 @@ class ParsingFunctions(private var tokens: List<Token>){
         val resultStack = Stack<Variable>()  // Стек для подсчета чисел
 
         // Ищем ожидаемый токен начала выражения
-        var nowToken = getTokenOrError(Name.STRING.value, Name.BOOL.value,
-            Name.RAND.value, Name.DOUBLE.value, Name.NUMBER.value, Name.VARIABLE.value, Name.L_BRACKET.value)
+        var nowToken = getTokenOrError(Name.STRING.value,
+            Name.RAND.value, Name.DOUBLE.value, Name.NUMBER.value, Name.BOOL.value, Name.VARIABLE.value, Name.L_BRACKET.value)
 
         // До выполнять до тех пор, пока нет окончания условия выражение(то есть начало выполнения тела ({)
         // или окончания выражения в массиве (]) или окончания выражения (;)
@@ -109,7 +109,7 @@ class ParsingFunctions(private var tokens: List<Token>){
                 else if (findToken(Name.L_SQUARE_BRACKET.value) != null) {
                     try {
                         // Элемент Int массива
-                        if ((variables[nowToken.text]?.value as Array<*>)[0] is Int) {
+                        if ((variables[nowToken.text]?.type == Type.INT/* as Array<*>)[0] is Int*/)) {
                             resultStack.push(Variable("", Type.INT,
                                 (variables[nowToken.text]?.value as Array<Int>)[parseExpression()!!.value.toString().toInt()]))
 
@@ -119,8 +119,14 @@ class ParsingFunctions(private var tokens: List<Token>){
                                 (variables[nowToken.text]?.value as Array<Double>)[parseExpression()!!.value.toString().toInt()]))
 
                         // Элемент String массива
-                        } else {
+                        } else if (variables[nowToken.text]?.type == Type.STRING){
                             resultStack.push(Variable("", Type.STRING,
+                                    (variables[nowToken.text]?.value as Array<String>)[parseExpression()!!.value.toString().toInt()]))
+                        }
+
+                        // Элемент Bool массива
+                        else {
+                            resultStack.push(Variable("", Type.BOOL,
                                     (variables[nowToken.text]?.value as Array<String>)[parseExpression()!!.value.toString().toInt()]))
                         }
                     }

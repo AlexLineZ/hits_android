@@ -59,6 +59,15 @@ class InitializeArrayBlock(
                 Array(expression.parseExpression()!!.value.toString().toInt()) { "" })
         }
 
+        // Создание массива с элементами типа Bool
+        else if (arrayType == Type.BOOL) {
+            val expression = ParsingFunctions(LexicalComponents(arraySize).getTokensFromCode())
+            variables[arrayName] = Variable(
+                arrayName,
+                "ArrayBool",
+                Array(expression.parseExpression()!!.value.toString().toInt()) { "0" })
+        }
+
         // Выполнение следующих блоков
         blockIndex++
     }
