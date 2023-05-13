@@ -9,7 +9,8 @@ var scopes = Scope()
 class ParsingFunctions(private var tokens: List<Token>){
     private var index = 0
 
-    private val nextToken = arrayOf( //массив ожидаемых токенов в выражении
+    // Массив ожидаемых токенов в выражении
+    private val nextToken = arrayOf(
         Name.MOD.value,
         Name.STRING.value,
         Name.DOUBLE.value,
@@ -38,25 +39,25 @@ class ParsingFunctions(private var tokens: List<Token>){
     )
 
     fun parseExpression(): Variable? {
-        val operatorStack = Stack<String>() //создаем стек операторов
-        val resultStack = Stack<Variable>()  //стек для подсчета чисел
+        val operatorStack = Stack<String>()  // Создаем стек операторов
+        val resultStack = Stack<Variable>()  // Стек для подсчета чисел
 
-        //ищем ожидаемый токен начала выражения
+        // Ищем ожидаемый токен начала выражения
         var nowToken = getTokenOrError(Name.STRING.value,
             Name.RAND.value, Name.DOUBLE.value, Name.NUMBER.value, Name.VARIABLE.value, Name.L_BRACKET.value)
 
-        // до выполнять до тех пор, пока нет окончания условия выражение(то есть начало выполнения тела ({)
+        // До выполнять до тех пор, пока нет окончания условия выражение(то есть начало выполнения тела ({)
         // или окончания выражения в массиве (]) или окончания выражения (;)
         while(nowToken.type.name != Name.L_FIG_BRACKET
             && nowToken.type.name != Name.R_SQUARE_BRACKET
             && nowToken.type.name != Name.SEMICOLON) {
 
-            //если токен является левой скобочкой (обычной)
+            // Если токен является левой скобочкой (обычной)
             if (nowToken.type.name == Name.L_BRACKET) {
                 operatorStack.push(Name.L_BRACKET.value)
             }
 
-            //если токен является правой скобочкой (обычной)
+            // Если токен является правой скобочкой (обычной)
             else if (nowToken.type.name == Name.R_BRACKET) {
                 var nowOperator = operatorStack.pop()
                 while (nowOperator != Name.L_BRACKET.value) {
@@ -71,60 +72,78 @@ class ParsingFunctions(private var tokens: List<Token>){
 //                resultStack.push((-1000..1000).random())
 //            }
 
-            //если текущий токен - это число типа Int
+            // Если текущий токен - это число типа Int
             else if (nowToken.type.name == Name.NUMBER) {
                 resultStack.push(Variable("", Type.INT, nowToken.text))
             }
 
-            //если текущий токен - это число типа Double
+            // Если текущий токен - это число типа Double
             else if (nowToken.type.name == Name.DOUBLE) {
                 resultStack.push(Variable("", Type.DOUBLE, nowToken.text))
             }
 
-            //если текущий токен - это String
+            // Если текущий токен - это String
             else if (nowToken.type.name == Name.STRING) {
                 resultStack.push(Variable("", Type.STRING, nowToken.text.slice(1..nowToken.text.length - 2)))
             }
 
-            //если текущий токен является переменной
+            // Если текущий токен является переменной
             else if (nowToken.type.name == Name.VARIABLE){
-
-                //если переменной нет, то выдать ошибку
+                // Если переменной нет, то выдать ошибку
                 if (variables[nowToken.text] == null) {
                     throw Exception("Где-то не задал переменную, ищи сам")
                 }
-                //если следующий токен - квадратная скобка, то закинуть элемент массива
+
+                // Если следующий токен - квадратная скобка, то закинуть элемент массива
                 else if (findToken(Name.L_SQUARE_BRACKET.value) != null) {
-                    if ((variables[nowToken.text]?.value as Array<*>)[0] is Int) {
-                        resultStack.push(Variable("", Type.INT, (variables[nowToken.text]?.value as Array<Int>)[parseExpression()!!.value.toString().toInt()]))
+                    try {
+                        // Элемент Int массива
+                        if ((variables[nowToken.text]?.value as Array<*>)[0] is Int) {
+                            resultStack.push(Variable("", Type.INT,
+                                (variables[nowToken.text]?.value as Array<Int>)[parseExpression()!!.value.toString().toInt()]))
+
+                        // Элемент Double массива
+                        } else if ((variables[nowToken.text]?.value as Array<*>)[0] is Double) {
+                            resultStack.push(Variable("", Type.DOUBLE,
+                                (variables[nowToken.text]?.value as Array<Double>)[parseExpression()!!.value.toString().toInt()]))
+
+                        // Элемент String массива
+                        } else {
+                            resultStack.push(Variable("", Type.STRING,
+                                    (variables[nowToken.text]?.value as Array<String>)[parseExpression()!!.value.toString().toInt()]))
+                        }
                     }
-                    else if ((variables[nowToken.text]?.value as Array<*>)[0] is Double){
-                        resultStack.push(Variable("", Type.DOUBLE, (variables[nowToken.text]?.value as Array<Double>)[parseExpression()!!.value.toString().toInt()]))
-                    }
-                    else {
-                        resultStack.push(Variable("", Type.STRING, (variables[nowToken.text]?.value as Array<String>)[parseExpression()!!.value.toString().toInt()]))
+                    // Выход за пределы массива
+                    catch (e: ArrayIndexOutOfBoundsException){
+                        throw Error("Vihod za predeli massiva")
                     }
                 }
-                //в иных случаях закинуть значение переменной
+
+                // В иных случаях закинуть значение переменной
                 else {
                     resultStack.push(variables[nowToken.text])
                 }
             }
 
-            //если текущий токен - это оператор или оператор сравнения
+            // Если текущий токен - это оператор или оператор сравнения
             else if (nowToken.type.identifier == Identifiers.OPERATORS || nowToken.type.identifier == Identifiers.BOOLEAN) {
-                //если стек пустой или выражение начинается со скобки
+                // Если стек пустой или выражение начинается со скобки
                 if (operatorStack.isEmpty() || operatorStack.firstElement() == Name.L_BRACKET.value) {
                     operatorStack.push(nowToken.text)
                 }
-                else { //начать выполнять операции в ином случае
+
+                // Начать выполнять операции в ином случае
+                else {
                     val currentPriority = nowToken.type.priority
                     val firstPriority = tokensList[operatorStack.firstElement()]?.priority
-                    //если приоритет текущего больше, то просто добавляем оператор
+
+                    // Если приоритет текущего больше, то просто добавляем оператор
                     if (currentPriority > firstPriority!!){
                         operatorStack.push(nowToken.text)
                     }
-                    else { //иначе сосчитать операцию
+
+                    // Иначе сосчитать операцию
+                    else {
                         val result = applyOperator(resultStack.pop(), resultStack.pop(), operatorStack.pop())
                         resultStack.push(result)
                         operatorStack.push(nowToken.text)
@@ -134,14 +153,16 @@ class ParsingFunctions(private var tokens: List<Token>){
             nowToken = getTokenOrError(*nextToken)
         }
 
-        //добиваем выражения до тех пор, пока стек не пустой
+        // Добиваем выражения до тех пор, пока стек не пустой
         while (!operatorStack.isEmpty()) {
             val result = applyOperator(resultStack.pop(), resultStack.pop(), operatorStack.pop())
             resultStack.push(result)
         }
+
         return resultStack.pop()
     }
 
+    // Применение операторов к переменным
     private fun applyOperator(a: Variable, b: Variable, operator: String): Variable {
         when (operator) {
             "+" -> return b + a

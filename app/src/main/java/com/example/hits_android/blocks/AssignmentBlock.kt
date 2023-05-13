@@ -51,6 +51,7 @@ class AssignmentBlock(
             val expression = ParsingFunctions(LexicalComponents(newValue).getTokensFromCode())
             variables[variableName] = expression.parseExpression()!!
         }
+
         // Присвоение значения элементу массива
         else if ((variables[arrName]?.value as Array<*>)[0] is Int) {
             val expression = ParsingFunctions(LexicalComponents(newValue).getTokensFromCode())

@@ -370,17 +370,90 @@ fun TestProgram(){
     blockIndex = 0
     _output.value = ""
 
-    val s0 = InitializeArrayBlock(-1, -1, "s", "s", true)
-    s0.testBlock("arr", "String", "10;")
+    // Размер массива
+    var s = InitializeVarBlock(-1, -1, "init", "init", true)
+    s.testBlock("size", Type.INT, "10;")
 
-    val s1 = AssignmentBlock(-1, -1, "s", "s", true)
-    s1.testBlock("arr[0]", "\"Hello world\";")
+    // Создание массива
+    var s0 = InitializeArrayBlock(-1, -1, "init", "init", true)
+    s0.testBlock("arr", Type.STRING, "size;")
 
-    val s2 = AssignmentBlock(-1, -1, "s", "s", true)
-    s2.testBlock("arr[1]", "arr[0] + \"smert\";")
+    // Счётчик цикла
+    var s1 = InitializeVarBlock(-1, -1, "init", "init", true)
+    s1.testBlock("a", Type.INT, "0;")
 
-    val s3 = OutputBlock(-1, -1, "s", "s", true)
-    s3.testBlock("arr[1];")
+    // Заполнение массива
+    var s2 = WhileBlock(-1, -1, "while", "while", true)
+    s2.testBlock("a < size;")
+    var s3 = BeginBlock(-1, -1, "begin", "begin", true)
+
+    var s4 = AssignmentBlock(-1, -1, "assign", "assign", true)
+    s4.testBlock("arr[a]", "100 - a;")
+    var s5 = AssignmentBlock(-1, -1, "assign", "assign", true)
+    s5.testBlock("a", "a + 1;")
+
+    var s6 = EndBlock(-1, -1, "end", "end", true)
+
+    // Внешний цикл
+    var s7 = InitializeVarBlock(-1, -1, "init", "init", true)
+    s7.testBlock("first", Type.INT, "0;")
+
+    var s8 = WhileBlock(-1, -1, "init", "init", true)
+    s8.testBlock("first < size;")
+
+    var s9 = BeginBlock(-1, -1, "init", "init", true)
+
+    // Внутренний цикл
+    var s10 = InitializeVarBlock(-1, -1, "init", "init", true)
+    s10.testBlock("second", Type.INT, "first + 1;")
+
+    var s11 = WhileBlock(-1, -1, "init", "init", true)
+    s11.testBlock("second < size;")
+
+    var s12 = BeginBlock(-1, -1, "init", "init", true)
+
+    // Проверка
+    var s13 = IfBlock(-1, -1, "init", "init", true)
+    s13.testBlock("arr[first] > arr[second];")
+
+    var s14 = BeginBlock(-1, -1, "init", "init", true)
+
+    // Свап
+    var s15 = InitializeVarBlock(-1, -1, "init", "init", true)
+    s15.testBlock("temp", Type.STRING, "arr[first];")
+    var s16 = AssignmentBlock(-1, -1, "init", "init", true)
+    s16.testBlock("arr[first]", "arr[second];")
+    var s17 = AssignmentBlock(-1, -1, "init", "init", true)
+    s17.testBlock("arr[second]", "temp;")
+
+    var s18 = EndBlock(-1, -1, "init", "init", true)
+
+    var s19 = AssignmentBlock(-1, -1, "init", "init", true)
+    s19.testBlock("second", "second + 1;")
+
+    var s20 = EndBlock(-1, -1, "init", "init", true)
+
+    var s21 = AssignmentBlock(-1, -1, "init", "init", true)
+    s21.testBlock("first", "first + 1;")
+
+    var s22 = EndBlock(-1, -1, "init", "init", true)
+
+    // Вывод результата
+    var s23 = InitializeVarBlock(-1, -1, "init", "init", true)
+    s23.testBlock("index", Type.INT, "0;")
+
+    var s24 = WhileBlock(-1, -1, "init", "init", true)
+    s24.testBlock("index < size;")
+
+    var s25 = BeginBlock(-1, -1, "init", "init", true)
+
+    var s26 = OutputBlock(-1, -1, "init", "init", true)
+    s26.testBlock("arr[index];")
+
+    var s27 = AssignmentBlock(-1, -1, "init", "init", true)
+    s27.testBlock("index", "index + 1;")
+
+    var s28 = EndBlock(-1, -1, "init", "init", true)
 
     GlobalScope.launch {
         while (blockIndex < blockList.size) {
