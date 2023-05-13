@@ -42,6 +42,16 @@ class InitializeVarBlock(
                 .slice(0.. newVariable.value.toString().indexOf('.') - 1)
         }
 
+        // Перевод bool значения в 1 или 0
+        if (type == Type.BOOL) {
+            if (newVariable.value.toString() != "0" && newVariable.value.toString() != "false") {
+                newVariable.value = "1"
+            }
+            else {
+                newVariable.value = "0"
+            }
+        }
+
         // Обрезание "" у строк
         if (type == Type.STRING) {
             newVariable.value = newVariable.value.toString()

@@ -63,8 +63,9 @@ class Variable(var name: String, var type: String, var value: Any) {
             }
         }
 
-        // Сравнение строк
-        else if (type == Type.STRING && otherVariable.type == Type.STRING) {
+        // Сравнение строк и булевых переменных
+        else if (type == Type.STRING && otherVariable.type == Type.STRING ||
+                type == Type.BOOL && otherVariable.type == Type.BOOL) {
             if (value.toString() > otherVariable.value.toString()) {
                 return 1
             }
@@ -138,8 +139,9 @@ class Variable(var name: String, var type: String, var value: Any) {
             return value.toString().toDouble() == (otherVariable as Variable).value.toString().toDouble()
         }
 
-        // Сравнение строк
-        if (type == Type.STRING && (otherVariable as Variable).type == Type.STRING) {
+        // Сравнение строк и булевых переменных
+        if (type == Type.STRING && (otherVariable as Variable).type == Type.STRING ||
+            type == Type.BOOL && (otherVariable as Variable).type == Type.BOOL) {
             return value.toString() == (otherVariable as Variable).value.toString()
         }
 

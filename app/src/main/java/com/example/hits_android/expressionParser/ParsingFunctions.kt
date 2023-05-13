@@ -12,6 +12,7 @@ class ParsingFunctions(private var tokens: List<Token>){
     // Массив ожидаемых токенов в выражении
     private val nextToken = arrayOf(
         Name.MOD.value,
+        Name.BOOL.value,
         Name.STRING.value,
         Name.DOUBLE.value,
         Name.RAND.value,
@@ -43,7 +44,7 @@ class ParsingFunctions(private var tokens: List<Token>){
         val resultStack = Stack<Variable>()  // Стек для подсчета чисел
 
         // Ищем ожидаемый токен начала выражения
-        var nowToken = getTokenOrError(Name.STRING.value,
+        var nowToken = getTokenOrError(Name.STRING.value, Name.BOOL.value,
             Name.RAND.value, Name.DOUBLE.value, Name.NUMBER.value, Name.VARIABLE.value, Name.L_BRACKET.value)
 
         // До выполнять до тех пор, пока нет окончания условия выражение(то есть начало выполнения тела ({)
@@ -85,6 +86,16 @@ class ParsingFunctions(private var tokens: List<Token>){
             // Если текущий токен - это String
             else if (nowToken.type.name == Name.STRING) {
                 resultStack.push(Variable("", Type.STRING, nowToken.text.slice(1..nowToken.text.length - 2)))
+            }
+
+            // Если текущий токен - это Bool
+            else if (nowToken.type.name == Name.BOOL) {
+                if (nowToken.text != "0" && nowToken.text != "false"){
+                    resultStack.push(Variable("", Type.BOOL, "1"))
+                }
+                else {
+                    resultStack.push(Variable("", Type.BOOL, "0"))
+                }
             }
 
             // Если текущий токен является переменной

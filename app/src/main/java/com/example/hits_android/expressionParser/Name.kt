@@ -4,6 +4,7 @@ enum class Name (val value: String) {
     RAND("rand()"),
     DOUBLE("double"),
     STRING("string"),
+    BOOL("bool"),
     SPACE("space"),
     NEW_STRING("\n"),
     PLUS("+"),
