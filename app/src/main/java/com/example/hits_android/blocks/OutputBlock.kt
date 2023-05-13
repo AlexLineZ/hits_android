@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.example.hits_android.expressionParser.LexicalComponents
 import com.example.hits_android.expressionParser.ParsingFunctions
 import com.example.hits_android.expressionParser.variables
+import com.example.hits_android.model.FlowViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
@@ -38,7 +39,7 @@ class OutputBlock(
         when(result){
             null -> println("ඞ Empty")
             else -> {
-                println("ඞ ${result.value}")
+                //println("ඞ ${result.value}")
                 FlowViewModel().setCurrentValue("ඞ ${result.value}\n")
             }
         }
@@ -55,16 +56,5 @@ class OutputBlock(
     // Возврат названия блока
     override fun getNameOfBlock(): String {
         return blockName
-    }
-}
-
-var consoleString = ""
-class FlowViewModel: ViewModel() {
-
-    fun setCurrentValue(newValue: String) {
-        consoleString += newValue
-    }
-    val counterFlow = flow {
-        emit(consoleString)
     }
 }

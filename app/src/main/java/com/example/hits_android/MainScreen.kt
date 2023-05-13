@@ -51,6 +51,11 @@ import androidx.navigation.compose.rememberNavController
 import com.example.hits_android.blocks.*
 import com.example.hits_android.expressionParser.Type
 import com.example.hits_android.expressionParser.variables
+import com.example.hits_android.model.FlowViewModel
+import com.example.hits_android.model._output
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 class MainScreen:Screen {
@@ -236,7 +241,7 @@ private fun BottomBar(
 }
 
 
-
+val viewModel = FlowViewModel()
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun NavBar() {
@@ -249,8 +254,8 @@ fun NavBar() {
         bottomBar = { NavBottomBar(navController) },
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                TestProgram()
                 navController.navigate("Console")
+                TestProgram()
             }) {
                 Icon(imageVector = Icons.Default.PlayArrow, contentDescription = "Start")
             }
@@ -272,7 +277,7 @@ fun NavBar() {
                 }
             }
             composable("Console") {
-                Console(navController)
+                Console(navController, viewModel)
             }
         }
     }
@@ -329,9 +334,8 @@ private fun prepareBottomMenu(): List<BottomMenuItem> {
 data class BottomMenuItem(val label: String, val icon: ImageVector)
 
 @Composable
-fun Console(navController: NavController) {
-    val viewModel = viewModel<FlowViewModel>()
-    val currentValue = viewModel.counterFlow.collectAsState(initial = "1")
+fun Console(navController: NavController, viewModel: FlowViewModel) {
+    val output by viewModel.output.collectAsState()
 
     LazyColumn(
         modifier = Modifier.fillMaxSize()
@@ -352,17 +356,19 @@ fun Console(navController: NavController) {
         }
         item {
             Text(
-                text = currentValue.value,
+                text = output,
                 modifier = Modifier.padding(16.dp)
             )
         }
     }
 }
 
+@OptIn(DelicateCoroutinesApi::class)
 fun TestProgram(){
     variables.clear()
     blockList.clear()
-    consoleString = ""
+    blockIndex = 0
+    _output.value = ""
 
     // Размер массива
     var s = InitializeVarBlock(-1, -1, "init", "init", true)
@@ -449,8 +455,10 @@ fun TestProgram(){
 
     var s28 = EndBlock(-1, -1, "init", "init", true)
 
-    while (blockIndex < blockList.size) {
-        blockList[blockIndex].runCodeBlock()
+    GlobalScope.launch {
+        while (blockIndex < blockList.size) {
+            blockList[blockIndex].runCodeBlock()
+        }
     }
 }
 
