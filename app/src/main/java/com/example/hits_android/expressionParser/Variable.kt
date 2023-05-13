@@ -18,6 +18,11 @@ class Variable(var name: String, var type: String, var value: Any) {
                 (value.toString().toDouble() + otherVariable.value.toString().toDouble()).toString())
         }
 
+        // Сложение строк
+        else if (type == Type.STRING && otherVariable.type == Type.STRING) {
+            return Variable("newVariable", Type.STRING, value.toString() + otherVariable.value.toString())
+        }
+
         throw Error("Сложение переменных типов ${type} и ${otherVariable.type}")
     }
 
@@ -58,6 +63,18 @@ class Variable(var name: String, var type: String, var value: Any) {
             }
         }
 
+        // Сравнение строк
+        else if (type == Type.STRING && otherVariable.type == Type.STRING) {
+            if (value.toString() > otherVariable.value.toString()) {
+                return 1
+            }
+            else if (value.toString() == otherVariable.value.toString()) {
+                return 0
+            }
+            else {
+                return -1
+            }
+        }
         throw Error("Сравнение переменных типов ${type} и ${otherVariable.type}")
     }
 
@@ -99,7 +116,7 @@ class Variable(var name: String, var type: String, var value: Any) {
         throw Error("Деление переменных типов ${type} и ${otherVariable.type}")
     }
 
-    // Взятие остатко от деления
+    // Взятие остатка от деления
     operator fun rem(otherVariable: Variable) : Variable {
         // Деление Int и Int
         if (type == Type.INT && otherVariable.type == Type.INT) {
@@ -118,12 +135,12 @@ class Variable(var name: String, var type: String, var value: Any) {
             (type == Type.INT && (otherVariable as Variable).type == Type.DOUBLE) ||
             (type == Type.DOUBLE && (otherVariable as Variable).type == Type.INT) ||
             (type == Type.DOUBLE && (otherVariable as Variable).type == Type.DOUBLE)) {
-            if (value.toString().toDouble() == (otherVariable as Variable).value.toString().toDouble()) {
-                return true
-            }
-            else {
-                return false
-            }
+            return value.toString().toDouble() == (otherVariable as Variable).value.toString().toDouble()
+        }
+
+        // Сравнение строк
+        if (type == Type.STRING && (otherVariable as Variable).type == Type.STRING) {
+            return value.toString() == (otherVariable as Variable).value.toString()
         }
 
         throw Error("Сравнение переменных типов ${type} и ${(otherVariable as Variable).type}")

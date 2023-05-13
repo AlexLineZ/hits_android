@@ -34,12 +34,17 @@ class InitializeVarBlock(
 
         // Вычисление значения переменной
         val expression = ParsingFunctions(LexicalComponents(value).getTokensFromCode())
-        var newVariable = Variable(name, type, expression.parseExpression()!!.value)
+        val newVariable = Variable(name, type, expression.parseExpression()!!.value)
 
         // Обрезка дробной части у переменной типа Int
         if (type == Type.INT && newVariable.value.toString().contains(".")) {
             newVariable.value = newVariable.value.toString()
                 .slice(0.. newVariable.value.toString().indexOf('.') - 1)
+        }
+
+        // Обрезание "" у строк
+        if (type == Type.STRING) {
+            newVariable.value = newVariable.value.toString()
         }
 
         // Сохранение переменной

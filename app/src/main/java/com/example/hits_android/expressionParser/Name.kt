@@ -3,6 +3,7 @@ package com.example.hits_android.expressionParser
 enum class Name (val value: String) {
     RAND("rand()"),
     DOUBLE("double"),
+    STRING("string"),
     SPACE("space"),
     NEW_STRING("\n"),
     PLUS("+"),

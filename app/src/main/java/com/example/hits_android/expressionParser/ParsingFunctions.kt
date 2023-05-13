@@ -11,6 +11,7 @@ class ParsingFunctions(private var tokens: List<Token>){
 
     private val nextToken = arrayOf( //массив ожидаемых токенов в выражении
         Name.MOD.value,
+        Name.STRING.value,
         Name.DOUBLE.value,
         Name.RAND.value,
         Name.NUMBER.value,
@@ -41,7 +42,8 @@ class ParsingFunctions(private var tokens: List<Token>){
         val resultStack = Stack<Variable>()  //стек для подсчета чисел
 
         //ищем ожидаемый токен начала выражения
-        var nowToken = getTokenOrError(Name.RAND.value, Name.DOUBLE.value, Name.NUMBER.value, Name.VARIABLE.value, Name.L_BRACKET.value)
+        var nowToken = getTokenOrError(Name.STRING.value,
+            Name.RAND.value, Name.DOUBLE.value, Name.NUMBER.value, Name.VARIABLE.value, Name.L_BRACKET.value)
 
         // до выполнять до тех пор, пока нет окончания условия выражение(то есть начало выполнения тела ({)
         // или окончания выражения в массиве (]) или окончания выражения (;)
@@ -79,6 +81,11 @@ class ParsingFunctions(private var tokens: List<Token>){
                 resultStack.push(Variable("", Type.DOUBLE, nowToken.text))
             }
 
+            //если текущий токен - это String
+            else if (nowToken.type.name == Name.STRING) {
+                resultStack.push(Variable("", Type.STRING, nowToken.text.slice(1..nowToken.text.length - 2)))
+            }
+
             //если текущий токен является переменной
             else if (nowToken.type.name == Name.VARIABLE){
 
@@ -89,10 +96,13 @@ class ParsingFunctions(private var tokens: List<Token>){
                 //если следующий токен - квадратная скобка, то закинуть элемент массива
                 else if (findToken(Name.L_SQUARE_BRACKET.value) != null) {
                     if ((variables[nowToken.text]?.value as Array<*>)[0] is Int) {
-                        resultStack.push(Variable("", "Int", (variables[nowToken.text]?.value as Array<Int>)[parseExpression()!!.value.toString().toInt()]))
+                        resultStack.push(Variable("", Type.INT, (variables[nowToken.text]?.value as Array<Int>)[parseExpression()!!.value.toString().toInt()]))
                     }
-                    else{
-                        resultStack.push(Variable("", "Double", (variables[nowToken.text]?.value as Array<Double>)[parseExpression()!!.value.toString().toInt()]))
+                    else if ((variables[nowToken.text]?.value as Array<*>)[0] is Double){
+                        resultStack.push(Variable("", Type.DOUBLE, (variables[nowToken.text]?.value as Array<Double>)[parseExpression()!!.value.toString().toInt()]))
+                    }
+                    else {
+                        resultStack.push(Variable("", Type.STRING, (variables[nowToken.text]?.value as Array<String>)[parseExpression()!!.value.toString().toInt()]))
                     }
                 }
                 //в иных случаях закинуть значение переменной
@@ -145,8 +155,16 @@ class ParsingFunctions(private var tokens: List<Token>){
             "<=" -> return if (b <= a) Variable("", Type.INT, "1") else Variable("", Type.INT, "0")
             ">" -> return if (b > a) Variable("", Type.INT, "1") else Variable("", Type.INT, "0")
             "<" -> return if (b < a) Variable("", Type.INT, "1") else Variable("", Type.INT, "0")
-            "||" -> return if ((b.value != "0") || (a.value != "0")) Variable("", Type.INT, "1") else Variable("", Type.INT, "0")
-            "&&" -> return if ((b.value != "0") && (a.value != "0")) Variable("", Type.INT, "1") else Variable("", Type.INT, "0")
+            "||" -> return if ((b.value != "0") || (a.value != "0")) Variable(
+                "",
+                Type.INT,
+                "1"
+            ) else Variable("", Type.INT, "0")
+            "&&" -> return if ((b.value != "0") && (a.value != "0")) Variable(
+                "",
+                Type.INT,
+                "1"
+            ) else Variable("", Type.INT, "0")
             else -> throw Error("OMG")
         }
     }

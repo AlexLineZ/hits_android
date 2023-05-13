@@ -50,6 +50,15 @@ class InitializeArrayBlock(
                 Array(expression.parseExpression()!!.value.toString().toInt()) { 0.0 })
         }
 
+        // Создание массива с элементами типа String
+        else if (arrayType == Type.STRING) {
+            val expression = ParsingFunctions(LexicalComponents(arraySize).getTokensFromCode())
+            variables[arrayName] = Variable(
+                arrayName,
+                "ArrayString",
+                Array(expression.parseExpression()!!.value.toString().toInt()) { "" })
+        }
+
         // Выполнение следующих блоков
         blockIndex++
     }

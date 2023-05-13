@@ -7,6 +7,7 @@ val tokensList = mutableMapOf<String, TokenType>(
     "double"   to TokenType(Name.DOUBLE,           Identifiers.LITERAL,          Regex("^(((-?[1-9]\\d*)|(-?0))(\\.\\d*))")),
     "number"   to TokenType(Name.NUMBER,           Identifiers.LITERAL,          Regex("^(-?0|-?[1-9]\\d*)")),
     "variable" to TokenType(Name.VARIABLE,         Identifiers.VARIABLE,         Regex("^\\w+")),
+    "string"   to TokenType(Name.STRING,         Identifiers.VARIABLE,           Regex("^\"[\\w\\s]*\"")),
 
     "space"    to TokenType(Name.SPACE,            Identifiers.SPACES,           Regex("^\\s+")),
     "\n"       to TokenType(Name.NEW_STRING,       Identifiers.SPACES,           Regex("^\\n")),

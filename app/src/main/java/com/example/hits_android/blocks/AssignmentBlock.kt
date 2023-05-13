@@ -56,9 +56,13 @@ class AssignmentBlock(
             val expression = ParsingFunctions(LexicalComponents(newValue).getTokensFromCode())
             (variables[arrName]?.value as Array<Int>)[arrayIndex] = expression.parseExpression()!!.value.toString().toInt()
         }
-        else {
+        else if ((variables[arrName]?.value as Array<*>)[0] is Double) {
             val expression = ParsingFunctions(LexicalComponents(newValue).getTokensFromCode())
             (variables[arrName]?.value as Array<Double>)[arrayIndex] = expression.parseExpression()!!.value.toString().toDouble()
+        }
+        else {
+            val expression = ParsingFunctions(LexicalComponents(newValue).getTokensFromCode())
+            (variables[arrName]?.value as Array<String>)[arrayIndex] = expression.parseExpression()!!.value.toString()
         }
 
         // Выполнение следующего блока
