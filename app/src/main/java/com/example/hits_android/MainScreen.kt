@@ -43,6 +43,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -239,23 +240,30 @@ private fun BottomBar(
 }
 
 
-val viewModel = FlowViewModel()
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun NavBar() {
     val scaffoldState = rememberScaffoldState()
     val navController = rememberNavController()
     val vm = ReorderListViewModel()
+    val viewModel: FlowViewModel = viewModel()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = { NavBottomBar(navController) },
         floatingActionButton = {
+            val isProgramRunning by viewModel.isProgramRunning.collectAsState()
+
             FloatingActionButton(onClick = {
-                navController.navigate("Console")
-                TestProgram()
+                if (isProgramRunning) {
+                    viewModel.stopProgram()
+                } else {
+                    viewModel.startProgram()
+                    navController.navigate("Console")
+                }
             }) {
-                Icon(imageVector = Icons.Default.PlayArrow, contentDescription = "Start")
+                val buttonIcon = if (isProgramRunning) Icons.Default.Close else Icons.Default.PlayArrow
+                Icon(imageVector = buttonIcon, contentDescription = "Start")
             }
         },
         scaffoldState = scaffoldState,
@@ -389,11 +397,6 @@ fun TestProgram(){
     val s6 = OutputBlock(-1, -1, "S", "S", true)
     s6.testBlock("a;")
 
-    GlobalScope.launch {
-        while (blockIndex < blockList.size) {
-            blockList[blockIndex].runCodeBlock()
-        }
-    }
 }
 
 
