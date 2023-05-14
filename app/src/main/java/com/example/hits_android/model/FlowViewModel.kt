@@ -4,13 +4,10 @@ import androidx.lifecycle.ViewModel
 import com.example.hits_android.TestProgram
 import com.example.hits_android.blocks.blockIndex
 import com.example.hits_android.blocks.blockList
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 
 var _output = MutableStateFlow("")
 
@@ -19,26 +16,30 @@ class FlowViewModel : ViewModel() {
 
     fun setCurrentValue(newValue: String) {
         _output.value += newValue
-        println(_output.value)
+    }
+
+    fun setError(error: String){
+        _output.value = error
     }
     private val _isProgramRunning = MutableStateFlow(false)
     val isProgramRunning: StateFlow<Boolean> = _isProgramRunning.asStateFlow()
 
     private var job: Job? = null
 
-    fun toggleProgramRunning() {
-        _isProgramRunning.value = !_isProgramRunning.value
-    }
-
     @OptIn(DelicateCoroutinesApi::class)
     fun startProgram() {
         if (!isProgramRunning.value) {
             job = GlobalScope.launch {
                 TestProgram()
-                while (blockIndex < blockList.size) {
-                    blockList[blockIndex].runCodeBlock()
+                try{
+                    while (blockIndex < blockList.size) {
+                        blockList[blockIndex].runCodeBlock()
+                    }
+                    _isProgramRunning.value = false
+                } catch (e: java.lang.Exception){
+                     setError(e.message.toString())
+                    _isProgramRunning.value = false
                 }
-                _isProgramRunning.value = false
             }
             _isProgramRunning.value = true
         }

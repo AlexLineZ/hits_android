@@ -464,12 +464,12 @@ fun TestProgram(){
     s23.testBlock("index", Type.INT, "0;")
 
     var s24 = WhileBlock(-1, -1, "init", "init", true)
-    s24.testBlock("index < size;")
+    s24.testBlock("1;")
 
     var s25 = BeginBlock(-1, -1, "init", "init", true)
 
     var s26 = OutputBlock(-1, -1, "init", "init", true)
-    s26.testBlock("arr[index];")
+    s26.testBlock("index;")
 
     var s27 = AssignmentBlock(-1, -1, "init", "init", true)
     s27.testBlock("index", "index + 1;")
