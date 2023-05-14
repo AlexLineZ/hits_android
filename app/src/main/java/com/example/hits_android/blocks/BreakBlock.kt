@@ -24,16 +24,17 @@ class BreakBlock(
     // Выход из цикла
     override fun runCodeBlock() {
         // Поиск начала тела цикла
-        while (blockIndex != -1 && blockList[blockIndex].getNameOfBlock() != WhileBlock.BLOCK_NAME) {
-            blockIndex--
+        while (blockList[blockIndex].getNameOfBlock() != WhileBlock.BLOCK_NAME) {
+            try {
+                blockIndex--
 
-            if (blockList[blockIndex].getNameOfBlock() == BeginBlock.BLOCK_NAME) {
-                scopes.destoryScope()
+                if (blockList[blockIndex].getNameOfBlock() == BeginBlock.BLOCK_NAME) {
+                    scopes.destoryScope()
+                }
             }
-        }
-
-        if (blockIndex == -1) {
-            throw Error("Berak не относится к циклу")
+            catch (e: ArrayIndexOutOfBoundsException) {
+                throw Error("Berak не относится к циклу")
+            }
         }
 
         // Выход из цикла

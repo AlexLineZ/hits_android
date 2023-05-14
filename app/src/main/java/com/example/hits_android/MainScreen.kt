@@ -379,7 +379,7 @@ fun TestProgram(){
     val s2 = AssignmentBlock(-1, -1, "S", "S", true)
     s2.testBlock("a", "a + 1;")
 
-    val s3 = ContinueBlock(-1, -1, "S", "S", true)
+    val s33 = ContinueBlock(-1, -1, "S", "S", true)
 
     val s4 = AssignmentBlock(-1, -1, "S", "S", true)
     s4.testBlock("a", "a - 1;")
