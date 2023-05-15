@@ -132,7 +132,7 @@ class ParsingFunctions(private var tokens: List<Token>){
                     }
                     // Выход за пределы массива
                     catch (e: ArrayIndexOutOfBoundsException){
-                        throw Error("Vihod za predeli massiva")
+                        throw Exception("Vihod za predeli massiva")
                     }
                 }
 
@@ -203,14 +203,14 @@ class ParsingFunctions(private var tokens: List<Token>){
                 Type.INT,
                 "1"
             ) else Variable("", Type.INT, "0")
-            else -> throw Error("OMG")
+            else -> throw Exception("OMG")
         }
     }
 
     private fun getTokenOrError(vararg target: String): Token{
         val token = findToken(*target)
         if (token == null){
-            throw Error("Cringe")
+            throw Exception("Cringe")
         }
         else {
             return token

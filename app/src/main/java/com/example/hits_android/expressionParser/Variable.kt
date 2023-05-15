@@ -23,7 +23,7 @@ class Variable(var name: String, var type: String, var value: Any) {
             return Variable("newVariable", Type.STRING, value.toString() + otherVariable.value.toString())
         }
 
-        throw Error("Сложение переменных типов ${type} и ${otherVariable.type}")
+        throw Exception("Сложение переменных типов ${type} и ${otherVariable.type}")
     }
 
     // Вычитание переменных
@@ -42,7 +42,7 @@ class Variable(var name: String, var type: String, var value: Any) {
                 (value.toString().toDouble() - otherVariable.value.toString().toDouble()).toString())
         }
 
-        throw Error("Вычитание переменных типов ${type} и ${otherVariable.type}")
+        throw Exception("Вычитание переменных типов ${type} и ${otherVariable.type}")
     }
 
     // Сравнение переменных
@@ -76,7 +76,7 @@ class Variable(var name: String, var type: String, var value: Any) {
                 return -1
             }
         }
-        throw Error("Сравнение переменных типов ${type} и ${otherVariable.type}")
+        throw Exception("Сравнение переменных типов ${type} и ${otherVariable.type}")
     }
 
     // Умножение переменных
@@ -95,7 +95,7 @@ class Variable(var name: String, var type: String, var value: Any) {
                 (value.toString().toDouble() * otherVariable.value.toString().toDouble()).toString())
         }
 
-        throw Error("Умножение переменных типов ${type} и ${otherVariable.type}")
+        throw Exception("Умножение переменных типов ${type} и ${otherVariable.type}")
     }
 
     // Деление переменных
@@ -114,7 +114,7 @@ class Variable(var name: String, var type: String, var value: Any) {
                 (value.toString().toDouble() / otherVariable.value.toString().toDouble()).toString())
         }
 
-        throw Error("Деление переменных типов ${type} и ${otherVariable.type}")
+        throw Exception("Деление переменных типов ${type} и ${otherVariable.type}")
     }
 
     // Взятие остатка от деления
@@ -125,7 +125,7 @@ class Variable(var name: String, var type: String, var value: Any) {
                 (value.toString().toInt() % otherVariable.value.toString().toInt()).toString())
         }
 
-        throw Error("Взятие остатка от деления переменных типов ${type} и ${otherVariable.type}")
+        throw Exception("Взятие остатка от деления переменных типов ${type} и ${otherVariable.type}")
     }
 
     // Сравнение переменных
@@ -145,6 +145,6 @@ class Variable(var name: String, var type: String, var value: Any) {
             return value.toString() == (otherVariable as Variable).value.toString()
         }
 
-        throw Error("Сравнение переменных типов ${type} и ${(otherVariable as Variable).type}")
+        throw Exception("Сравнение переменных типов ${type} и ${(otherVariable as Variable).type}")
     }
 }

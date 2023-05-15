@@ -19,9 +19,4 @@ class Scope() {
     fun getScope(): MutableList<String> {
         return scopesList[scopesList.size - 1]
     }
-
-    // Проверка наличия переменных в текущей области видимости
-    fun isEmpty() : Boolean {
-        return scopesList.size == 0
-    }
 }
