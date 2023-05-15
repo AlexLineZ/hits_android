@@ -29,7 +29,7 @@ class InitializeVarBlock(
     override fun runCodeBlock() {
         // Пересоздание переменной
         if (variables[name] != null){
-            throw Exception("Чел, ты пересоздаешь переменную");
+            throw Exception("Происходит пересоздание переменной");
         }
 
         // Вычисление значения переменной
