@@ -41,6 +41,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -222,7 +223,6 @@ private fun BottomBar(
     }
 }
 
-
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun NavBar() {
@@ -230,23 +230,18 @@ fun NavBar() {
     val navController = rememberNavController()
     val vm = ReorderListViewModel()
     val viewModel: FlowViewModel = viewModel()
+    var isOpen by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = { NavBottomBar(navController) },
         floatingActionButton = {
-            val isProgramRunning by viewModel.isProgramRunning.collectAsState()
 
             FloatingActionButton(onClick = {
-                if (isProgramRunning) {
-                    viewModel.stopProgram()
-                } else {
-                    viewModel.startProgram()
-                    navController.navigate("Console")
-                }
+                isOpen = !isOpen
             }) {
-                val buttonIcon = if (isProgramRunning) Icons.Default.Close else Icons.Default.PlayArrow
-                Icon(imageVector = buttonIcon, contentDescription = "Start")
+                val buttonIcon = if (!isOpen) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown
+                Icon(imageVector = buttonIcon, contentDescription = "forYura")
             }
         },
         scaffoldState = scaffoldState,
@@ -265,9 +260,15 @@ fun NavBar() {
                     }
                 }
             }
+
             composable("Console") {
                 Console(navController, viewModel)
             }
+
+            composable("Settings") {
+                Settings(navController)
+            }
+
         }
     }
 }
@@ -275,6 +276,7 @@ fun NavBar() {
 @Composable
 fun NavBottomBar(navController: NavController) {
     val bottomMenuItemsList = prepareBottomMenu()
+    val viewModel: FlowViewModel = viewModel()
 
     var selectedItem by remember {
         mutableStateOf("Coding")
@@ -284,7 +286,7 @@ fun NavBottomBar(navController: NavController) {
         cutoutShape = CircleShape
     ) {
         bottomMenuItemsList.forEachIndexed { index, menuItem ->
-            if (index == 1) {
+            if (index == 2) {
                 BottomNavigationItem(
                     selected = false,
                     onClick = {},
@@ -293,20 +295,41 @@ fun NavBottomBar(navController: NavController) {
                 )
             }
 
-            BottomNavigationItem(
-                selected = (selectedItem == menuItem.label),
-                onClick = {
-                    selectedItem = menuItem.label
-                    navController.navigate(menuItem.label)
-                },
-                icon = {
-                    Icon(
-                        imageVector = menuItem.icon,
-                        contentDescription = menuItem.label
-                    )
-                },
-                enabled = true
-            )
+            if (menuItem.label == "Start") {
+                val isProgramRunning by viewModel.isProgramRunning.collectAsState()
+                BottomNavigationItem(
+                    selected = (selectedItem == menuItem.label),
+                    onClick = {
+                        selectedItem = menuItem.label
+                        if (isProgramRunning) {
+                            viewModel.stopProgram()
+                        } else {
+                            viewModel.startProgram()
+                            navController.navigate("Console")
+                        }
+                    },
+                    icon = {
+                        val buttonIcon = if (isProgramRunning) Icons.Default.Close else Icons.Default.PlayArrow
+                        Icon(imageVector = buttonIcon, contentDescription = menuItem.label)
+                    },
+                    enabled = true
+                )
+            } else {
+                BottomNavigationItem(
+                    selected = (selectedItem == menuItem.label),
+                    onClick = {
+                        selectedItem = menuItem.label
+                        navController.navigate(menuItem.label)
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = menuItem.icon,
+                            contentDescription = menuItem.label
+                        )
+                    },
+                    enabled = true
+                )
+            }
         }
     }
 }
@@ -314,8 +337,10 @@ fun NavBottomBar(navController: NavController) {
 private fun prepareBottomMenu(): List<BottomMenuItem> {
     val bottomMenuItemsList = arrayListOf<BottomMenuItem>()
 
+    bottomMenuItemsList.add(BottomMenuItem(label = "Settings", icon = Icons.Default.Settings))
     bottomMenuItemsList.add(BottomMenuItem(label = "Coding", icon = Icons.Default.Build))
     bottomMenuItemsList.add(BottomMenuItem(label = "Console", icon = Icons.Default.DateRange))
+    bottomMenuItemsList.add(BottomMenuItem(label = "Start", icon = Icons.Default.PlayArrow))
 
     return bottomMenuItemsList
 }
@@ -351,6 +376,37 @@ fun Console(navController: NavController, viewModel: FlowViewModel) {
         }
     }
 }
+
+@Composable
+fun Settings(navController: NavController) {
+
+    LazyColumn(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        item {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Settings",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+            }
+        }
+        item {
+            Text(
+                text = "Авторы:\nАлексей Ковкин, Юрий Ситдиков, Александр Кирсанов",
+                modifier = Modifier.padding(16.dp)
+            )
+        }
+    }
+}
+
+
 
 @OptIn(DelicateCoroutinesApi::class)
 fun TestProgram(){
