@@ -1,6 +1,54 @@
 package com.example.hits_android.blocks
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.material.Button
+import androidx.compose.material.DropdownMenu
+import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import com.example.hits_android.expressionParser.*
+import org.burnoutcrew.reorderable.ReorderableItem
+import org.burnoutcrew.reorderable.ReorderableLazyListState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.ExperimentalComposeUiApi
 
 // Блок создания новой переменной типа Int
 class InitializeVarBlock(
@@ -14,6 +62,7 @@ class InitializeVarBlock(
     companion object {
         val BLOCK_NAME = "initVarBlock"
     }
+
     override val blockName = BLOCK_NAME
 
     // Добавление блока в список блоков
@@ -28,7 +77,7 @@ class InitializeVarBlock(
     // Создание новой переменной
     override fun runCodeBlock() {
         // Пересоздание переменной
-        if (variables[name] != null){
+        if (variables[name] != null) {
             throw Exception("Чел, ты пересоздаешь переменную");
         }
 
@@ -39,15 +88,14 @@ class InitializeVarBlock(
         // Обрезка дробной части у переменной типа Int
         if (type == Type.INT && newVariable.value.toString().contains(".")) {
             newVariable.value = newVariable.value.toString()
-                .slice(0.. newVariable.value.toString().indexOf('.') - 1)
+                .slice(0..newVariable.value.toString().indexOf('.') - 1)
         }
 
         // Перевод bool значения в 1 или 0
         if (type == Type.BOOL) {
             if (newVariable.value.toString() != "0" && newVariable.value.toString() != "false") {
                 newVariable.value = "1"
-            }
-            else {
+            } else {
                 newVariable.value = "0"
             }
         }
@@ -65,7 +113,7 @@ class InitializeVarBlock(
     }
 
     // Тестирование блоков без UI
-    fun testBlock(n: String, t: String, v: String){
+    fun testBlock(n: String, t: String, v: String) {
         name = n
         type = t
         value = v
@@ -74,5 +122,113 @@ class InitializeVarBlock(
     // Возврат названия блока
     override fun getNameOfBlock(): String {
         return blockName
+    }
+
+    @Composable
+    override fun blockComposable(item: Block) {
+        item as InitializeVarBlock
+        Row {
+            dropdownMenuExample(item)
+            itemNameField(item)
+            itemValueField(item)
+        }
+    }
+
+    @Composable
+    fun dropdownMenuExample(item: InitializeVarBlock) {
+        val types = listOf("Int", "Bool", "String")
+        val selectedType = remember { mutableStateOf<String?>(null) }
+        val expanded = remember { mutableStateOf(false) }
+        Text(
+            text = selectedType.value ?: "Type",
+            modifier = Modifier
+                .fillMaxWidth(0.3f)
+                .clickable(onClick = { expanded.value = true }),
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.h6
+        )
+
+        DropdownMenu(
+            expanded = expanded.value,
+            onDismissRequest = { expanded.value = false },
+            modifier = Modifier
+                .fillMaxWidth(0.3f)
+        ) {
+            types.forEach { type ->
+                DropdownMenuItem(
+                    onClick = {
+                        selectedType.value = type
+                        item.type = type
+                        expanded.value = false
+                    }
+                ) {
+                    Text(text = type)
+                }
+            }
+        }
+    }
+
+    @OptIn(ExperimentalComposeUiApi::class)
+    @Composable
+    fun itemNameField(item: InitializeVarBlock) {
+        val textState = remember { mutableStateOf(TextFieldValue()) }
+        val keyboardController = LocalSoftwareKeyboardController.current
+        val themeColors = MaterialTheme.colors
+
+        TextField(
+            value = textState.value,
+            onValueChange = { textState.value = it },
+            modifier = Modifier.fillMaxWidth(0.5f),
+            shape = RoundedCornerShape(4.dp),
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.White,
+                textColor = Color.Black,
+                cursorColor = themeColors.primary, // Основной цвет темы
+                focusedIndicatorColor = themeColors.primary, // Основной цвет темы
+                unfocusedIndicatorColor = Color.Gray
+            ),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Done // Изменяем действие клавиатуры на "Готово"
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    item.name = textState.value.toString()
+                    keyboardController?.hide() // Скрываем клавиатуру
+                }
+            )
+        )
+    }
+
+    @OptIn(ExperimentalComposeUiApi::class)
+    @Composable
+    fun itemValueField(item: InitializeVarBlock) {
+        val textState = remember { mutableStateOf(TextFieldValue()) }
+        val keyboardController = LocalSoftwareKeyboardController.current
+        val themeColors = MaterialTheme.colors
+
+        TextField(
+            value = textState.value,
+            onValueChange = { textState.value = it },
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(4.dp),
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.White,
+                textColor = Color.Black,
+                cursorColor = themeColors.primary, // Основной цвет темы
+                focusedIndicatorColor = themeColors.primary, // Основной цвет темы
+                unfocusedIndicatorColor = Color.Gray
+            ),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Done // Изменяем действие клавиатуры на "Готово"
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    item.value = textState.value.toString()
+                    keyboardController?.hide() // Скрываем клавиатуру
+                }
+            )
+        )
     }
 }

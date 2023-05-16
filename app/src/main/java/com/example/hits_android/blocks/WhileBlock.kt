@@ -1,8 +1,16 @@
 package com.example.hits_android.blocks
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.example.hits_android.expressionParser.LexicalComponents
 import com.example.hits_android.expressionParser.ParsingFunctions
 import com.example.hits_android.expressionParser.variables
+import org.burnoutcrew.reorderable.ReorderableLazyListState
 
 // Блок цикла while
 class WhileBlock(
@@ -68,5 +76,13 @@ class WhileBlock(
     // Возврат названия блока
     override fun getNameOfBlock(): String {
         return blockName
+    }
+
+    @Composable
+    override fun blockComposable(item: Block) {
+        Text(
+            text = item.title,
+            modifier = Modifier.padding(24.dp)
+        )
     }
 }

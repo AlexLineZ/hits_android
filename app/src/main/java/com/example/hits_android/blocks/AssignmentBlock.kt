@@ -1,9 +1,13 @@
 package com.example.hits_android.blocks
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.ui.unit.Dp
 import com.example.hits_android.expressionParser.LexicalComponents
 import com.example.hits_android.expressionParser.ParsingFunctions
 import com.example.hits_android.expressionParser.Type
 import com.example.hits_android.expressionParser.variables
+import org.burnoutcrew.reorderable.ReorderableLazyListState
 
 // Блок присвоения переменной нового значения
 class AssignmentBlock(
@@ -11,7 +15,7 @@ class AssignmentBlock(
     override var nextID: Int = -1,
     override val key: String,
     override val title:String = "Assign",
-    override val isDragOverLocked:Boolean = true
+    override val isDragOverLocked:Boolean = false
 ): Block {
     // Название блока
     companion object {
@@ -92,5 +96,10 @@ class AssignmentBlock(
     // Возврат названия блока
     override fun getNameOfBlock(): String {
         return blockName
+    }
+
+    @Composable
+    override fun blockComposable(item: Block) {
+        TODO("Not yet implemented")
     }
 }

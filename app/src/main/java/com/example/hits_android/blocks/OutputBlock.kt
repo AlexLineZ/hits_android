@@ -1,5 +1,12 @@
 package com.example.hits_android.blocks
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.example.hits_android.expressionParser.LexicalComponents
 import com.example.hits_android.expressionParser.ParsingFunctions
@@ -8,6 +15,7 @@ import com.example.hits_android.model.FlowViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
+import org.burnoutcrew.reorderable.ReorderableLazyListState
 
 // Блок вывода
 class OutputBlock(
@@ -56,5 +64,13 @@ class OutputBlock(
     // Возврат названия блока
     override fun getNameOfBlock(): String {
         return blockName
+    }
+
+    @Composable
+    override fun blockComposable(item: Block) {
+        Text(
+            text = item.title,
+            modifier = Modifier.padding(24.dp)
+        )
     }
 }

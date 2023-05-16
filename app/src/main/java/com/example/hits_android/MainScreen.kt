@@ -60,69 +60,22 @@ import kotlinx.coroutines.launch
 class MainScreen:Screen {
     @Composable
     override fun Content() {
-        val vm = ReorderListViewModel()
         Hits_androidTheme {
             NavBar()
         }
     }
 }
 
-// нужно будет это убрать потом
-@Composable
-fun DropDownMenu() {
-    var isExpanded by remember { mutableStateOf(false)}
-    val list = listOf("Int", "Bool", "String")
-    var selectedItem by remember { mutableStateOf("Int")}
-}
-
 @Composable
 fun Sandbox(
     vm: ReorderListViewModel
 ) {
-    var offsetX by remember { mutableStateOf(0f) }
-    var offsetY by remember { mutableStateOf(0f) }
-    var scale by remember { mutableStateOf(1f) }
-    val maxScale = 40f
-
     Box(
         Modifier
             .fillMaxHeight(0.9f)
             .fillMaxWidth()
-            .pointerInput(Unit) {
-                detectTransformGestures { _, pan, zoom, _ ->
-                    scale *= zoom
-                    scale = scale.coerceIn(0.1f, maxScale)
-                    offsetX += pan.x
-                    offsetY += pan.y
-                }
-            }
-            .graphicsLayer(
-                scaleX = scale,
-                scaleY = scale,
-                translationX = offsetX,
-                translationY = offsetY
-            )
     ) {
-        val haptic = LocalHapticFeedback.current
-        var ofsetX by remember { mutableStateOf(0f) }
-        var ofsetY by remember { mutableStateOf(0f) }
-
-        Box(modifier = Modifier
-            .offset {
-                IntOffset(x = ofsetX.roundToInt(), y = ofsetY.roundToInt())
-            }
-            .pointerInput(Unit) {
-                detectDragGesturesAfterLongPress(
-                    onDragStart = { haptic.performHapticFeedback(HapticFeedbackType.LongPress) }
-                ) { change, dragAmount ->
-                    change.consume()
-                    ofsetX += dragAmount.x
-                    ofsetY += dragAmount.y
-                }
-            }
-        ) {
-            VerticalReorderList(vm = vm)
-        }
+        VerticalReorderList(vm = vm)
     }
 }
 
@@ -147,21 +100,20 @@ private fun VerticalReorderList(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier
                             .fillMaxWidth()
+                            .height(70.dp)
                             .scale(scale.value)
                             .shadow(elevation, RoundedCornerShape(24.dp))
                             .clip(RoundedCornerShape(24.dp))
                             .background(Color.Red.copy(alpha = alpha.value))
                     ) {
-                        Text(
-                            text = item.title,
-                            modifier = Modifier.padding(24.dp)
-                        )
+                        item.blockComposable(item)
                     }
                 } else {
                     Box(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier
                             .fillMaxWidth()
+                            .height(70.dp)
                             .detectReorderAfterLongPress(state)
                             .scale(scale.value)
                             .shadow(elevation, RoundedCornerShape(24.dp))
@@ -173,26 +125,11 @@ private fun VerticalReorderList(
                                 }
                             )
                     ) {
-                        Text(
-                            text = item.title,
-                            modifier = Modifier.padding(24.dp)
-                        )
+                        item.blockComposable(item)
                     }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun MainBlockComposable(block: Block) {
-    Box(
-        modifier = Modifier
-            .width(200.dp)
-            .height(100.dp)
-            .background(Color.LightGray)
-    ) {
-        Text(text = block.blockName, modifier = Modifier.align(Alignment.TopCenter))
     }
 }
 
@@ -217,19 +154,60 @@ private fun BottomBar(
                                 .toMutableList()
                                 .apply {
                                     add(vm.codeBlocksList.size - 1,
-                                        when (item.key) {
-                                            "0" -> {
+                                        when (item.blockName) {
+                                            "assignmentBlock" -> {
+                                                AssignmentBlock(key = "${vm.codeBlocksList.size}")
+                                            }
+
+                                            "beginBlock" -> {
                                                 BeginBlock(key = "${vm.codeBlocksList.size}")
                                             }
-                                            "1" -> {
-                                                EndBlock(key = "$${vm.codeBlocksList.size}")
+
+                                            "breakBlock" -> {
+                                                BreakBlock(key = "${vm.codeBlocksList.size}")
                                             }
+
+                                            "continueBlock" -> {
+                                                ContinueBlock(key = "${vm.codeBlocksList.size}")
+                                            }
+
+                                            "ElseBlock" -> {
+                                                ElseBlock(key = "${vm.codeBlocksList.size}")
+                                            }
+
+                                            "endBlock" -> {
+                                                EndBlock(key = "${vm.codeBlocksList.size}")
+                                            }
+
+                                            "IfBlock" -> {
+                                                IfBlock(key = "${vm.codeBlocksList.size}")
+                                            }
+
+                                            "initArrayBlock" -> {
+                                                InitializeArrayBlock(key = "${vm.codeBlocksList.size}")
+                                            }
+
+                                            "initVarBlock" -> {
+                                                InitializeVarBlock(key = "${vm.codeBlocksList.size}")
+                                            }
+
+                                            "outputBlock" -> {
+                                                OutputBlock(key = "${vm.codeBlocksList.size}")
+                                            }
+
+                                            "WhileBlock" -> {
+                                                WhileBlock(key = "${vm.codeBlocksList.size}")
+                                            }
+
                                             else -> {
-                                                InitializeVarBlock(key = "$${vm.codeBlocksList.size}")
+                                                AssignmentBlock(key = "${vm.codeBlocksList.size}")
                                             }
-                                        })
+                                        }
+                                    )
                                 }
-                            Log.d("s", "${vm.codeBlocksList.size}")
+                            for (block in vm.codeBlocksList) {
+                                Log.d("s", "${block.blockName}\n")
+                            }
                         }
                     )
             ) {
