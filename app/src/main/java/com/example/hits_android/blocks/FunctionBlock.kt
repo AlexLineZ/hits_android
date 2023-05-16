@@ -29,18 +29,18 @@ class FunctionBlock(
         blockList.add(this)
     }
 
-    var parameters = ""
-    var funName = ""
-    var parNamesList = MutableList(0){""}
+    var parameters = ""                     // Параметры функции
+    var funName = ""                        // Название функции
+    var parNamesList = MutableList(0){""}   // Список параметров
 
     // Создание функции
     override fun runCodeBlock() {
         val parList = parameters.split(",").toMutableList()
 
+        // Инициализация параметров
         for (i in parList.indices) {
             parList[i] = parList[i].replace(" ", "")
 
-            // Вычисление значения переменной
             val expression = LexicalComponents(parList[i]).getTokensFromCode()
             val name = expression[0].text
             parNamesList.add(name)
@@ -50,12 +50,12 @@ class FunctionBlock(
                 throw Exception("Параметр назван так же, как и уже существующая переменная.")
             }
 
+            // Добавление параметров в область видимости функции
             variables[name] = Variable(name, type, "null")
             functionScope.add(name)
         }
 
-        println(functionScope)
-
+        // Пропуск тела функции
         blockIndex++
         skipBlock()
     }

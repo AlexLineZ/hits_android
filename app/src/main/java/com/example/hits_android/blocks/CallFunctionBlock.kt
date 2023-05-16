@@ -21,8 +21,8 @@ class CallFunctionBlock(
         blockList.add(this)
     }
 
-    var functionName = ""
-    var arguments = ""
+    var functionName = "" // Название вызываемой функции
+    var arguments = ""    // Передаваемые аргументы
 
     // Вызов функции
     override fun runCodeBlock() {
@@ -34,8 +34,7 @@ class CallFunctionBlock(
         // Поиск определения функции
         while (blockList[blockIndex].getNameOfBlock() != FunctionBlock.BLOCK_NAME ||
             (blockList[blockIndex].getNameOfBlock() == FunctionBlock.BLOCK_NAME &&
-                    (blockList[blockIndex] as FunctionBlock).getFunctionName() !=
-                    functionName)) {
+                    (blockList[blockIndex] as FunctionBlock).getFunctionName() != functionName)) {
             try {
                 blockIndex--
 
