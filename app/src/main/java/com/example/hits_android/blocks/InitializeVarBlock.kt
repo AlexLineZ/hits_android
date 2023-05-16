@@ -1,12 +1,15 @@
 package com.example.hits_android.blocks
 
+import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
@@ -71,7 +74,7 @@ class InitializeVarBlock(
     }
 
     var name: String = ""  // Название переменной
-    var type: String = ""  // Тип переменной
+    var type: String = "Int"  // Тип переменной
     var value: String = "" // Значение переменной
 
     // Создание новой переменной
@@ -127,7 +130,12 @@ class InitializeVarBlock(
     @Composable
     override fun blockComposable(item: Block) {
         item as InitializeVarBlock
-        Row {
+        Row (
+            modifier = Modifier
+            .fillMaxWidth()
+            .height(70.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             dropdownMenuExample(item)
             itemNameField(item)
             itemValueField(item)
@@ -139,15 +147,20 @@ class InitializeVarBlock(
         val types = listOf("Int", "Bool", "String")
         val selectedType = remember { mutableStateOf<String?>(null) }
         val expanded = remember { mutableStateOf(false) }
-        Text(
-            text = selectedType.value ?: "Type",
+        Box(
             modifier = Modifier
                 .fillMaxWidth(0.3f)
+                .fillMaxHeight()
                 .clickable(onClick = { expanded.value = true }),
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.h6
-        )
-
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                textAlign = TextAlign.Center,
+                text = selectedType.value ?: type,
+                style = MaterialTheme.typography.h6,
+                maxLines = 1
+            )
+        }
         DropdownMenu(
             expanded = expanded.value,
             onDismissRequest = { expanded.value = false },
@@ -171,7 +184,7 @@ class InitializeVarBlock(
     @OptIn(ExperimentalComposeUiApi::class)
     @Composable
     fun itemNameField(item: InitializeVarBlock) {
-        val textState = remember { mutableStateOf(TextFieldValue()) }
+        val textState = remember { mutableStateOf(TextFieldValue(text = item.name)) }
         val keyboardController = LocalSoftwareKeyboardController.current
         val themeColors = MaterialTheme.colors
 
@@ -193,7 +206,7 @@ class InitializeVarBlock(
             ),
             keyboardActions = KeyboardActions(
                 onDone = {
-                    item.name = textState.value.toString()
+                    item.name = textState.value.text
                     keyboardController?.hide() // Скрываем клавиатуру
                 }
             )
@@ -203,7 +216,7 @@ class InitializeVarBlock(
     @OptIn(ExperimentalComposeUiApi::class)
     @Composable
     fun itemValueField(item: InitializeVarBlock) {
-        val textState = remember { mutableStateOf(TextFieldValue()) }
+        val textState = remember { mutableStateOf(TextFieldValue(text = item.value)) }
         val keyboardController = LocalSoftwareKeyboardController.current
         val themeColors = MaterialTheme.colors
 
@@ -225,7 +238,8 @@ class InitializeVarBlock(
             ),
             keyboardActions = KeyboardActions(
                 onDone = {
-                    item.value = textState.value.toString()
+                    item.value = textState.value.text
+                    Log.d("s", "${item.value}\n")
                     keyboardController?.hide() // Скрываем клавиатуру
                 }
             )

@@ -1,8 +1,12 @@
 package com.example.hits_android.blocks
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.example.hits_android.expressionParser.LexicalComponents
 import com.example.hits_android.expressionParser.ParsingFunctions
 import com.example.hits_android.expressionParser.Type
@@ -100,6 +104,9 @@ class AssignmentBlock(
 
     @Composable
     override fun blockComposable(item: Block) {
-        TODO("Not yet implemented")
+        Text(
+            text = item.title,
+            modifier = Modifier.padding(24.dp)
+        )
     }
 }

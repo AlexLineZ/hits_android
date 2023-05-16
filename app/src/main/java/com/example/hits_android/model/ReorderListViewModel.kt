@@ -32,12 +32,10 @@ class ReorderListViewModel: ViewModel() {
             WhileBlock(key = "1"),
             IfBlock(key = "2"),
             ElseBlock(key = "3"),
-            BeginBlock(key = "4"),
-            EndBlock(key = "5"),
-            ContinueBlock(key = "6"),
-            OutputBlock(key = "7"),
-            InitializeArrayBlock(key = "8"),
-            AssignmentBlock(key = "9")
+            ContinueBlock(key = "4"),
+            OutputBlock(key = "5"),
+            InitializeArrayBlock(key = "6"),
+            AssignmentBlock(key = "7")
         )
     )
 

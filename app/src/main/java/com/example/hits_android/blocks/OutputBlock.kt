@@ -1,10 +1,31 @@
 package com.example.hits_android.blocks
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
@@ -68,9 +89,59 @@ class OutputBlock(
 
     @Composable
     override fun blockComposable(item: Block) {
-        Text(
-            text = item.title,
-            modifier = Modifier.padding(24.dp)
+        item as OutputBlock
+        Row (
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(0.3f)
+                    .height(70.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = item.title,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.h6,
+                    maxLines = 1
+                )
+            }
+            itemConditionField(item)
+        }
+    }
+
+    @OptIn(ExperimentalComposeUiApi::class)
+    @Composable
+    fun itemConditionField(item: OutputBlock) {
+        val textState = remember { mutableStateOf(TextFieldValue(text = item.expression)) }
+        val keyboardController = LocalSoftwareKeyboardController.current
+        val themeColors = MaterialTheme.colors
+
+        TextField(
+            value = textState.value,
+            onValueChange = { textState.value = it },
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(4.dp),
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.White,
+                textColor = Color.Black,
+                cursorColor = themeColors.primary, // Основной цвет темы
+                focusedIndicatorColor = themeColors.primary, // Основной цвет темы
+                unfocusedIndicatorColor = Color.Gray
+            ),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Done // Изменяем действие клавиатуры на "Готово"
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    item.expression = textState.value.text
+                    keyboardController?.hide() // Скрываем клавиатуру
+                }
+            )
         )
     }
 }

@@ -1,15 +1,16 @@
 package com.example.hits_android.blocks
 
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.hits_android.expressionParser.scopes
 import com.example.hits_android.expressionParser.variables
-import org.burnoutcrew.reorderable.ReorderableLazyListState
 
 // Блок конца блока кода
 class EndBlock(
@@ -54,9 +55,18 @@ class EndBlock(
 
     @Composable
     override fun blockComposable(item: Block) {
-        Text(
-            text = item.title,
-            modifier = Modifier.padding(24.dp)
-        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(40.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = item.title,
+                modifier = Modifier
+                    .fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }

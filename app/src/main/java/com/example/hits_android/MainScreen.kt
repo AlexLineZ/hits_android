@@ -42,12 +42,15 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.compose.md_theme_dark_onPrimary
 import com.example.hits_android.blocks.*
 import com.example.hits_android.expressionParser.variables
 import com.example.hits_android.model.FlowViewModel
@@ -112,13 +115,12 @@ private fun VerticalReorderList(
                     Box(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .height(70.dp)
+                            .fillMaxSize()
                             .detectReorderAfterLongPress(state)
                             .scale(scale.value)
                             .shadow(elevation, RoundedCornerShape(24.dp))
                             .clip(RoundedCornerShape(24.dp))
-                            .background(Color.LightGray.copy(alpha = alpha.value))
+                            .background(md_theme_dark_onPrimary)
                             .clickable(
                                 onClick = {
                                     Log.d("s", "${vm.codeBlocksList.size}")
@@ -159,9 +161,9 @@ private fun BottomBar(
                                                 AssignmentBlock(key = "${vm.codeBlocksList.size}")
                                             }
 
-                                            "beginBlock" -> {
-                                                BeginBlock(key = "${vm.codeBlocksList.size}")
-                                            }
+//                                            "beginBlock" -> {
+//                                                BeginBlock(key = "${vm.codeBlocksList.size}")
+//                                            }
 
                                             "breakBlock" -> {
                                                 BreakBlock(key = "${vm.codeBlocksList.size}")
@@ -175,9 +177,9 @@ private fun BottomBar(
                                                 ElseBlock(key = "${vm.codeBlocksList.size}")
                                             }
 
-                                            "endBlock" -> {
-                                                EndBlock(key = "${vm.codeBlocksList.size}")
-                                            }
+//                                            "endBlock" -> {
+//                                                EndBlock(key = "${vm.codeBlocksList.size}")
+//                                            }
 
                                             "IfBlock" -> {
                                                 IfBlock(key = "${vm.codeBlocksList.size}")
@@ -204,10 +206,13 @@ private fun BottomBar(
                                             }
                                         }
                                     )
+                                    if (item.blockName == "ElseBlock" ||
+                                        item.blockName == "IfBlock" ||
+                                        item.blockName == "WhileBlock") {
+                                        add(vm.codeBlocksList.size, EndBlock(key = "${vm.codeBlocksList.size + 2}"))
+                                        add(vm.codeBlocksList.size, BeginBlock(key = "${vm.codeBlocksList.size + 1}"))
+                                    }
                                 }
-                            for (block in vm.codeBlocksList) {
-                                Log.d("s", "${block.blockName}\n")
-                            }
                         }
                     )
             ) {
