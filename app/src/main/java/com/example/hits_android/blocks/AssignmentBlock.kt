@@ -48,7 +48,7 @@ class AssignmentBlock(
 
         // Проверка существования переменной
         if (variables[variableName] == null && variables[arrName] == null) {
-            throw Exception("Чел, ты хочешь присвоить той переменной, которой нет...")
+            throw Exception("Присваивание к несуществующей переменной")
         }
 
         // Присвоение значения переменной типа Int

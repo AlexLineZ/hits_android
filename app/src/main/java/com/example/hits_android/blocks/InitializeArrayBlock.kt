@@ -37,7 +37,7 @@ class InitializeArrayBlock(
     override fun runCodeBlock() {
         // Пересоздание массива
         if (variables[arrayName] != null) {
-            throw Error("Чел, ты пересоздаешь переменную")
+            throw Exception("Происходит пересоздание переменной")
         }
 
         // Создание массива с элементами типа Int

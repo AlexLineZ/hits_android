@@ -41,7 +41,7 @@ class ContinueBlock(
                 }
             }
             catch (e: ArrayIndexOutOfBoundsException) {
-                throw Error("Continue не относится к циклу")
+                throw Exception("Continue не относится к циклу")
             }
         }
 

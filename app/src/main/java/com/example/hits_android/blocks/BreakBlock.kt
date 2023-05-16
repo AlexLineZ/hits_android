@@ -41,7 +41,7 @@ class BreakBlock(
                 }
             }
             catch (e: ArrayIndexOutOfBoundsException) {
-                throw Error("Berak не относится к циклу")
+                throw Exception("Break не относится к циклу")
             }
         }
 

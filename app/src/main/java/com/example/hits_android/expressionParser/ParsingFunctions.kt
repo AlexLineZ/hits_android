@@ -102,7 +102,7 @@ class ParsingFunctions(private var tokens: List<Token>){
             else if (nowToken.type.name == Name.VARIABLE){
                 // Если переменной нет, то выдать ошибку
                 if (variables[nowToken.text] == null) {
-                    throw Exception("Где-то не задал переменную, ищи сам")
+                    throw Exception("Переменная не была задана")
                 }
 
                 // Если следующий токен - квадратная скобка, то закинуть элемент массива
@@ -132,7 +132,7 @@ class ParsingFunctions(private var tokens: List<Token>){
                     }
                     // Выход за пределы массива
                     catch (e: ArrayIndexOutOfBoundsException){
-                        throw Error("Vihod za predeli massiva")
+                        throw Exception("Произошел выход за пределы массива")
                     }
                 }
 
@@ -203,14 +203,14 @@ class ParsingFunctions(private var tokens: List<Token>){
                 Type.INT,
                 "1"
             ) else Variable("", Type.INT, "0")
-            else -> throw Error("OMG")
+            else -> throw Exception("OMG")
         }
     }
 
     private fun getTokenOrError(vararg target: String): Token{
         val token = findToken(*target)
         if (token == null){
-            throw Error("Cringe")
+            throw Exception("Синтаксическая ошибка")
         }
         else {
             return token
