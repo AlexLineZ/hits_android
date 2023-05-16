@@ -1,5 +1,6 @@
 package com.example.hits_android.blocks
 
+import androidx.compose.ui.platform.InspectableModifier
 import com.example.hits_android.expressionParser.scopes
 
 // Блок выхода из цикла
@@ -30,6 +31,9 @@ class BreakBlock(
 
                 if (blockList[blockIndex].getNameOfBlock() == BeginBlock.BLOCK_NAME) {
                     scopes.destoryScope()
+                }
+                else if (blockList[blockIndex].getNameOfBlock() == EndBlock.BLOCK_NAME) {
+                    scopes.addScope(scopes.getScope())
                 }
             }
             catch (e: ArrayIndexOutOfBoundsException) {

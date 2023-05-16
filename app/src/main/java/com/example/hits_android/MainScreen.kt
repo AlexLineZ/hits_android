@@ -377,25 +377,29 @@ fun TestProgram(){
     _output.value = ""
 
     val s0 = InitializeVarBlock(-1, -1, "S", "S", true)
-    s0.testBlock("a", "Int", "0;")
+    s0.testBlock("a", "Int", "10;")
 
     val s1 = WhileBlock(-1, -1, "S", "S", true)
-    s1.testBlock("a < 1;")
+    s1.testBlock("1;")
 
-    val s10 = BeginBlock(-1, -1, "S", "S", true)
+    val s2 = BeginBlock(-1, -1, "S", "S", true)
 
-    val s2 = AssignmentBlock(-1, -1, "S", "S", true)
-    s2.testBlock("a", "a + 1;")
+    val s3 = IfBlock(-1, -1, "S", "S", true)
+    s3.testBlock("a < 100;")
 
-    val s33 = ContinueBlock(-1, -1, "S", "S", true)
+    val s4 = BeginBlock(-1, -1, "S", "S", true)
 
-    val s4 = AssignmentBlock(-1, -1, "S", "S", true)
-    s4.testBlock("a", "a - 1;")
+    val s5 = OutputBlock(-1, -1, "S", "S", true)
+    s5.testBlock("a;")
 
-    val s5 = EndBlock(-1, -1, "S", "S", true)
+    val s6 = EndBlock(-1, -1, "S", "S", true)
 
-    val s6 = OutputBlock(-1, -1, "S", "S", true)
-    s6.testBlock("a;")
+    val s7 = BreakBlock(-1, -1, "S", "S", true)
+
+    val s8 = EndBlock(-1, -1, "S", "S", true)
+
+    val s9 = OutputBlock(-1, -1, "S", "S", true)
+    s9.testBlock("a;")
 
 }
 
