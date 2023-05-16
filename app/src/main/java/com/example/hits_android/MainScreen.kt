@@ -2,6 +2,7 @@ package com.example.hits_android
 
 
 import android.annotation.SuppressLint
+import android.telecom.Call
 import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
@@ -376,27 +377,30 @@ fun TestProgram(){
     blockIndex = 0
     _output.value = ""
 
-    val s0 = InitializeVarBlock(-1, -1, "S", "S", true)
-    s0.testBlock("a", "Int", "0;")
+    val s0 = FunctionBlock(-1, -1, "S", "S", false)
+    s0.testBlock("Func", "a: Int, b: Int")
 
-    val s1 = WhileBlock(-1, -1, "S", "S", true)
-    s1.testBlock("a < 1;")
+    val s1 = BeginBlock(-1, -1, "S", "S", false)
 
-    val s10 = BeginBlock(-1, -1, "S", "S", true)
+   // val g0 = InitializeVarBlock(-1, -1, "S", "S", false)
+    //g0.testBlock("a", "Int", "10;")
 
-    val s2 = AssignmentBlock(-1, -1, "S", "S", true)
-    s2.testBlock("a", "a + 1;")
+    val s3 = OutputBlock(-1, -1, "S", "S", false)
+    s3.testBlock("a + b;")
 
-    val s33 = ContinueBlock(-1, -1, "S", "S", true)
+    val s2 = EndBlock(-1, -1, "S", "S", false)
 
-    val s4 = AssignmentBlock(-1, -1, "S", "S", true)
-    s4.testBlock("a", "a - 1;")
+    val s5 = OutputBlock(-1, -1, "s", "s", true)
+    s5.testBlock("11;")
 
-    val s5 = EndBlock(-1, -1, "S", "S", true)
+    val idk = InitializeVarBlock(-1, -1, "g", "g", false)
+    idk.testBlock("idk", "Int", "111;")
 
-    val s6 = OutputBlock(-1, -1, "S", "S", true)
-    s6.testBlock("a;")
+    val s4 = CallFunctionBlock(-1, -1, "S", "S", false)
+    s4.testBlock("Func", "idk, 17 + 3")
 
+    //val g1 = OutputBlock(-1, -1, "s", "S", false)
+   // g1.testBlock("a;")
 }
 
 

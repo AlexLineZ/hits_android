@@ -17,6 +17,15 @@ class Scope() {
 
     // Возврат текущей области видимости
     fun getScope(): MutableList<String> {
+        if (isEmpty()) {
+            return MutableList<String>(0){""}
+        }
+
         return scopesList[scopesList.size - 1]
+    }
+
+    // Проверка списка областей видимости на пустоту
+    fun isEmpty(): Boolean {
+        return scopesList.size == 0
     }
 }
