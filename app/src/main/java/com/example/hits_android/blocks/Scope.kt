@@ -1,5 +1,8 @@
 package com.example.hits_android.blocks
 
+import com.example.hits_android.expressionParser.scopes
+import com.example.hits_android.expressionParser.variables
+
 // Область видимости переменных
 class Scope() {
     // Список всех областей видимости

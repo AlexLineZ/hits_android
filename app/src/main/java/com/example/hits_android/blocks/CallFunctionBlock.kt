@@ -46,7 +46,7 @@ class CallFunctionBlock(
                 }
             }
             catch (e: ArrayIndexOutOfBoundsException) {
-                throw Exception("Вызываемая функция не была найдена.")
+                throw Exception("Функция ${functionName} не была найдена при вызове.")
             }
         }
 
@@ -56,12 +56,23 @@ class CallFunctionBlock(
         // Передача аргументов
         val argList = arguments.split(",").toMutableList()
 
+        if (argList.size != (blockList[blockIndex] as FunctionBlock).getParameters().size) {
+            throw Exception("Кол-во аргументов при вызове функции ${functionName} не совпадает с кол-вом" +
+                    " её параметров.")
+        }
+
         for (i in argList.indices) {
             argList[i] = argList[i].replace(" ", "")
             argList[i] += ";"
 
             val expression = ParsingFunctions(LexicalComponents(argList[i]).getTokensFromCode())
-            variables[(blockList[blockIndex] as FunctionBlock).getParameters()[i]]?.value = expression.parseExpression()!!.value
+            val args = expression.parseExpression()!!
+
+            if (variables[(blockList[blockIndex] as FunctionBlock).getParameters()[i]]?.type != args.type) {
+                throw Exception("При вызове функции ${functionName} переданы аргументы неподходящих типов.")
+            }
+
+            variables[(blockList[blockIndex] as FunctionBlock).getParameters()[i]]?.value = args.value
         }
 
         // Выполнение тела функции
