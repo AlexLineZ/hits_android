@@ -378,15 +378,15 @@ fun TestProgram(){
     _output.value = ""
 
     val s0 = FunctionBlock(-1, -1, "S", "S", false)
-    s0.testBlock("Func", "a: Int, b: Int")
+    s0.testBlock("Func", "")
 
     val s1 = BeginBlock(-1, -1, "S", "S", false)
 
-   // val g0 = InitializeVarBlock(-1, -1, "S", "S", false)
-    //g0.testBlock("a", "Int", "10;")
+    val g0 = InitializeVarBlock(-1, -1, "S", "S", false)
+    g0.testBlock("a", "Int", "10;")
 
     val s3 = OutputBlock(-1, -1, "S", "S", false)
-    s3.testBlock("a + b;")
+    s3.testBlock("a;")
 
     val s2 = EndBlock(-1, -1, "S", "S", false)
 
@@ -397,10 +397,7 @@ fun TestProgram(){
     idk.testBlock("idk", "Int", "111;")
 
     val s4 = CallFunctionBlock(-1, -1, "S", "S", false)
-    s4.testBlock("Func", "idk, 17 + 3")
-
-    //val g1 = OutputBlock(-1, -1, "s", "S", false)
-   // g1.testBlock("a;")
+    s4.testBlock("Func", "")
 }
 
 

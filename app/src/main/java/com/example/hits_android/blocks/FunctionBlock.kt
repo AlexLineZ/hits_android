@@ -37,6 +37,10 @@ class FunctionBlock(
     override fun runCodeBlock() {
         val parList = parameters.split(",").toMutableList()
 
+        if (parameters == "") {
+            parList.removeAt(0)
+        }
+
         // Инициализация параметров
         for (i in parList.indices) {
             parList[i] = parList[i].replace(" ", "")

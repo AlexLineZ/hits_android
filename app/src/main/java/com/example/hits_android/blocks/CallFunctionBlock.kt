@@ -56,6 +56,10 @@ class CallFunctionBlock(
         // Передача аргументов
         val argList = arguments.split(",").toMutableList()
 
+        if (arguments == "") {
+            argList.removeAt(0)
+        }
+
         if (argList.size != (blockList[blockIndex] as FunctionBlock).getParameters().size) {
             throw Exception("Кол-во аргументов при вызове функции ${functionName} не совпадает с кол-вом" +
                     " её параметров.")
@@ -76,7 +80,7 @@ class CallFunctionBlock(
         }
 
         // Выполнение тела функции
-        blockIndex += 2
+        blockIndex += 1
 
         while (blockList[blockIndex].getNameOfBlock() != EndBlock.BLOCK_NAME) {
             blockList[blockIndex].runCodeBlock()
