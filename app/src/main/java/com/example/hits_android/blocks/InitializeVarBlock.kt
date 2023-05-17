@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -130,15 +131,23 @@ class InitializeVarBlock(
     @Composable
     override fun BlockComposable(item: Block, codeBlocksList: List<Block>) {
         item as InitializeVarBlock
-        Row(
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(70.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxSize()
+                .height(70.dp)
+                .padding(start = calculatePadding(codeBlocksList, item.key))
+                .clip(RoundedCornerShape(24.dp))
+                .background(Color.Gray)
         ) {
-            dropdownMenuExample(item)
-            ItemNameField(item)
-            ItemValueField(item)
+            Row(
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                dropdownMenuExample(item)
+                ItemNameField(item)
+                ItemValueField(item)
+            }
         }
     }
 

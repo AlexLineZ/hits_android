@@ -1,5 +1,6 @@
 package com.example.hits_android.blocks
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
@@ -103,26 +105,34 @@ class WhileBlock(
     @Composable
     override fun BlockComposable(item: Block, codeBlocksList: List<Block>) {
         item as WhileBlock
-        Row(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(10.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .padding(start = calculatePadding(codeBlocksList, item.key))
+                .clip(RoundedCornerShape(24.dp))
+                .background(Color.Gray)
         ) {
-            Box(
+            Row(
                 modifier = Modifier
-                    .fillMaxWidth(0.3f)
-                    .height(70.dp),
-                contentAlignment = Alignment.Center
+                    .fillMaxSize()
+                    .padding(10.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = item.title,
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.h6,
-                    maxLines = 1
-                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth(0.3f)
+                        .height(70.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = item.title,
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.h6,
+                        maxLines = 1
+                    )
+                }
+                ItemConditionField(item)
             }
-            ItemConditionField(item)
         }
     }
 

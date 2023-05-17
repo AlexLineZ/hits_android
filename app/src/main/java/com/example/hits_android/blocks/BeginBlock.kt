@@ -3,6 +3,7 @@ package com.example.hits_android.blocks
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -70,7 +71,9 @@ class BeginBlock(
     override fun BlockComposable(item: Block, codeBlocksList: List<Block>) {
         Box(
             modifier = Modifier
-                .fillMaxWidth()
+                .padding(start = calculatePadding(codeBlocksList, item.key))
+                .clip(RoundedCornerShape(24.dp))
+                .background(Color.Gray)
                 .height(40.dp),
             contentAlignment = Alignment.Center
         ) {

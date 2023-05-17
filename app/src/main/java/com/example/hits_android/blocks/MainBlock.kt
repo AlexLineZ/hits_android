@@ -83,19 +83,10 @@ class FinishProgramBlock(
 
     @Composable
     override fun BlockComposable(item: Block, codeBlocksList: List<Block>) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(start = 40.dp)
-                .clip(RoundedCornerShape(24.dp))
-                .background(Color.Gray)
-        ) {
-            Text(
-                text = item.title,
-                modifier = Modifier.padding(24.dp)
-            )
-        }
-
+        Text(
+            text = item.title,
+            modifier = Modifier.padding(24.dp)
+        )
     }
 }
 
@@ -107,15 +98,16 @@ fun calculatePadding(codeBlocksList: List<Block>, key: String): Dp {
             key -> {
                 flag = true
                 when (block.blockName) {
-                    "beginBlock" -> paddingValue += 40
-                    "endBlock" -> paddingValue -= 40
+                    "beginBlock" -> paddingValue += 25
+                    "endBlock" -> {}
                     else -> {}
                 }
             }
+
             else -> {
                 when (block.blockName) {
-                    "beginBlock" -> paddingValue += 40
-                    "endBlock" -> paddingValue -= 40
+                    "beginBlock" -> paddingValue += 25
+                    "endBlock" -> paddingValue -= 25
                     else -> {}
                 }
             }
@@ -123,8 +115,7 @@ fun calculatePadding(codeBlocksList: List<Block>, key: String): Dp {
         if (flag) {
             break
         }
+        paddingValue = (if (paddingValue >= 0) (paddingValue) else (0))
     }
-//    Log.d("s", "${codeBlocksList}")
-    Log.d("s", "${paddingValue}")
-    return (if (paddingValue >= 0) (paddingValue.dp) else (0.dp))
+    return paddingValue.dp
 }
