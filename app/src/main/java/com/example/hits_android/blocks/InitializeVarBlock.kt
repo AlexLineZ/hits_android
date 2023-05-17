@@ -147,7 +147,6 @@ class InitializeVarBlock(
             Text(
                 textAlign = TextAlign.Center,
                 text = selectedType.value ?: type,
-                style = MaterialTheme.typography.h6,
                 maxLines = 1
             )
         }
@@ -163,10 +162,9 @@ class InitializeVarBlock(
                         selectedType.value = type
                         item.type = type
                         expanded.value = false
-                    }
-                ) {
-                    Text(text = type)
-                }
+                    },
+                    text = { Text(text = type) }
+                )
             }
         }
     }
@@ -176,20 +174,12 @@ class InitializeVarBlock(
     fun ItemNameField(item: InitializeVarBlock) {
         val textState = remember { mutableStateOf(TextFieldValue(text = item.name)) }
         val keyboardController = LocalSoftwareKeyboardController.current
-        val themeColors = MaterialTheme.colors
 
         TextField(
             value = textState.value,
             onValueChange = { textState.value = it },
             modifier = Modifier.fillMaxWidth(0.5f),
             shape = RoundedCornerShape(4.dp),
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = Color.White,
-                textColor = Color.Black,
-                cursorColor = themeColors.primary, // Основной цвет темы
-                focusedIndicatorColor = themeColors.primary, // Основной цвет темы
-                unfocusedIndicatorColor = Color.Gray
-            ),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Done // Изменяем действие клавиатуры на "Готово"
@@ -208,20 +198,12 @@ class InitializeVarBlock(
     fun ItemValueField(item: InitializeVarBlock) {
         val textState = remember { mutableStateOf(TextFieldValue(text = item.value)) }
         val keyboardController = LocalSoftwareKeyboardController.current
-        val themeColors = MaterialTheme.colors
 
         TextField(
             value = textState.value,
             onValueChange = { textState.value = it },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(4.dp),
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = Color.White,
-                textColor = Color.Black,
-                cursorColor = themeColors.primary, // Основной цвет темы
-                focusedIndicatorColor = themeColors.primary, // Основной цвет темы
-                unfocusedIndicatorColor = Color.Gray
-            ),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Done // Изменяем действие клавиатуры на "Готово"

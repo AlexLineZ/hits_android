@@ -107,7 +107,6 @@ class OutputBlock(
                     Text(
                         text = item.title,
                         textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.h6,
                         maxLines = 1
                     )
                 }
@@ -121,20 +120,12 @@ class OutputBlock(
     fun itemConditionField(item: OutputBlock) {
         val textState = remember { mutableStateOf(TextFieldValue(text = item.expression)) }
         val keyboardController = LocalSoftwareKeyboardController.current
-        val themeColors = MaterialTheme.colors
 
         TextField(
             value = textState.value,
             onValueChange = { textState.value = it },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(4.dp),
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = Color.White,
-                textColor = Color.Black,
-                cursorColor = themeColors.primary, // Основной цвет темы
-                focusedIndicatorColor = themeColors.primary, // Основной цвет темы
-                unfocusedIndicatorColor = Color.Gray
-            ),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Done // Изменяем действие клавиатуры на "Готово"
