@@ -48,9 +48,11 @@ import org.burnoutcrew.reorderable.detectReorderAfterLongPress
 import org.burnoutcrew.reorderable.rememberReorderableLazyListState
 import org.burnoutcrew.reorderable.reorderable
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.navigation.compose.currentBackStackEntryAsState
 
 class MainScreen : Screen {
@@ -227,43 +229,45 @@ sealed class BottomBarScreen(
     val icon_focused: Int
 ) {
 
-    // for home
-    object Home: BottomBarScreen(
-        route = "home",
-        title = "Home",
+    object Coding: BottomBarScreen(
+        route = "coding",
+        title = "Coding",
         icon = R.drawable.ic_bottom_home,
         icon_focused = R.drawable.ic_bottom_home_focused
     )
 
-    // for report
-    object Report: BottomBarScreen(
-        route = "report",
-        title = "Report",
+    object Console: BottomBarScreen(
+        route = "console",
+        title = "Console",
         icon = R.drawable.ic_bottom_report,
         icon_focused = R.drawable.ic_bottom_report_focused
     )
 
-    // for report
-    object Profile: BottomBarScreen(
-        route = "profile",
-        title = "Profile",
+    object Settings: BottomBarScreen(
+        route = "settings",
+        title = "Settings",
         icon = R.drawable.ic_bottom_profile,
         icon_focused = R.drawable.ic_bottom_profile_focused
     )
 
+    object Start: BottomBarScreen(
+        route = "start",
+        title = "Start",
+        icon = R.drawable.ic_bottom_home,
+        icon_focused = R.drawable.ic_bottom_home_focused
+    )
 }
 
 @Composable
-fun BottomNavGraph(
-    navController: NavHostController
-) {
+fun BottomNavGraph(navController: NavHostController) {
+
     val vm = ReorderListViewModel()
     val viewModel: FlowViewModel = viewModel()
     NavHost(
         navController = navController,
-        startDestination = BottomBarScreen.Home.route
+        startDestination = BottomBarScreen.Coding.route
     ) {
-        composable(route = BottomBarScreen.Home.route) {
+        composable(route = BottomBarScreen.Coding.route) {
             Surface {
                 Column {
                     BottomBar(vm)
@@ -271,10 +275,10 @@ fun BottomNavGraph(
                 }
             }
         }
-        composable(route = BottomBarScreen.Report.route) {
-            Settings(navController)
+        composable(route = BottomBarScreen.Console.route) {
+            Console(navController, viewModel)
         }
-        composable(route = BottomBarScreen.Profile.route) {
+        composable(route = BottomBarScreen.Settings.route) {
             Settings(navController)
         }
     }
@@ -297,9 +301,10 @@ fun BottomNav() {
 @Composable
 fun BottomBar(navController: NavHostController) {
     val screens = listOf(
-        BottomBarScreen.Home,
-        BottomBarScreen.Report,
-        BottomBarScreen.Profile
+        BottomBarScreen.Coding,
+        BottomBarScreen.Console,
+        BottomBarScreen.Settings,
+        BottomBarScreen.Start
     )
 
     val navStackBackEntry by navController.currentBackStackEntryAsState()
@@ -321,7 +326,6 @@ fun BottomBar(navController: NavHostController) {
             )
         }
     }
-
 }
 
 @Composable
@@ -330,6 +334,8 @@ fun RowScope.AddItem(
     currentDestination: NavDestination?,
     navController: NavHostController
 ) {
+    val viewModel: FlowViewModel = viewModel()
+    val isProgramRunning by viewModel.isProgramRunning.collectAsState()
     val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
 
     val background =
@@ -338,15 +344,28 @@ fun RowScope.AddItem(
     val contentColor =
         if (selected) Color.White else Color.Black
 
+    val buttonIcon = remember { mutableStateOf(if (isProgramRunning) Icons.Default.Close else Icons.Default.PlayArrow) }
+
     Box(
         modifier = Modifier
             .height(40.dp)
             .clip(CircleShape)
             .background(background)
             .clickable(onClick = {
-                navController.navigate(screen.route) {
-                    popUpTo(navController.graph.findStartDestination().id)
-                    launchSingleTop = true
+                if (screen == BottomBarScreen.Start) {
+                    if (isProgramRunning) {
+                        viewModel.stopProgram()
+                        buttonIcon.value = Icons.Default.PlayArrow
+                    } else {
+                        viewModel.startProgram()
+                        buttonIcon.value = Icons.Default.Close
+                        navController.navigate(BottomBarScreen.Console.route)
+                    }
+                } else {
+                    navController.navigate(screen.route) {
+                        popUpTo(navController.graph.findStartDestination().id)
+                        launchSingleTop = true
+                    }
                 }
             })
     ) {
@@ -359,17 +378,27 @@ fun RowScope.AddItem(
             Icon(
                 painter = painterResource(id = if (selected) screen.icon_focused else screen.icon),
                 contentDescription = "icon",
-                tint = contentColor
+                tint = contentColor,
+                modifier = Modifier.size(24.dp)
             )
-            AnimatedVisibility(visible = selected) {
+            AnimatedVisibility(visible = selected && screen != BottomBarScreen.Start) {
                 Text(
                     text = screen.title,
                     color = contentColor
                 )
             }
+            if (screen == BottomBarScreen.Start) {
+                Icon(
+                    painter = rememberVectorPainter(buttonIcon.value),
+                    contentDescription = "button",
+                    tint = contentColor,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
         }
     }
 }
+
 
 @Composable
 fun Console(navController: NavController, viewModel: FlowViewModel) {
