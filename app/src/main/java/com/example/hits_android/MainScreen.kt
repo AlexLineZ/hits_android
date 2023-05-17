@@ -1,7 +1,6 @@
 package com.example.hits_android
 
 
-import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
@@ -14,15 +13,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,12 +22,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -52,13 +47,17 @@ import org.burnoutcrew.reorderable.ReorderableItem
 import org.burnoutcrew.reorderable.detectReorderAfterLongPress
 import org.burnoutcrew.reorderable.rememberReorderableLazyListState
 import org.burnoutcrew.reorderable.reorderable
-
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.navigation.compose.currentBackStackEntryAsState
 
 class MainScreen : Screen {
     @Composable
     override fun Content() {
         Hits_androidTheme {
-            NavBar()
+            BottomNav()
         }
     }
 }
@@ -221,131 +220,156 @@ private fun BottomBar(
     }
 }
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+sealed class BottomBarScreen(
+    val route: String,
+    val title: String,
+    val icon: Int,
+    val icon_focused: Int
+) {
+
+    // for home
+    object Home: BottomBarScreen(
+        route = "home",
+        title = "Home",
+        icon = R.drawable.ic_bottom_home,
+        icon_focused = R.drawable.ic_bottom_home_focused
+    )
+
+    // for report
+    object Report: BottomBarScreen(
+        route = "report",
+        title = "Report",
+        icon = R.drawable.ic_bottom_report,
+        icon_focused = R.drawable.ic_bottom_report_focused
+    )
+
+    // for report
+    object Profile: BottomBarScreen(
+        route = "profile",
+        title = "Profile",
+        icon = R.drawable.ic_bottom_profile,
+        icon_focused = R.drawable.ic_bottom_profile_focused
+    )
+
+}
+
 @Composable
-fun NavBar() {
-    val scaffoldState = rememberScaffoldState()
-    val navController = rememberNavController()
+fun BottomNavGraph(
+    navController: NavHostController
+) {
     val vm = ReorderListViewModel()
     val viewModel: FlowViewModel = viewModel()
-    var isOpen by remember { mutableStateOf(false) }
+    NavHost(
+        navController = navController,
+        startDestination = BottomBarScreen.Home.route
+    ) {
+        composable(route = BottomBarScreen.Home.route) {
+            Surface {
+                Column {
+                    BottomBar(vm)
+                    Sandbox(vm)
+                }
+            }
+        }
+        composable(route = BottomBarScreen.Report.route) {
+            Settings(navController)
+        }
+        composable(route = BottomBarScreen.Profile.route) {
+            Settings(navController)
+        }
+    }
+}
+
+@Composable
+fun BottomNav() {
+    val navController = rememberNavController()
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        scaffoldState = scaffoldState,
-        isFloatingActionButtonDocked = true,
-        floatingActionButtonPosition = FabPosition.Center,
-        content = {
-            NavHost(
-                navController = navController,
-                startDestination = "Coding"
-            ) {
-                composable("Coding") {
-                    Surface {
-                        Column {
-                            BottomBar(vm)
-                            Sandbox(vm)
-                        }
-                    }
-                }
+        bottomBar = { BottomBar(navController = navController) }
+    ) {
+        Modifier.padding(it)
+        BottomNavGraph(
+            navController = navController
+        )
+    }
+}
 
-                composable("Console") {
-                    Console(navController, viewModel)
-                }
+@Composable
+fun BottomBar(navController: NavHostController) {
+    val screens = listOf(
+        BottomBarScreen.Home,
+        BottomBarScreen.Report,
+        BottomBarScreen.Profile
+    )
 
-                composable("Settings") {
-                    Settings(navController)
-                }
-            }
-        },
-        bottomBar = {
-            BottomAppBar(
-                cutoutShape = CircleShape
-            ) {
-                val bottomMenuItemsList = prepareBottomMenu()
-                var selectedItem by remember { mutableStateOf("Coding") }
+    val navStackBackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navStackBackEntry?.destination
 
-                bottomMenuItemsList.forEachIndexed { index, menuItem ->
-                    if (index == 2) {
-                        BottomNavigationItem(
-                            selected = false,
-                            onClick = {},
-                            enabled = false,
-                            label = { }
-                        )
-                    }
+    Row(
+        modifier = Modifier
+            .padding(start = 10.dp, end = 10.dp, top = 8.dp, bottom = 8.dp)
+            .background(Color.Transparent)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        screens.forEach { screen ->
+            AddItem(
+                screen = screen,
+                currentDestination = currentDestination,
+                navController = navController
+            )
+        }
+    }
 
-                    if (menuItem.label == "Start") {
-                        val isProgramRunning by viewModel.isProgramRunning.collectAsState()
-                        BottomNavigationItem(
-                            selected = (selectedItem == menuItem.label),
-                            onClick = {
-                                selectedItem = menuItem.label
-                                if (isProgramRunning) {
-                                    viewModel.stopProgram()
-                                } else {
-                                    viewModel.startProgram()
-                                    navController.navigate("Console")
-                                }
-                            },
-                            enabled = true,
-                            label = {
-                                val buttonIcon =
-                                    if (isProgramRunning) Icons.Default.Close else Icons.Default.PlayArrow
-                                Icon(
-                                    painter = rememberVectorPainter(buttonIcon),
-                                    contentDescription = menuItem.label
-                                )
-                            }
-                        )
-                    } else {
-                        BottomNavigationItem(
-                            selected = (selectedItem == menuItem.label),
-                            onClick = {
-                                selectedItem = menuItem.label
-                                navController.navigate(menuItem.label)
-                            },
-                            enabled = true,
-                            label = {
-                                Icon(
-                                    painter = rememberVectorPainter(menuItem.icon),
-                                    contentDescription = menuItem.label
-                                )
-                            }
-                        )
-                    }
+}
+
+@Composable
+fun RowScope.AddItem(
+    screen: BottomBarScreen,
+    currentDestination: NavDestination?,
+    navController: NavHostController
+) {
+    val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
+
+    val background =
+        if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.6f) else Color.Transparent
+
+    val contentColor =
+        if (selected) Color.White else Color.Black
+
+    Box(
+        modifier = Modifier
+            .height(40.dp)
+            .clip(CircleShape)
+            .background(background)
+            .clickable(onClick = {
+                navController.navigate(screen.route) {
+                    popUpTo(navController.graph.findStartDestination().id)
+                    launchSingleTop = true
                 }
-            }
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    isOpen = !isOpen
-                }
-            ) {
-                val buttonIcon =
-                    if (!isOpen) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown
-                Icon(
-                    painter = rememberVectorPainter(buttonIcon),
-                    contentDescription = "forYura"
+            })
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(start = 10.dp, end = 10.dp, top = 8.dp, bottom = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = if (selected) screen.icon_focused else screen.icon),
+                contentDescription = "icon",
+                tint = contentColor
+            )
+            AnimatedVisibility(visible = selected) {
+                Text(
+                    text = screen.title,
+                    color = contentColor
                 )
             }
         }
-    )
-}}
-
-private fun prepareBottomMenu(): List<BottomMenuItem> {
-    val bottomMenuItemsList = arrayListOf<BottomMenuItem>()
-
-    bottomMenuItemsList.add(BottomMenuItem(label = "Settings", icon = Icons.Default.Settings))
-    bottomMenuItemsList.add(BottomMenuItem(label = "Coding", icon = Icons.Default.Build))
-    bottomMenuItemsList.add(BottomMenuItem(label = "Console", icon = Icons.Default.DateRange))
-    bottomMenuItemsList.add(BottomMenuItem(label = "Start", icon = Icons.Default.PlayArrow))
-
-    return bottomMenuItemsList
+    }
 }
-
-data class BottomMenuItem(val label: String, val icon: ImageVector)
 
 @Composable
 fun Console(navController: NavController, viewModel: FlowViewModel) {
@@ -436,6 +460,5 @@ fun TestProgram() {
     s6.testBlock("a;")
 
 }
-
 
 
