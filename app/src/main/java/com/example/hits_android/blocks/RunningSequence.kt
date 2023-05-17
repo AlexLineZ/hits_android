@@ -10,8 +10,7 @@ fun skipBlock() {
     do {
         if (blockList[blockIndex].getNameOfBlock() == EndBlock.BLOCK_NAME) {
             currentBalance++
-        }
-        else if (blockList[blockIndex].getNameOfBlock() == BeginBlock.BLOCK_NAME) {
+        } else if (blockList[blockIndex].getNameOfBlock() == BeginBlock.BLOCK_NAME) {
             currentBalance--
         }
 

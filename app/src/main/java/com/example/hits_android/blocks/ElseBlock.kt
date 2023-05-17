@@ -14,13 +14,14 @@ class ElseBlock(
     override var previousID: Int = -1,
     override var nextID: Int = -1,
     override val key: String,
-    override val title:String = "Else",
-    override val isDragOverLocked:Boolean = false
-): Block {
+    override val title: String = "Else",
+    override val isDragOverLocked: Boolean = false
+) : Block {
     // Название блока
     companion object {
         val BLOCK_NAME = "ElseBlock"
     }
+
     override val blockName = BLOCK_NAME
 
     // Добавление блока в список блоков
@@ -48,7 +49,7 @@ class ElseBlock(
     }
 
     @Composable
-    override fun blockComposable(item: Block) {
+    override fun BlockComposable(item: Block, codeBlocksList: List<Block>) {
         Text(
             text = item.title,
             modifier = Modifier.padding(24.dp)

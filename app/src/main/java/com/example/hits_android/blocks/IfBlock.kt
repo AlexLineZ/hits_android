@@ -1,6 +1,7 @@
 package com.example.hits_android.blocks
 
 import android.graphics.Paint.Align
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -22,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
@@ -38,13 +40,14 @@ class IfBlock(
     override var previousID: Int = -1,
     override var nextID: Int = -1,
     override val key: String,
-    override val title:String = "If",
-    override val isDragOverLocked:Boolean = false
-): Block {
+    override val title: String = "If",
+    override val isDragOverLocked: Boolean = false
+) : Block {
     // Название блока
     companion object {
         val BLOCK_NAME = "IfBlock"
     }
+
     override val blockName = BLOCK_NAME
 
     // Условие
@@ -98,34 +101,42 @@ class IfBlock(
     }
 
     @Composable
-    override fun blockComposable(item: Block) {
+    override fun BlockComposable(item: Block, codeBlocksList: List<Block>) {
         item as IfBlock
-        Row (
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(10.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .padding(start = calculatePadding(codeBlocksList, item.key))
+                .clip(RoundedCornerShape(24.dp))
+                .background(Color.Gray)
         ) {
-            Box(
+            Row(
                 modifier = Modifier
-                    .fillMaxWidth(0.3f)
-                    .height(70.dp),
-                contentAlignment = Alignment.Center
+                    .fillMaxSize()
+                    .padding(10.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = item.title,
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.h6,
-                    maxLines = 1
-                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth(0.3f)
+                        .height(70.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = item.title,
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.h6,
+                        maxLines = 1
+                    )
+                }
+                ItemConditionField(item)
             }
-            itemConditionField(item)
         }
     }
 
     @OptIn(ExperimentalComposeUiApi::class)
     @Composable
-    fun itemConditionField(item: IfBlock) {
+    fun ItemConditionField(item: IfBlock) {
         val textState = remember { mutableStateOf(TextFieldValue(text = item.condition)) }
         val keyboardController = LocalSoftwareKeyboardController.current
         val themeColors = MaterialTheme.colors
@@ -134,7 +145,7 @@ class IfBlock(
             value = textState.value,
             onValueChange = { textState.value = it },
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(4.dp),
+            shape = RoundedCornerShape(6.dp),
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = Color.White,
                 textColor = Color.Black,

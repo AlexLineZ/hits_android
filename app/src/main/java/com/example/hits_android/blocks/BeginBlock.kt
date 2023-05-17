@@ -29,13 +29,14 @@ class BeginBlock(
     override var previousID: Int = -1,
     override var nextID: Int = -1,
     override val key: String,
-    override val title:String = "Begin",
-    override val isDragOverLocked:Boolean = false
-): Block {
+    override val title: String = "Begin",
+    override val isDragOverLocked: Boolean = false
+) : Block {
     // Название блока
-    companion object{
+    companion object {
         val BLOCK_NAME = "beginBlock"
     }
+
     override val blockName = BLOCK_NAME
 
     // Добавление блока в список блоков
@@ -66,7 +67,7 @@ class BeginBlock(
     }
 
     @Composable
-    override fun blockComposable(item: Block) {
+    override fun BlockComposable(item: Block, codeBlocksList: List<Block>) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()

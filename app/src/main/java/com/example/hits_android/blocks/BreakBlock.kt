@@ -15,13 +15,14 @@ class BreakBlock(
     override var previousID: Int = -1,
     override var nextID: Int = -1,
     override val key: String,
-    override val title:String = "Break",
-    override val isDragOverLocked:Boolean = false
-): Block {
+    override val title: String = "Break",
+    override val isDragOverLocked: Boolean = false
+) : Block {
     // Название блока
-    companion object{
+    companion object {
         val BLOCK_NAME = "breakBlock"
     }
+
     override val blockName = BLOCK_NAME
 
     // Добавление блока в список блоков
@@ -39,8 +40,7 @@ class BreakBlock(
                 if (blockList[blockIndex].getNameOfBlock() == BeginBlock.BLOCK_NAME) {
                     scopes.destoryScope()
                 }
-            }
-            catch (e: ArrayIndexOutOfBoundsException) {
+            } catch (e: ArrayIndexOutOfBoundsException) {
                 throw Exception("Break не относится к циклу")
             }
         }
@@ -59,7 +59,7 @@ class BreakBlock(
     }
 
     @Composable
-    override fun blockComposable(item: Block) {
+    override fun BlockComposable(item: Block, codeBlocksList: List<Block>) {
         Text(
             text = item.title,
             modifier = Modifier.padding(24.dp)

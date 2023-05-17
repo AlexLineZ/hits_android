@@ -61,7 +61,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 
-class MainScreen:Screen {
+class MainScreen : Screen {
     @Composable
     override fun Content() {
         Hits_androidTheme {
@@ -88,16 +88,18 @@ fun Sandbox(
 private fun VerticalReorderList(
     vm: ReorderListViewModel
 ) {
-    val state = rememberReorderableLazyListState(onMove = vm::moveBlock, canDragOver = vm::isDogDragOverEnabled)
+    val state = rememberReorderableLazyListState(
+        onMove = vm::moveBlock,
+        canDragOver = vm::isDogDragOverEnabled
+    )
     LazyColumn(
         state = state.listState,
         modifier = Modifier.reorderable(state),
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(vm.codeBlocksList, { item -> item.key }) { item ->
             ReorderableItem(state, item.key) { dragging ->
                 val scale = animateFloatAsState(if (dragging) 1.1f else 1.0f)
-                val alpha = animateFloatAsState(if (dragging) 0.9f else 1.0f)
                 val elevation = if (dragging) 8.dp else 0.dp
                 if (item.isDragOverLocked) {
                     Box(
@@ -107,11 +109,8 @@ private fun VerticalReorderList(
                             .height(70.dp)
                             .scale(scale.value)
                             .shadow(elevation, RoundedCornerShape(24.dp))
-                            .clip(RoundedCornerShape(24.dp))
-                            .background(Color.Red.copy(alpha = alpha.value))
-                            .padding(start = 20.dp)
                     ) {
-                        item.blockComposable(item)
+                        item.BlockComposable(item, vm.codeBlocksList)
                     }
                 } else {
                     Box(
@@ -121,15 +120,13 @@ private fun VerticalReorderList(
                             .detectReorderAfterLongPress(state)
                             .scale(scale.value)
                             .shadow(elevation, RoundedCornerShape(24.dp))
-                            .clip(RoundedCornerShape(24.dp))
-                            .background(md_theme_dark_onPrimary)
                             .clickable(
                                 onClick = {
                                     Log.d("s", "${vm.codeBlocksList.size}")
                                 }
                             )
                     ) {
-                        item.blockComposable(item)
+                        item.BlockComposable(item, vm.codeBlocksList)
                     }
                 }
             }
@@ -142,8 +139,7 @@ private fun BottomBar(
     vm: ReorderListViewModel
 ) {
     LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(vm.blockSelectionList, { item -> item.key }) { item ->
             Box(
@@ -157,7 +153,8 @@ private fun BottomBar(
                             vm.codeBlocksList = vm.codeBlocksList
                                 .toMutableList()
                                 .apply {
-                                    add(vm.codeBlocksList.size - 1,
+                                    add(
+                                        vm.codeBlocksList.size - 1,
                                         when (item.blockName) {
                                             "assignmentBlock" -> {
                                                 AssignmentBlock(key = "${vm.codeBlocksList.size}")
@@ -210,9 +207,16 @@ private fun BottomBar(
                                     )
                                     if (item.blockName == "ElseBlock" ||
                                         item.blockName == "IfBlock" ||
-                                        item.blockName == "WhileBlock") {
-                                        add(vm.codeBlocksList.size, EndBlock(key = "${vm.codeBlocksList.size + 2}"))
-                                        add(vm.codeBlocksList.size, BeginBlock(key = "${vm.codeBlocksList.size + 1}"))
+                                        item.blockName == "WhileBlock"
+                                    ) {
+                                        add(
+                                            vm.codeBlocksList.size,
+                                            EndBlock(key = "${vm.codeBlocksList.size + 2}")
+                                        )
+                                        add(
+                                            vm.codeBlocksList.size,
+                                            BeginBlock(key = "${vm.codeBlocksList.size + 1}")
+                                        )
                                     }
                                 }
                         }
@@ -241,7 +245,8 @@ fun NavBar() {
             FloatingActionButton(onClick = {
                 isOpen = !isOpen
             }) {
-                val buttonIcon = if (!isOpen) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown
+                val buttonIcon =
+                    if (!isOpen) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown
                 Icon(imageVector = buttonIcon, contentDescription = "forYura")
             }
         },
@@ -310,7 +315,8 @@ fun NavBottomBar(navController: NavController) {
                         }
                     },
                     icon = {
-                        val buttonIcon = if (isProgramRunning) Icons.Default.Close else Icons.Default.PlayArrow
+                        val buttonIcon =
+                            if (isProgramRunning) Icons.Default.Close else Icons.Default.PlayArrow
                         Icon(imageVector = buttonIcon, contentDescription = menuItem.label)
                     },
                     enabled = true
@@ -408,9 +414,8 @@ fun Settings(navController: NavController) {
 }
 
 
-
 @OptIn(DelicateCoroutinesApi::class)
-fun TestProgram(){
+fun TestProgram() {
     variables.clear()
     blockList.clear()
     blockIndex = 0

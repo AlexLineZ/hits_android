@@ -58,9 +58,9 @@ class InitializeVarBlock(
     override var previousID: Int = -1,
     override var nextID: Int = -1,
     override val key: String,
-    override val title:String = "InitVar",
-    override val isDragOverLocked:Boolean = false
-): Block {
+    override val title: String = "InitVar",
+    override val isDragOverLocked: Boolean = false
+) : Block {
     // Название блока
     companion object {
         val BLOCK_NAME = "initVarBlock"
@@ -128,17 +128,17 @@ class InitializeVarBlock(
     }
 
     @Composable
-    override fun blockComposable(item: Block) {
+    override fun BlockComposable(item: Block, codeBlocksList: List<Block>) {
         item as InitializeVarBlock
-        Row (
+        Row(
             modifier = Modifier
-            .fillMaxWidth()
-            .height(70.dp),
+                .fillMaxWidth()
+                .height(70.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             dropdownMenuExample(item)
-            itemNameField(item)
-            itemValueField(item)
+            ItemNameField(item)
+            ItemValueField(item)
         }
     }
 
@@ -183,7 +183,7 @@ class InitializeVarBlock(
 
     @OptIn(ExperimentalComposeUiApi::class)
     @Composable
-    fun itemNameField(item: InitializeVarBlock) {
+    fun ItemNameField(item: InitializeVarBlock) {
         val textState = remember { mutableStateOf(TextFieldValue(text = item.name)) }
         val keyboardController = LocalSoftwareKeyboardController.current
         val themeColors = MaterialTheme.colors
@@ -215,7 +215,7 @@ class InitializeVarBlock(
 
     @OptIn(ExperimentalComposeUiApi::class)
     @Composable
-    fun itemValueField(item: InitializeVarBlock) {
+    fun ItemValueField(item: InitializeVarBlock) {
         val textState = remember { mutableStateOf(TextFieldValue(text = item.value)) }
         val keyboardController = LocalSoftwareKeyboardController.current
         val themeColors = MaterialTheme.colors

@@ -1,15 +1,21 @@
 package com.example.hits_android.blocks
 
+import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -22,21 +28,21 @@ interface Block {
     var nextID: Int
     val key: String
     val title: String
-    val isDragOverLocked:Boolean
+    val isDragOverLocked: Boolean
     fun runCodeBlock()
-    fun getNameOfBlock():String
+    fun getNameOfBlock(): String
 
     @Composable
-    fun blockComposable(item: Block)
+    fun BlockComposable(item: Block, codeBlocksList: List<Block>)
 }
 
 class MainBlock(
     override var previousID: Int = -1,
     override var nextID: Int = -1,
     override val key: String,
-    override val title:String = "Main",
-    override val isDragOverLocked:Boolean = false
-): Block {
+    override val title: String = "Main",
+    override val isDragOverLocked: Boolean = false
+) : Block {
     override val blockName = "mainBlock"
 
     override fun runCodeBlock() {
@@ -49,7 +55,7 @@ class MainBlock(
     }
 
     @Composable
-    override fun blockComposable(item: Block) {
+    override fun BlockComposable(item: Block, codeBlocksList: List<Block>) {
         Text(
             text = item.title,
             modifier = Modifier.padding(24.dp)
@@ -61,9 +67,9 @@ class FinishProgramBlock(
     override var previousID: Int = -1,
     override var nextID: Int = -1,
     override val key: String,
-    override val title:String = "Main",
-    override val isDragOverLocked:Boolean = false
-): Block {
+    override val title: String = "Main",
+    override val isDragOverLocked: Boolean = false
+) : Block {
     override val blockName = "finishProgram"
 
     override fun runCodeBlock() {
@@ -76,10 +82,49 @@ class FinishProgramBlock(
     }
 
     @Composable
-    override fun blockComposable(item: Block) {
-        Text(
-            text = item.title,
-            modifier = Modifier.padding(24.dp)
-        )
+    override fun BlockComposable(item: Block, codeBlocksList: List<Block>) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 40.dp)
+                .clip(RoundedCornerShape(24.dp))
+                .background(Color.Gray)
+        ) {
+            Text(
+                text = item.title,
+                modifier = Modifier.padding(24.dp)
+            )
+        }
+
     }
+}
+
+fun calculatePadding(codeBlocksList: List<Block>, key: String): Dp {
+    var paddingValue: Int = 0
+    var flag: Boolean = false
+    for (block in codeBlocksList) {
+        when (block.key) {
+            key -> {
+                flag = true
+                when (block.blockName) {
+                    "beginBlock" -> paddingValue += 40
+                    "endBlock" -> paddingValue -= 40
+                    else -> {}
+                }
+            }
+            else -> {
+                when (block.blockName) {
+                    "beginBlock" -> paddingValue += 40
+                    "endBlock" -> paddingValue -= 40
+                    else -> {}
+                }
+            }
+        }
+        if (flag) {
+            break
+        }
+    }
+//    Log.d("s", "${codeBlocksList}")
+    Log.d("s", "${paddingValue}")
+    return (if (paddingValue >= 0) (paddingValue.dp) else (0.dp))
 }

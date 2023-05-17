@@ -17,17 +17,18 @@ class EndBlock(
     override var previousID: Int = -1,
     override var nextID: Int = -1,
     override val key: String,
-    override val title:String = "End",
-    override val isDragOverLocked:Boolean = false
-): Block {
+    override val title: String = "End",
+    override val isDragOverLocked: Boolean = false
+) : Block {
     // Название блока
-    companion object{
+    companion object {
         val BLOCK_NAME = "endBlock"
     }
+
     override val blockName = BLOCK_NAME
 
     // Добавление блока в список блоков
-    init{
+    init {
         blockList.add(this)
     }
 
@@ -54,7 +55,7 @@ class EndBlock(
     }
 
     @Composable
-    override fun blockComposable(item: Block) {
+    override fun BlockComposable(item: Block, codeBlocksList: List<Block>) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()

@@ -18,13 +18,14 @@ class AssignmentBlock(
     override var previousID: Int = -1,
     override var nextID: Int = -1,
     override val key: String,
-    override val title:String = "Assign",
-    override val isDragOverLocked:Boolean = false
-): Block {
+    override val title: String = "Assign",
+    override val isDragOverLocked: Boolean = false
+) : Block {
     // Название блока
     companion object {
         val BLOCK_NAME = "assignmentBlock"
     }
+
     override val blockName = BLOCK_NAME
 
     var variableName: String = "" // Название изменяемой переменной
@@ -43,8 +44,10 @@ class AssignmentBlock(
 
         // Нахождение индекса массива
         if ('[' in variableName) {
-            val index = variableName.slice((variableName.indexOf('[') + 1)..(variableName.indexOf(']') - 1))
-            val indexExpression = ParsingFunctions(LexicalComponents(index + ";").getTokensFromCode())
+            val index =
+                variableName.slice((variableName.indexOf('[') + 1)..(variableName.indexOf(']') - 1))
+            val indexExpression =
+                ParsingFunctions(LexicalComponents(index + ";").getTokensFromCode())
 
             arrayIndex = (indexExpression).parseExpression()!!.value.toString().toInt()
             arrName = variableName.slice(0..variableName.indexOf('[') - 1)
@@ -65,24 +68,23 @@ class AssignmentBlock(
 //        else if ((variables[arrName]?.value as Array<*>)[0] is Int) {
         else if (variables[arrName]?.type == Type.INT) {
             val expression = ParsingFunctions(LexicalComponents(newValue).getTokensFromCode())
-            (variables[arrName]?.value as Array<Int>)[arrayIndex] = expression.parseExpression()!!.value.toString().toInt()
-        }
-        else if ((variables[arrName]?.value as Array<*>)[0] is Double) {
+            (variables[arrName]?.value as Array<Int>)[arrayIndex] =
+                expression.parseExpression()!!.value.toString().toInt()
+        } else if ((variables[arrName]?.value as Array<*>)[0] is Double) {
             val expression = ParsingFunctions(LexicalComponents(newValue).getTokensFromCode())
-            (variables[arrName]?.value as Array<Double>)[arrayIndex] = expression.parseExpression()!!.value.toString().toDouble()
-        }
-        else if (variables[arrName]?.type == Type.STRING){
+            (variables[arrName]?.value as Array<Double>)[arrayIndex] =
+                expression.parseExpression()!!.value.toString().toDouble()
+        } else if (variables[arrName]?.type == Type.STRING) {
             val expression = ParsingFunctions(LexicalComponents(newValue).getTokensFromCode())
-            (variables[arrName]?.value as Array<String>)[arrayIndex] = expression.parseExpression()!!.value.toString()
-        }
-        else {
+            (variables[arrName]?.value as Array<String>)[arrayIndex] =
+                expression.parseExpression()!!.value.toString()
+        } else {
             val expression = ParsingFunctions(LexicalComponents(newValue).getTokensFromCode())
             val result = expression.parseExpression()!!.value.toString()
 
             if (result == "0" || result == "false") {
                 (variables[arrName]?.value as Array<String>)[arrayIndex] = "0"
-            }
-            else {
+            } else {
                 (variables[arrName]?.value as Array<String>)[arrayIndex] = "1"
             }
         }
@@ -103,7 +105,7 @@ class AssignmentBlock(
     }
 
     @Composable
-    override fun blockComposable(item: Block) {
+    override fun BlockComposable(item: Block, codeBlocksList: List<Block>) {
         Text(
             text = item.title,
             modifier = Modifier.padding(24.dp)

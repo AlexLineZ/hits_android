@@ -38,13 +38,14 @@ class WhileBlock(
     override var previousID: Int = -1,
     override var nextID: Int = -1,
     override val key: String,
-    override val title:String = "While",
-    override val isDragOverLocked:Boolean = false
-):Block {
+    override val title: String = "While",
+    override val isDragOverLocked: Boolean = false
+) : Block {
     // Название блока
     companion object {
         val BLOCK_NAME = "WhileBlock"
     }
+
     override val blockName = BLOCK_NAME
 
     // Добавление блока в список блоков
@@ -100,9 +101,9 @@ class WhileBlock(
     }
 
     @Composable
-    override fun blockComposable(item: Block) {
+    override fun BlockComposable(item: Block, codeBlocksList: List<Block>) {
         item as WhileBlock
-        Row (
+        Row(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(10.dp),
@@ -121,13 +122,13 @@ class WhileBlock(
                     maxLines = 1
                 )
             }
-            itemConditionField(item)
+            ItemConditionField(item)
         }
     }
 
     @OptIn(ExperimentalComposeUiApi::class)
     @Composable
-    fun itemConditionField(item: WhileBlock) {
+    fun ItemConditionField(item: WhileBlock) {
         val textState = remember { mutableStateOf(TextFieldValue(text = item.condition)) }
         val keyboardController = LocalSoftwareKeyboardController.current
         val themeColors = MaterialTheme.colors

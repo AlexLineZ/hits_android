@@ -44,12 +44,13 @@ class OutputBlock(
     override var nextID: Int = -1,
     override val key: String,
     override val title: String = "Print",
-    override val isDragOverLocked:Boolean = false
-): Block {
+    override val isDragOverLocked: Boolean = false
+) : Block {
     // Название блока
     companion object {
         val BLOCK_NAME = "outputBlock"
     }
+
     override val blockName = BLOCK_NAME
 
     // Выражение, переданное блоку в качестве параметра
@@ -65,7 +66,7 @@ class OutputBlock(
         val exp = ParsingFunctions(LexicalComponents(expression).getTokensFromCode())
         val result = exp.parseExpression()
 
-        when(result){
+        when (result) {
             null -> println("ඞ Empty")
             else -> {
                 //println("ඞ ${result.value}")
@@ -88,9 +89,9 @@ class OutputBlock(
     }
 
     @Composable
-    override fun blockComposable(item: Block) {
+    override fun BlockComposable(item: Block, codeBlocksList: List<Block>) {
         item as OutputBlock
-        Row (
+        Row(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(10.dp),
