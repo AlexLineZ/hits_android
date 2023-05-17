@@ -6,10 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.hits_android.blocks.AssignmentBlock
-import com.example.hits_android.blocks.BeginBlock
 import com.example.hits_android.blocks.ContinueBlock
 import com.example.hits_android.blocks.ElseBlock
-import com.example.hits_android.blocks.EndBlock
 import com.example.hits_android.blocks.FinishProgramBlock
 import com.example.hits_android.blocks.IfBlock
 import com.example.hits_android.blocks.InitializeArrayBlock

@@ -6,7 +6,7 @@ import java.util.*
 val variables = mutableMapOf<String, Variable>()
 var scopes = Scope()
 
-class ParsingFunctions(private var tokens: List<Token>){
+class ParsingFunctions(private var tokens: List<Token>) {
     private var index = 0
 
     // Массив ожидаемых токенов в выражении
@@ -44,14 +44,22 @@ class ParsingFunctions(private var tokens: List<Token>){
         val resultStack = Stack<Variable>()  // Стек для подсчета чисел
 
         // Ищем ожидаемый токен начала выражения
-        var nowToken = getTokenOrError(Name.STRING.value,
-            Name.RAND.value, Name.DOUBLE.value, Name.NUMBER.value, Name.BOOL.value, Name.VARIABLE.value, Name.L_BRACKET.value)
+        var nowToken = getTokenOrError(
+            Name.STRING.value,
+            Name.RAND.value,
+            Name.DOUBLE.value,
+            Name.NUMBER.value,
+            Name.BOOL.value,
+            Name.VARIABLE.value,
+            Name.L_BRACKET.value
+        )
 
         // До выполнять до тех пор, пока нет окончания условия выражение(то есть начало выполнения тела ({)
         // или окончания выражения в массиве (]) или окончания выражения (;)
-        while(nowToken.type.name != Name.L_FIG_BRACKET
+        while (nowToken.type.name != Name.L_FIG_BRACKET
             && nowToken.type.name != Name.R_SQUARE_BRACKET
-            && nowToken.type.name != Name.SEMICOLON) {
+            && nowToken.type.name != Name.SEMICOLON
+        ) {
 
             // Если токен является левой скобочкой (обычной)
             if (nowToken.type.name == Name.L_BRACKET) {
@@ -85,21 +93,26 @@ class ParsingFunctions(private var tokens: List<Token>){
 
             // Если текущий токен - это String
             else if (nowToken.type.name == Name.STRING) {
-                resultStack.push(Variable("", Type.STRING, nowToken.text.slice(1..nowToken.text.length - 2)))
+                resultStack.push(
+                    Variable(
+                        "",
+                        Type.STRING,
+                        nowToken.text.slice(1..nowToken.text.length - 2)
+                    )
+                )
             }
 
             // Если текущий токен - это Bool
             else if (nowToken.type.name == Name.BOOL) {
-                if (nowToken.text != "0" && nowToken.text != "false"){
+                if (nowToken.text != "0" && nowToken.text != "false") {
                     resultStack.push(Variable("", Type.BOOL, "1"))
-                }
-                else {
+                } else {
                     resultStack.push(Variable("", Type.BOOL, "0"))
                 }
             }
 
             // Если текущий токен является переменной
-            else if (nowToken.type.name == Name.VARIABLE){
+            else if (nowToken.type.name == Name.VARIABLE) {
                 // Если переменной нет, то выдать ошибку
                 if (variables[nowToken.text] == null) {
                     throw Exception("Переменная не была задана")
@@ -110,28 +123,48 @@ class ParsingFunctions(private var tokens: List<Token>){
                     try {
                         // Элемент Int массива
                         if ((variables[nowToken.text]?.type == Type.INT/* as Array<*>)[0] is Int*/)) {
-                            resultStack.push(Variable("", Type.INT,
-                                (variables[nowToken.text]?.value as Array<Int>)[parseExpression()!!.value.toString().toInt()]))
+                            resultStack.push(
+                                Variable(
+                                    "", Type.INT,
+                                    (variables[nowToken.text]?.value as Array<Int>)[parseExpression()!!.value.toString()
+                                        .toInt()]
+                                )
+                            )
 
-                        // Элемент Double массива
+                            // Элемент Double массива
                         } else if ((variables[nowToken.text]?.value as Array<*>)[0] is Double) {
-                            resultStack.push(Variable("", Type.DOUBLE,
-                                (variables[nowToken.text]?.value as Array<Double>)[parseExpression()!!.value.toString().toInt()]))
+                            resultStack.push(
+                                Variable(
+                                    "", Type.DOUBLE,
+                                    (variables[nowToken.text]?.value as Array<Double>)[parseExpression()!!.value.toString()
+                                        .toInt()]
+                                )
+                            )
 
-                        // Элемент String массива
-                        } else if (variables[nowToken.text]?.type == Type.STRING){
-                            resultStack.push(Variable("", Type.STRING,
-                                    (variables[nowToken.text]?.value as Array<String>)[parseExpression()!!.value.toString().toInt()]))
+                            // Элемент String массива
+                        } else if (variables[nowToken.text]?.type == Type.STRING) {
+                            resultStack.push(
+                                Variable(
+                                    "", Type.STRING,
+                                    (variables[nowToken.text]?.value as Array<String>)[parseExpression()!!.value.toString()
+                                        .toInt()]
+                                )
+                            )
                         }
 
                         // Элемент Bool массива
                         else {
-                            resultStack.push(Variable("", Type.BOOL,
-                                    (variables[nowToken.text]?.value as Array<String>)[parseExpression()!!.value.toString().toInt()]))
+                            resultStack.push(
+                                Variable(
+                                    "", Type.BOOL,
+                                    (variables[nowToken.text]?.value as Array<String>)[parseExpression()!!.value.toString()
+                                        .toInt()]
+                                )
+                            )
                         }
                     }
                     // Выход за пределы массива
-                    catch (e: ArrayIndexOutOfBoundsException){
+                    catch (e: ArrayIndexOutOfBoundsException) {
                         throw Exception("Произошел выход за пределы массива")
                     }
                 }
@@ -155,13 +188,14 @@ class ParsingFunctions(private var tokens: List<Token>){
                     val firstPriority = tokensList[operatorStack.firstElement()]?.priority
 
                     // Если приоритет текущего больше, то просто добавляем оператор
-                    if (currentPriority > firstPriority!!){
+                    if (currentPriority > firstPriority!!) {
                         operatorStack.push(nowToken.text)
                     }
 
                     // Иначе сосчитать операцию
                     else {
-                        val result = applyOperator(resultStack.pop(), resultStack.pop(), operatorStack.pop())
+                        val result =
+                            applyOperator(resultStack.pop(), resultStack.pop(), operatorStack.pop())
                         resultStack.push(result)
                         operatorStack.push(nowToken.text)
                     }
@@ -198,21 +232,22 @@ class ParsingFunctions(private var tokens: List<Token>){
                 Type.INT,
                 "1"
             ) else Variable("", Type.INT, "0")
+
             "&&" -> return if ((b.value != "0") && (a.value != "0")) Variable(
                 "",
                 Type.INT,
                 "1"
             ) else Variable("", Type.INT, "0")
+
             else -> throw Exception("OMG")
         }
     }
 
-    private fun getTokenOrError(vararg target: String): Token{
+    private fun getTokenOrError(vararg target: String): Token {
         val token = findToken(*target)
-        if (token == null){
+        if (token == null) {
             throw Exception("Синтаксическая ошибка")
-        }
-        else {
+        } else {
             return token
         }
     }

@@ -15,7 +15,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -28,17 +27,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import com.example.hits_android.expressionParser.LexicalComponents
 import com.example.hits_android.expressionParser.ParsingFunctions
-import com.example.hits_android.expressionParser.variables
 import com.example.hits_android.model.FlowViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flow
-import org.burnoutcrew.reorderable.ReorderableLazyListState
 
 // Блок вывода
 class OutputBlock(

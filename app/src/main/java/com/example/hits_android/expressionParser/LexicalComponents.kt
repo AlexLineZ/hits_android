@@ -10,15 +10,15 @@ class LexicalComponents(private val expression: String) {
         return allTokens
     }
 
-    private fun getTokens() : Unit?{
+    private fun getTokens(): Unit? {
         if (index >= expression.length) {
             return null
         }
 
-        for (type in tokensList.values){
+        for (type in tokensList.values) {
             val str = Regex(type.regex.pattern).find(expression.substring(index))
             if (str != null) {
-                return if (str.value == Name.SPACE.value){
+                return if (str.value == Name.SPACE.value) {
                     index += str.value.length
                     getTokens()
                 } else {
