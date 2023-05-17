@@ -66,7 +66,7 @@ class CallFunctionBlock(
         }
 
         for (i in argList.indices) {
-            argList[i] = argList[i].replace(" ", "")
+            //argList[i] = argList[i].replace(" ", "")
             argList[i] += ";"
 
             val expression = ParsingFunctions(LexicalComponents(argList[i]).getTokensFromCode())
