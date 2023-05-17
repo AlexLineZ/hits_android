@@ -108,6 +108,7 @@ private fun VerticalReorderList(
                             .shadow(elevation, RoundedCornerShape(24.dp))
                             .clip(RoundedCornerShape(24.dp))
                             .background(Color.Red.copy(alpha = alpha.value))
+                            .padding(start = 20.dp)
                     ) {
                         item.blockComposable(item)
                     }
