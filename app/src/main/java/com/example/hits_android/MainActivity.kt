@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import cafe.adriel.voyager.navigator.Navigator
-import com.example.compose.Hits_androidTheme
+import com.example.hits_android.ui.theme.Hits_androidTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -12,7 +12,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             Hits_androidTheme {
-               Navigator(screen = StartScreen())
+                Navigator(screen = StartScreen())
             }
         }
     }

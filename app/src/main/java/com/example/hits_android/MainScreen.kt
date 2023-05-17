@@ -16,6 +16,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,11 +36,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import cafe.adriel.voyager.core.screen.Screen
-import com.example.compose.Hits_androidTheme
+import com.example.hits_android.ui.theme.Hits_androidTheme
 import com.example.hits_android.blocks.*
 import com.example.hits_android.expressionParser.variables
 import com.example.hits_android.model.FlowViewModel
@@ -224,107 +232,107 @@ fun NavBar() {
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        bottomBar = { NavBottomBar(navController) },
-        floatingActionButton = {
-
-            FloatingActionButton(onClick = {
-                isOpen = !isOpen
-            }) {
-                val buttonIcon =
-                    if (!isOpen) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown
-                Icon(imageVector = buttonIcon, contentDescription = "forYura")
-            }
-        },
         scaffoldState = scaffoldState,
         isFloatingActionButtonDocked = true,
-        floatingActionButtonPosition = FabPosition.Center
-    ) {
-        NavHost(
-            navController = navController,
-            startDestination = "Coding"
-        ) {
-            composable("Coding") {
-                Surface() {
-                    Column {
-                        BottomBar(vm)
-                        Sandbox(vm)
+        floatingActionButtonPosition = FabPosition.Center,
+        content = {
+            NavHost(
+                navController = navController,
+                startDestination = "Coding"
+            ) {
+                composable("Coding") {
+                    Surface {
+                        Column {
+                            BottomBar(vm)
+                            Sandbox(vm)
+                        }
+                    }
+                }
+
+                composable("Console") {
+                    Console(navController, viewModel)
+                }
+
+                composable("Settings") {
+                    Settings(navController)
+                }
+            }
+        },
+        bottomBar = {
+            BottomAppBar(
+                cutoutShape = CircleShape
+            ) {
+                val bottomMenuItemsList = prepareBottomMenu()
+                var selectedItem by remember { mutableStateOf("Coding") }
+
+                bottomMenuItemsList.forEachIndexed { index, menuItem ->
+                    if (index == 2) {
+                        BottomNavigationItem(
+                            selected = false,
+                            onClick = {},
+                            enabled = false,
+                            label = { }
+                        )
+                    }
+
+                    if (menuItem.label == "Start") {
+                        val isProgramRunning by viewModel.isProgramRunning.collectAsState()
+                        BottomNavigationItem(
+                            selected = (selectedItem == menuItem.label),
+                            onClick = {
+                                selectedItem = menuItem.label
+                                if (isProgramRunning) {
+                                    viewModel.stopProgram()
+                                } else {
+                                    viewModel.startProgram()
+                                    navController.navigate("Console")
+                                }
+                            },
+                            enabled = true,
+                            label = {
+                                val buttonIcon =
+                                    if (isProgramRunning) Icons.Default.Close else Icons.Default.PlayArrow
+                                Icon(
+                                    painter = rememberVectorPainter(buttonIcon),
+                                    contentDescription = menuItem.label
+                                )
+                            }
+                        )
+                    } else {
+                        BottomNavigationItem(
+                            selected = (selectedItem == menuItem.label),
+                            onClick = {
+                                selectedItem = menuItem.label
+                                navController.navigate(menuItem.label)
+                            },
+                            enabled = true,
+                            label = {
+                                Icon(
+                                    painter = rememberVectorPainter(menuItem.icon),
+                                    contentDescription = menuItem.label
+                                )
+                            }
+                        )
                     }
                 }
             }
-
-            composable("Console") {
-                Console(navController, viewModel)
-            }
-
-            composable("Settings") {
-                Settings(navController)
-            }
-
-        }
-    }
-}
-
-@Composable
-fun NavBottomBar(navController: NavController) {
-    val bottomMenuItemsList = prepareBottomMenu()
-    val viewModel: FlowViewModel = viewModel()
-
-    var selectedItem by remember {
-        mutableStateOf("Coding")
-    }
-
-    BottomAppBar(
-        cutoutShape = CircleShape
-    ) {
-        bottomMenuItemsList.forEachIndexed { index, menuItem ->
-            if (index == 2) {
-                BottomNavigationItem(
-                    selected = false,
-                    onClick = {},
-                    icon = {},
-                    enabled = false
-                )
-            }
-
-            if (menuItem.label == "Start") {
-                val isProgramRunning by viewModel.isProgramRunning.collectAsState()
-                BottomNavigationItem(
-                    selected = (selectedItem == menuItem.label),
-                    onClick = {
-                        selectedItem = menuItem.label
-                        if (isProgramRunning) {
-                            viewModel.stopProgram()
-                        } else {
-                            viewModel.startProgram()
-                            navController.navigate("Console")
-                        }
-                    },
-                    icon = {
-                        val buttonIcon =
-                            if (isProgramRunning) Icons.Default.Close else Icons.Default.PlayArrow
-                        Icon(imageVector = buttonIcon, contentDescription = menuItem.label)
-                    },
-                    enabled = true
-                )
-            } else {
-                BottomNavigationItem(
-                    selected = (selectedItem == menuItem.label),
-                    onClick = {
-                        selectedItem = menuItem.label
-                        navController.navigate(menuItem.label)
-                    },
-                    icon = {
-                        Icon(
-                            imageVector = menuItem.icon,
-                            contentDescription = menuItem.label
-                        )
-                    },
-                    enabled = true
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    isOpen = !isOpen
+                }
+            ) {
+                val buttonIcon =
+                    if (!isOpen) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown
+                Icon(
+                    painter = rememberVectorPainter(buttonIcon),
+                    contentDescription = "forYura"
                 )
             }
         }
-    }
-}
+    )
+}}
 
 private fun prepareBottomMenu(): List<BottomMenuItem> {
     val bottomMenuItemsList = arrayListOf<BottomMenuItem>()
