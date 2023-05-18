@@ -229,6 +229,13 @@ sealed class BottomBarScreen(
     val icon_focused: Int = R.drawable.ic_bottom_home_focused
 ) {
 
+    object BlocksBar: BottomBarScreen(
+        route = "blocksbar",
+        title = "BlocksBar",
+        icon = R.drawable.ic_bottom_arrow_up,
+        icon_focused = R.drawable.ic_bottom_arrow_down
+    )
+
     object Coding: BottomBarScreen(
         route = "coding",
         title = "Coding",
@@ -301,6 +308,7 @@ fun BottomNav() {
 @Composable
 fun BottomBar(navController: NavHostController) {
     val screens = listOf(
+        BottomBarScreen.BlocksBar,
         BottomBarScreen.Coding,
         BottomBarScreen.Console,
         BottomBarScreen.Settings,
