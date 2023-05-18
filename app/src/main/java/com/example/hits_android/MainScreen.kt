@@ -266,37 +266,11 @@ sealed class BottomBarScreen(
 }
 
 @Composable
-fun BottomNavGraph(navController: NavHostController) {
-
-    val vm = ReorderListViewModel()
-    val viewModel: FlowViewModel = viewModel()
-    NavHost(
-        navController = navController,
-        startDestination = BottomBarScreen.Coding.route
-    ) {
-        composable(route = BottomBarScreen.Coding.route) {
-            Surface {
-                Column {
-                    BottomBar(vm)
-                    Sandbox(vm)
-                }
-            }
-        }
-        composable(route = BottomBarScreen.Console.route) {
-            Console(navController, viewModel)
-        }
-        composable(route = BottomBarScreen.Settings.route) {
-            Settings(navController)
-        }
-    }
-}
-
-@Composable
 fun BottomNav() {
     val navController = rememberNavController()
 
     Scaffold(
-        bottomBar = { BottomBar(navController = navController) }
+        bottomBar = { NavBottomBar(navController = navController) }
     ) {
         Modifier.padding(it)
         BottomNavGraph(
@@ -306,7 +280,7 @@ fun BottomNav() {
 }
 
 @Composable
-fun BottomBar(navController: NavHostController) {
+fun NavBottomBar(navController: NavHostController) {
     val viewModel: FlowViewModel = viewModel()
 
     val screens = listOf(
@@ -340,6 +314,32 @@ fun BottomBar(navController: NavHostController) {
 }
 
 @Composable
+fun BottomNavGraph(navController: NavHostController) {
+
+    val vm = ReorderListViewModel()
+    val viewModel: FlowViewModel = viewModel()
+    NavHost(
+        navController = navController,
+        startDestination = BottomBarScreen.Coding.route
+    ) {
+        composable(route = BottomBarScreen.Coding.route) {
+            Surface {
+                Column {
+                    BottomBar(vm)
+                    Sandbox(vm)
+                }
+            }
+        }
+        composable(route = BottomBarScreen.Console.route) {
+            Console(navController, viewModel)
+        }
+        composable(route = BottomBarScreen.Settings.route) {
+            Settings(navController)
+        }
+    }
+}
+
+@Composable
 fun RowScope.AddItem(
     screen: BottomBarScreen,
     currentDestination: NavDestination?,
@@ -361,6 +361,8 @@ fun RowScope.AddItem(
         if (selected) screen.icon_focused else screen.icon
     }
 
+    val blocksBarSelected = remember { mutableStateOf(false) }
+
     Box(
         modifier = Modifier
             .height(40.dp)
@@ -374,6 +376,8 @@ fun RowScope.AddItem(
                         viewModel.startProgram()
                         navController.navigate(BottomBarScreen.Console.route)
                     }
+                } else if (screen == BottomBarScreen.BlocksBar) {
+                    blocksBarSelected.value = !blocksBarSelected.value
                 } else {
                     navController.navigate(screen.route) {
                         popUpTo(navController.graph.findStartDestination().id)
@@ -389,12 +393,12 @@ fun RowScope.AddItem(
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Icon(
-                painter = painterResource(id = buttonIcon),
+                painter = painterResource(id = if (screen == BottomBarScreen.BlocksBar && blocksBarSelected.value) screen.icon_focused else buttonIcon),
                 contentDescription = "icon",
                 tint = contentColor,
                 modifier = Modifier.size(24.dp)
             )
-            AnimatedVisibility(visible = selected && screen != BottomBarScreen.Start) {
+            AnimatedVisibility(visible = selected && screen != BottomBarScreen.Start && screen != BottomBarScreen.BlocksBar) {
                 Text(
                     text = screen.title,
                     color = contentColor
@@ -403,6 +407,7 @@ fun RowScope.AddItem(
         }
     }
 }
+
 
 
 @Composable
