@@ -17,6 +17,9 @@ class Scope() {
 
     // Возврат текущей области видимости
     fun getScope(): MutableList<String> {
+        if (scopesList.size == 0) {
+            return MutableList<String>(0){""}
+        }
         return scopesList[scopesList.size - 1]
     }
 }
