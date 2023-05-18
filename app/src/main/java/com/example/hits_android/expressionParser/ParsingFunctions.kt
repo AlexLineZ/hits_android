@@ -1,6 +1,7 @@
 package com.example.hits_android.expressionParser
 
 import com.example.hits_android.blocks.Scope
+import com.example.hits_android.blocks.blockIndex
 import java.util.*
 
 val variables = mutableMapOf<String, Variable>()
@@ -115,7 +116,7 @@ class ParsingFunctions(private var tokens: List<Token>) {
             else if (nowToken.type.name == Name.VARIABLE) {
                 // Если переменной нет, то выдать ошибку
                 if (variables[nowToken.text] == null) {
-                    throw Exception("Переменная не была задана")
+                    throw Exception("Переменная ${nowToken.text} не была задана")
                 }
 
                 // Если следующий токен - квадратная скобка, то закинуть элемент массива
@@ -194,6 +195,10 @@ class ParsingFunctions(private var tokens: List<Token>) {
 
                     // Иначе сосчитать операцию
                     else {
+                        if (resultStack.size < 2) {
+                            throw Exception("Для применения операций в блоке ${blockIndex + 1} не хватает операндов.")
+                        }
+
                         val result =
                             applyOperator(resultStack.pop(), resultStack.pop(), operatorStack.pop())
                         resultStack.push(result)
@@ -201,15 +206,24 @@ class ParsingFunctions(private var tokens: List<Token>) {
                     }
                 }
             }
+
             nowToken = getTokenOrError(*nextToken)
         }
 
         // Добиваем выражения до тех пор, пока стек не пустой
         while (!operatorStack.isEmpty()) {
+            if (resultStack.size < 2) {
+                throw Exception("Для применения операций в блоке ${blockIndex + 1} не хватает операндов.")
+            }
+
             val result = applyOperator(resultStack.pop(), resultStack.pop(), operatorStack.pop())
             resultStack.push(result)
         }
 
+        if (resultStack.size > 1) {
+            throw Exception("Некорректное выражение, указаны несколько значений подряд " +
+                    "в блоке номер ${blockIndex + 1}")
+        }
         return resultStack.pop()
     }
 
@@ -219,7 +233,14 @@ class ParsingFunctions(private var tokens: List<Token>) {
             "+" -> return b + a
             "-" -> return b - a
             "*" -> return b * a
-            "/" -> return b / a
+            "/" -> return try {
+                b / a
+            } catch (e: Exception) {
+                if (e.message == "divide by zero") {
+                    throw Exception("Деление на 0")
+                }
+                throw Exception(e.message)
+            }
             "%" -> return b % a
             "!=" -> return if (b != a) Variable(" ", Type.INT, "1") else Variable("", Type.INT, "0")
             "==" -> return if (b == a) Variable("", Type.INT, "1") else Variable("", Type.INT, "0")
@@ -253,7 +274,7 @@ class ParsingFunctions(private var tokens: List<Token>) {
     }
 
     private fun findToken(vararg target: String): Token? {
-        return if ((index >= tokens.size) || target.find { i -> tokensList[i]!!.name == tokens[index].type.name } == null) {
+        return if ((index >= tokens.size) || target.find { i -> tokensList[i]?.name == tokens[index].type.name } == null) {
             null
         } else {
             return tokens[index++]
@@ -261,8 +282,3 @@ class ParsingFunctions(private var tokens: List<Token>) {
     }
 
 }
-
-
-
-
-

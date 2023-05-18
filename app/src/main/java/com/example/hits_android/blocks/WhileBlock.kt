@@ -53,6 +53,7 @@ class WhileBlock(
 
     // Условие цикла
     var condition: String = ""
+    var conditionText: String = ""
 
     // Выполнение цикла while
     override fun runCodeBlock() {
@@ -63,7 +64,7 @@ class WhileBlock(
         val whileBeginIndex = blockIndex
 
         // Проверка условия
-        var conditionExpression = ParsingFunctions(LexicalComponents(condition).getTokensFromCode())
+        var conditionExpression = ParsingFunctions(LexicalComponents(condition + ";").getTokensFromCode())
         var conditionState = conditionExpression.parseExpression()!!
 
         // Пока условие верно
@@ -77,7 +78,7 @@ class WhileBlock(
             blockList[blockIndex].runCodeBlock()
 
             // Проверка условия
-            conditionExpression = ParsingFunctions(LexicalComponents(condition).getTokensFromCode())
+            conditionExpression = ParsingFunctions(LexicalComponents(condition + ";").getTokensFromCode())
             conditionState = conditionExpression.parseExpression()!!
 
             // Переход к началу тела цикла
@@ -86,6 +87,7 @@ class WhileBlock(
 
         // Пропуск тела цикла
         skipBlock()
+        condition = conditionText
     }
 
     // Тестирование блока без UI
@@ -134,12 +136,16 @@ class WhileBlock(
     @OptIn(ExperimentalComposeUiApi::class)
     @Composable
     fun ItemConditionField(item: WhileBlock) {
-        val textState = remember { mutableStateOf(TextFieldValue(text = item.condition)) }
+        val textState = remember { mutableStateOf(TextFieldValue(text = item.conditionText)) }
         val keyboardController = LocalSoftwareKeyboardController.current
 
         TextField(
             value = textState.value,
-            onValueChange = { textState.value = it },
+            onValueChange = {
+                textState.value = it
+                item.conditionText = textState.value.text
+                item.condition = textState.value.text
+            },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(4.dp),
             keyboardOptions = KeyboardOptions(
@@ -148,6 +154,7 @@ class WhileBlock(
             ),
             keyboardActions = KeyboardActions(
                 onDone = {
+                    item.conditionText = textState.value.text
                     item.condition = textState.value.text
                     keyboardController?.hide() // Скрываем клавиатуру
                 }

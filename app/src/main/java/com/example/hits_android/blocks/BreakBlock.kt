@@ -43,6 +43,9 @@ class BreakBlock(
                 if (blockList[blockIndex].getNameOfBlock() == BeginBlock.BLOCK_NAME) {
                     scopes.destoryScope()
                 }
+                else if (blockList[blockIndex].getNameOfBlock() == EndBlock.BLOCK_NAME) {
+                    scopes.addScope(scopes.getScope())
+                }
             } catch (e: ArrayIndexOutOfBoundsException) {
                 throw Exception("Break не относится к циклу")
             }
