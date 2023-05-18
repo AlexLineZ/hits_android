@@ -225,8 +225,8 @@ private fun BottomBar(
 sealed class BottomBarScreen(
     val route: String,
     val title: String,
-    val icon: Int,
-    val icon_focused: Int
+    val icon: Int = R.drawable.ic_bottom_home,
+    val icon_focused: Int = R.drawable.ic_bottom_home_focused
 ) {
 
     object Coding: BottomBarScreen(
@@ -253,8 +253,8 @@ sealed class BottomBarScreen(
     object Start: BottomBarScreen(
         route = "start",
         title = "Start",
-        icon = R.drawable.ic_bottom_home,
-        icon_focused = R.drawable.ic_bottom_home_focused
+        icon = R.drawable.ic_bottom_play,
+        icon_focused = R.drawable.ic_bottom_stop
     )
 }
 
@@ -344,7 +344,7 @@ fun RowScope.AddItem(
     val contentColor =
         if (selected) Color.White else Color.Black
 
-    val buttonIcon = remember { mutableStateOf(if (isProgramRunning) Icons.Default.Close else Icons.Default.PlayArrow) }
+    val buttonIcon = remember { mutableStateOf(if (isProgramRunning) screen.icon_focused else screen.icon) }
 
     Box(
         modifier = Modifier
@@ -355,10 +355,8 @@ fun RowScope.AddItem(
                 if (screen == BottomBarScreen.Start) {
                     if (isProgramRunning) {
                         viewModel.stopProgram()
-                        buttonIcon.value = Icons.Default.PlayArrow
                     } else {
                         viewModel.startProgram()
-                        buttonIcon.value = Icons.Default.Close
                         navController.navigate(BottomBarScreen.Console.route)
                     }
                 } else {
@@ -385,14 +383,6 @@ fun RowScope.AddItem(
                 Text(
                     text = screen.title,
                     color = contentColor
-                )
-            }
-            if (screen == BottomBarScreen.Start) {
-                Icon(
-                    painter = rememberVectorPainter(buttonIcon.value),
-                    contentDescription = "button",
-                    tint = contentColor,
-                    modifier = Modifier.size(24.dp)
                 )
             }
         }
