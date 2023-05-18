@@ -307,6 +307,8 @@ fun BottomNav() {
 
 @Composable
 fun BottomBar(navController: NavHostController) {
+    val viewModel: FlowViewModel = viewModel()
+
     val screens = listOf(
         BottomBarScreen.BlocksBar,
         BottomBarScreen.Coding,
@@ -330,7 +332,8 @@ fun BottomBar(navController: NavHostController) {
             AddItem(
                 screen = screen,
                 currentDestination = currentDestination,
-                navController = navController
+                navController = navController,
+                viewModel = viewModel
             )
         }
     }
@@ -340,9 +343,9 @@ fun BottomBar(navController: NavHostController) {
 fun RowScope.AddItem(
     screen: BottomBarScreen,
     currentDestination: NavDestination?,
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: FlowViewModel
 ) {
-    val viewModel: FlowViewModel = viewModel()
     val isProgramRunning by viewModel.isProgramRunning.collectAsState()
     val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
 
@@ -352,7 +355,11 @@ fun RowScope.AddItem(
     val contentColor =
         if (selected) Color.White else Color.Black
 
-    val buttonIcon = remember { mutableStateOf(if (isProgramRunning) screen.icon_focused else screen.icon) }
+    val buttonIcon = if (screen == BottomBarScreen.Start) {
+        if (isProgramRunning) R.drawable.ic_bottom_stop else R.drawable.ic_bottom_play
+    } else {
+        if (selected) screen.icon_focused else screen.icon
+    }
 
     Box(
         modifier = Modifier
@@ -382,7 +389,7 @@ fun RowScope.AddItem(
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Icon(
-                painter = painterResource(id = if (selected) screen.icon_focused else screen.icon),
+                painter = painterResource(id = buttonIcon),
                 contentDescription = "icon",
                 tint = contentColor,
                 modifier = Modifier.size(24.dp)
