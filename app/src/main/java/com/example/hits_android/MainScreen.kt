@@ -402,13 +402,17 @@ fun RowScope.AddItem(
                         viewModel.stopProgram()
                     } else {
                         viewModel.startProgram()
-                        navController.navigate(BottomBarScreen.Console.route)
+
+                        if (currentDestination?.route != BottomBarScreen.Console.route) {
+                            navController.navigate(BottomBarScreen.Console.route)
+                        }
                     }
                 } else if (screen == BottomBarScreen.BlocksBar) {
                     blocksBarSelected.value = !blocksBarSelected.value
-//                    if () {
-//                        navController.navigate(BottomBarScreen.Coding.route)
-//                    }
+
+                    if (currentDestination?.route != BottomBarScreen.Coding.route) {
+                        navController.navigate(BottomBarScreen.Coding.route)
+                    }
                 } else {
                     navController.navigate(screen.route) {
                         popUpTo(navController.graph.findStartDestination().id)
