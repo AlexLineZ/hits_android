@@ -2,7 +2,7 @@ package com.example.hits_android.expressionParser
 
 import com.example.hits_android.blocks.Scope
 import com.example.hits_android.blocks.blockIndex
-import java.util.*
+import java.util.Stack
 
 val variables = mutableMapOf<String, Variable>()
 var scopes = Scope()
@@ -240,6 +240,7 @@ class ParsingFunctions(private var tokens: List<Token>) {
                 }
                 throw Exception(e.message)
             }
+
             "%" -> return b % a
             "!=" -> return if (b != a) Variable(" ", Type.INT, "1") else Variable("", Type.INT, "0")
             "==" -> return if (b == a) Variable("", Type.INT, "1") else Variable("", Type.INT, "0")

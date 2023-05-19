@@ -1,25 +1,27 @@
 package com.example.hits_android.blocks
 
 import androidx.compose.runtime.Composable
-import com.example.hits_android.expressionParser.*
-import kotlin.math.exp
+import com.example.hits_android.expressionParser.LexicalComponents
+import com.example.hits_android.expressionParser.Variable
+import com.example.hits_android.expressionParser.variables
 
 // Блок определения функции
 class FunctionBlock(
     override var previousID: Int = -1,
     override var nextID: Int = -1,
     override val key: String,
-    override val title:String = "Function",
-    override val isDragOverLocked:Boolean = true
-): Block {
+    override val title: String = "Function",
+    override val isDragOverLocked: Boolean = true
+) : Block {
     // Название блока
     companion object {
         val BLOCK_NAME = "functionBlock"
     }
+
     override val blockName = BLOCK_NAME
 
     // Область видимости функции
-    var functionScope = MutableList<String>(0){""}
+    var functionScope = MutableList<String>(0) { "" }
 
     // Добавление блока в список блоков
     init {
@@ -32,7 +34,7 @@ class FunctionBlock(
 
     var parameters = ""                     // Параметры функции
     var funName = ""                        // Название функции
-    var parNamesList = MutableList(0){""}   // Список параметров
+    var parNamesList = MutableList(0) { "" }   // Список параметров
 
     // Создание функции
     override fun runCodeBlock() {

@@ -10,7 +10,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,8 +44,7 @@ class BreakBlock(
 
                 if (blockList[blockIndex].getNameOfBlock() == BeginBlock.BLOCK_NAME) {
                     scopes.destoryScope()
-                }
-                else if (blockList[blockIndex].getNameOfBlock() == EndBlock.BLOCK_NAME) {
+                } else if (blockList[blockIndex].getNameOfBlock() == EndBlock.BLOCK_NAME) {
                     scopes.addScope(scopes.getScope())
                 }
             } catch (e: ArrayIndexOutOfBoundsException) {

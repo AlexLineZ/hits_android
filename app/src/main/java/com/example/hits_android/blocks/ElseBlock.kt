@@ -10,11 +10,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.hits_android.expressionParser.scopes
 
 // Блок else
 class ElseBlock(
@@ -54,13 +52,12 @@ class ElseBlock(
         do {
             if (blockList[blockIndex].getNameOfBlock() == BLOCK_NAME) {
                 balance++
-            }
-            else if (blockList[blockIndex].getNameOfBlock() == BeginBlock.BLOCK_NAME) {
+            } else if (blockList[blockIndex].getNameOfBlock() == BeginBlock.BLOCK_NAME) {
                 balance--
             }
 
             blockIndex--
-        }while (balance != 0 && blockIndex < 0)
+        } while (balance != 0 && blockIndex < 0)
 
         if (blockIndex == -1 || blockList[blockIndex].getNameOfBlock() != IfBlock.BLOCK_NAME) {
             throw Exception("Else не относится к условию.")

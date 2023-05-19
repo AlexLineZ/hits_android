@@ -17,9 +17,10 @@ class FlowViewModel : ViewModel() {
         _output.value += newValue
     }
 
-    fun setError(error: String){
+    fun setError(error: String) {
         _output.value = error
     }
+
     private val _isProgramRunning = MutableStateFlow(false)
     val isProgramRunning: StateFlow<Boolean> = _isProgramRunning.asStateFlow()
 
@@ -29,12 +30,12 @@ class FlowViewModel : ViewModel() {
     fun startProgram() {
         if (!isProgramRunning.value) {
             job = GlobalScope.launch {
-                try{
+                try {
                     while (blockIndex < blockList.size) {
                         blockList[blockIndex].runCodeBlock()
                     }
                     _isProgramRunning.value = false
-                } catch (e: java.lang.Exception){
+                } catch (e: java.lang.Exception) {
                     setError(e.message.toString())
                     _isProgramRunning.value = false
                 }

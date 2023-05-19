@@ -13,7 +13,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -66,7 +64,8 @@ class WhileBlock(
         val whileBeginIndex = blockIndex
 
         // Проверка условия
-        var conditionExpression = ParsingFunctions(LexicalComponents(condition + ";").getTokensFromCode())
+        var conditionExpression =
+            ParsingFunctions(LexicalComponents(condition + ";").getTokensFromCode())
         var conditionState = conditionExpression.parseExpression()!!
 
         // Пока условие верно
@@ -80,7 +79,8 @@ class WhileBlock(
             blockList[blockIndex].runCodeBlock()
 
             // Проверка условия
-            conditionExpression = ParsingFunctions(LexicalComponents(condition + ";").getTokensFromCode())
+            conditionExpression =
+                ParsingFunctions(LexicalComponents(condition + ";").getTokensFromCode())
             conditionState = conditionExpression.parseExpression()!!
 
             // Переход к началу тела цикла

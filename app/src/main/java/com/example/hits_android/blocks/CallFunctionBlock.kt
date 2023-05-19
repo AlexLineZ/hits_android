@@ -1,20 +1,24 @@
 package com.example.hits_android.blocks
 
 import androidx.compose.runtime.Composable
-import com.example.hits_android.expressionParser.*
+import com.example.hits_android.expressionParser.LexicalComponents
+import com.example.hits_android.expressionParser.ParsingFunctions
+import com.example.hits_android.expressionParser.scopes
+import com.example.hits_android.expressionParser.variables
 
 // Блок вызова функции
 class CallFunctionBlock(
     override var previousID: Int = -1,
     override var nextID: Int = -1,
     override val key: String,
-    override val title:String = "CallFunction",
-    override val isDragOverLocked:Boolean = true
-): Block {
+    override val title: String = "CallFunction",
+    override val isDragOverLocked: Boolean = true
+) : Block {
     // Название блока
     companion object {
         val BLOCK_NAME = "callFunctionBlock"
     }
+
     override val blockName = BLOCK_NAME
 
     // Добавление блока в список блоков
@@ -35,18 +39,17 @@ class CallFunctionBlock(
         // Поиск определения функции
         while (blockList[blockIndex].getNameOfBlock() != FunctionBlock.BLOCK_NAME ||
             (blockList[blockIndex].getNameOfBlock() == FunctionBlock.BLOCK_NAME &&
-                    (blockList[blockIndex] as FunctionBlock).getFunctionName() != functionName)) {
+                    (blockList[blockIndex] as FunctionBlock).getFunctionName() != functionName)
+        ) {
             try {
                 blockIndex--
 
                 if (blockList[blockIndex].getNameOfBlock() == BeginBlock.BLOCK_NAME) {
                     scopes.destoryScope()
-                }
-                else if (blockList[blockIndex].getNameOfBlock() == EndBlock.BLOCK_NAME) {
+                } else if (blockList[blockIndex].getNameOfBlock() == EndBlock.BLOCK_NAME) {
                     scopes.addScope(scopes.getScope())
                 }
-            }
-            catch (e: ArrayIndexOutOfBoundsException) {
+            } catch (e: ArrayIndexOutOfBoundsException) {
                 throw Exception("Функция ${functionName} не была найдена при вызове.")
             }
         }
@@ -62,8 +65,10 @@ class CallFunctionBlock(
         }
 
         if (argList.size != (blockList[blockIndex] as FunctionBlock).getParameters().size) {
-            throw Exception("Кол-во аргументов при вызове функции ${functionName} не совпадает с кол-вом" +
-                    " её параметров.")
+            throw Exception(
+                "Кол-во аргументов при вызове функции ${functionName} не совпадает с кол-вом" +
+                        " её параметров."
+            )
         }
 
         for (i in argList.indices) {
@@ -77,7 +82,8 @@ class CallFunctionBlock(
                 throw Exception("При вызове функции ${functionName} переданы аргументы неподходящих типов.")
             }
 
-            variables[(blockList[blockIndex] as FunctionBlock).getParameters()[i]]?.value = args.value
+            variables[(blockList[blockIndex] as FunctionBlock).getParameters()[i]]?.value =
+                args.value
         }
 
         // Выполнение тела функции
