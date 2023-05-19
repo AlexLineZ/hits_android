@@ -180,7 +180,7 @@ class AssignmentBlock(
                 textState.value = it
                 item.variableName = textState.value.text
             },
-            modifier = Modifier.fillMaxWidth(0.45f),
+            modifier = Modifier.fillMaxWidth(0.43f),
             shape = RoundedCornerShape(4.dp),
             placeholder = { Text(text = "left operand") },
             keyboardOptions = KeyboardOptions(
