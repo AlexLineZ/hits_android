@@ -1,11 +1,17 @@
 package com.example.hits_android.blocks
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 interface Block {
     val blockName: String
@@ -41,10 +47,13 @@ class MainBlock(
 
     @Composable
     override fun BlockComposable(item: Block, codeBlocksList: List<Block>) {
-        Text(
-            text = item.title,
-            modifier = Modifier.padding(24.dp)
-        )
+            Text(
+                text = item.title,
+                modifier = Modifier.padding(10.dp),
+                color = MaterialTheme.colorScheme.onBackground,
+                fontWeight = FontWeight.Bold,
+                fontSize = 25.sp
+            )
     }
 }
 
@@ -70,7 +79,10 @@ class FinishProgramBlock(
     override fun BlockComposable(item: Block, codeBlocksList: List<Block>) {
         Text(
             text = item.title,
-            modifier = Modifier.padding(24.dp)
+            modifier = Modifier.padding(10.dp),
+            color = MaterialTheme.colorScheme.onBackground,
+            fontWeight = FontWeight.Bold,
+            fontSize = 25.sp
         )
     }
 }

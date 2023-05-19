@@ -54,12 +54,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.navigation.compose.currentBackStackEntryAsState
+import kotlin.text.Typography
 
 class MainScreen : Screen {
+
     @Composable
     override fun Content() {
+        val vm = ReorderListViewModel()
         Hits_androidTheme {
-            BottomNav()
+            BottomNav(vm)
         }
     }
 }
@@ -141,7 +144,7 @@ private fun BottomBar(
                 modifier = Modifier
                     .size(100.dp, 75.dp)
                     .clip(RoundedCornerShape(24.dp))
-                    .background(Color.Red)
+                    .background(MaterialTheme.colorScheme.primary)
                     .clickable(
                         onClick = {
                             vm.codeBlocksList = vm.codeBlocksList
@@ -154,10 +157,6 @@ private fun BottomBar(
                                                 AssignmentBlock(key = "${vm.codeBlocksList.size}")
                                             }
 
-//                                            "beginBlock" -> {
-//                                                BeginBlock(key = "${vm.codeBlocksList.size}")
-//                                            }
-
                                             "breakBlock" -> {
                                                 BreakBlock(key = "${vm.codeBlocksList.size}")
                                             }
@@ -169,10 +168,6 @@ private fun BottomBar(
                                             "ElseBlock" -> {
                                                 ElseBlock(key = "${vm.codeBlocksList.size}")
                                             }
-
-//                                            "endBlock" -> {
-//                                                EndBlock(key = "${vm.codeBlocksList.size}")
-//                                            }
 
                                             "IfBlock" -> {
                                                 IfBlock(key = "${vm.codeBlocksList.size}")
@@ -216,7 +211,11 @@ private fun BottomBar(
                         }
                     )
             ) {
-                Text(item.title)
+                Text(
+                    text = item.title,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
     }
@@ -229,35 +228,35 @@ sealed class BottomBarScreen(
     val icon_focused: Int = R.drawable.ic_bottom_home_focused
 ) {
 
-    object BlocksBar: BottomBarScreen(
+    object BlocksBar : BottomBarScreen(
         route = "blocksbar",
         title = "BlocksBar",
         icon = R.drawable.ic_bottom_arrow_up,
         icon_focused = R.drawable.ic_bottom_arrow_down
     )
 
-    object Coding: BottomBarScreen(
+    object Coding : BottomBarScreen(
         route = "coding",
         title = "Coding",
         icon = R.drawable.ic_bottom_home,
         icon_focused = R.drawable.ic_bottom_home_focused
     )
 
-    object Console: BottomBarScreen(
+    object Console : BottomBarScreen(
         route = "console",
         title = "Console",
         icon = R.drawable.ic_bottom_report,
         icon_focused = R.drawable.ic_bottom_report_focused
     )
 
-    object Settings: BottomBarScreen(
+    object Settings : BottomBarScreen(
         route = "settings",
         title = "Settings",
         icon = R.drawable.ic_bottom_profile,
         icon_focused = R.drawable.ic_bottom_profile_focused
     )
 
-    object Start: BottomBarScreen(
+    object Start : BottomBarScreen(
         route = "start",
         title = "Start",
         icon = R.drawable.ic_bottom_play,
@@ -266,21 +265,24 @@ sealed class BottomBarScreen(
 }
 
 @Composable
-fun BottomNav() {
+fun BottomNav(
+    vm: ReorderListViewModel
+) {
     val navController = rememberNavController()
 
     Scaffold(
-        bottomBar = { NavBottomBar(navController = navController) }
+        bottomBar = { NavBottomBar(navController = navController, vm) }
     ) {
         Modifier.padding(it)
         BottomNavGraph(
-            navController = navController
+            navController = navController,
+            vm
         )
     }
 }
 
 @Composable
-fun NavBottomBar(navController: NavHostController) {
+fun NavBottomBar(navController: NavHostController, vm: ReorderListViewModel) {
     val viewModel: FlowViewModel = viewModel()
 
     val screens = listOf(
@@ -307,16 +309,16 @@ fun NavBottomBar(navController: NavHostController) {
                 screen = screen,
                 currentDestination = currentDestination,
                 navController = navController,
-                viewModel = viewModel
+                viewModel = viewModel,
+                vm
             )
         }
     }
 }
 
 @Composable
-fun BottomNavGraph(navController: NavHostController) {
+fun BottomNavGraph(navController: NavHostController, vm: ReorderListViewModel) {
 
-    val vm = ReorderListViewModel()
     val viewModel: FlowViewModel = viewModel()
     NavHost(
         navController = navController,
@@ -325,16 +327,15 @@ fun BottomNavGraph(navController: NavHostController) {
         composable(route = BottomBarScreen.Coding.route) {
             Surface {
                 Column {
-                    BottomBar(vm)
                     Sandbox(vm)
                 }
             }
         }
         composable(route = BottomBarScreen.Console.route) {
-            Console(navController, viewModel)
+            Console(viewModel)
         }
         composable(route = BottomBarScreen.Settings.route) {
-            Settings(navController)
+            Settings()
         }
     }
 }
@@ -344,7 +345,8 @@ fun RowScope.AddItem(
     screen: BottomBarScreen,
     currentDestination: NavDestination?,
     navController: NavHostController,
-    viewModel: FlowViewModel
+    viewModel: FlowViewModel,
+    vm: ReorderListViewModel
 ) {
     val isProgramRunning by viewModel.isProgramRunning.collectAsState()
     val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
@@ -398,6 +400,9 @@ fun RowScope.AddItem(
                 tint = contentColor,
                 modifier = Modifier.size(24.dp)
             )
+            AnimatedVisibility(visible = blocksBarSelected.value && screen == BottomBarScreen.BlocksBar) {
+                BottomBar(vm = vm)
+            }
             AnimatedVisibility(visible = selected && screen != BottomBarScreen.Start && screen != BottomBarScreen.BlocksBar) {
                 Text(
                     text = screen.title,
@@ -409,9 +414,8 @@ fun RowScope.AddItem(
 }
 
 
-
 @Composable
-fun Console(navController: NavController, viewModel: FlowViewModel) {
+fun Console(viewModel: FlowViewModel) {
     val output by viewModel.output.collectAsState()
 
     LazyColumn(
@@ -441,7 +445,7 @@ fun Console(navController: NavController, viewModel: FlowViewModel) {
 }
 
 @Composable
-fun Settings(navController: NavController) {
+fun Settings() {
 
     LazyColumn(
         modifier = Modifier.fillMaxSize()
@@ -497,7 +501,6 @@ fun TestProgram() {
 
     val s6 = OutputBlock(-1, -1, "S", "S", true)
     s6.testBlock("a;")
-
 }
 
 

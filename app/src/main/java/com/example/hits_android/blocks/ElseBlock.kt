@@ -5,12 +5,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 // Блок else
 class ElseBlock(
@@ -58,11 +61,14 @@ class ElseBlock(
                 .fillMaxSize()
                 .padding(start = calculatePadding(codeBlocksList, item.key))
                 .clip(RoundedCornerShape(24.dp))
-                .background(Color.Gray)
+                .background(MaterialTheme.colorScheme.surfaceVariant)
         ) {
             Text(
                 text = item.title,
-                modifier = Modifier.padding(24.dp)
+                modifier = Modifier.padding(24.dp),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontWeight = FontWeight.Bold,
+                fontSize = 30.sp
             )
         }
     }

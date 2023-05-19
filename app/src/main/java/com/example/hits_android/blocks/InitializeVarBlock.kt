@@ -28,11 +28,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.hits_android.expressionParser.*
 
 // Блок создания новой переменной типа Int
@@ -118,7 +120,7 @@ class InitializeVarBlock(
                 .height(70.dp)
                 .padding(start = calculatePadding(codeBlocksList, item.key))
                 .clip(RoundedCornerShape(24.dp))
-                .background(Color.Gray)
+                .background(MaterialTheme.colorScheme.surfaceVariant)
         ) {
             Row(
                 modifier = Modifier
@@ -134,7 +136,7 @@ class InitializeVarBlock(
 
     @Composable
     fun dropdownMenuExample(item: InitializeVarBlock) {
-        val types = listOf("Int", "Bool", "String")
+        val types = listOf("Int", "Double", "Bool", "String")
         val selectedType = remember { mutableStateOf<String?>(null) }
         val expanded = remember { mutableStateOf(false) }
         Box(
@@ -147,7 +149,10 @@ class InitializeVarBlock(
             Text(
                 textAlign = TextAlign.Center,
                 text = selectedType.value ?: type,
-                maxLines = 1
+                maxLines = 1,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontWeight = FontWeight.Bold,
+                fontSize = 30.sp
             )
         }
         DropdownMenu(

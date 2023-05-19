@@ -23,11 +23,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.hits_android.expressionParser.LexicalComponents
 import com.example.hits_android.expressionParser.ParsingFunctions
 
@@ -106,7 +108,7 @@ class WhileBlock(
                 .fillMaxSize()
                 .padding(start = calculatePadding(codeBlocksList, item.key))
                 .clip(RoundedCornerShape(24.dp))
-                .background(Color.Gray)
+                .background(MaterialTheme.colorScheme.surfaceVariant)
         ) {
             Row(
                 modifier = Modifier
@@ -123,7 +125,10 @@ class WhileBlock(
                     Text(
                         text = item.title,
                         textAlign = TextAlign.Center,
-                        maxLines = 1
+                        maxLines = 1,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 30.sp
                     )
                 }
                 ItemConditionField(item)
