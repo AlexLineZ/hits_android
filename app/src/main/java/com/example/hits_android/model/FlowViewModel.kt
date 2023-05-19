@@ -3,6 +3,7 @@ package com.example.hits_android.model
 import androidx.lifecycle.ViewModel
 import com.example.hits_android.blocks.blockIndex
 import com.example.hits_android.blocks.blockList
+import com.example.hits_android.expressionParser.variables
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,6 +32,10 @@ class FlowViewModel : ViewModel() {
         if (!isProgramRunning.value) {
             job = GlobalScope.launch {
                 try {
+                    variables.clear()
+                    blockIndex = 0
+                    _output.value = ""
+
                     while (blockIndex < blockList.size) {
                         blockList[blockIndex].runCodeBlock()
                     }
