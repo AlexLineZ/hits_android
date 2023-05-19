@@ -4,9 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import cafe.adriel.voyager.navigator.Navigator
+import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.hits_android.model.ThemeViewModel
 import com.example.hits_android.ui.theme.Hits_androidTheme
 import com.example.hits_android.ui.theme.MyAppTheme
 
@@ -15,13 +18,21 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-
-            val isDarkTheme = if (isSystemInDarkTheme()) MyAppTheme.Dark else MyAppTheme.Light
-            val selectedTheme = remember { mutableStateOf (isDarkTheme) }
-
-            Hits_androidTheme(selectedTheme = selectedTheme.value) {
-                Navigator(screen = StartScreen(selectedTheme))
+            Hits_androidTheme {
+                NavigationSystem()
             }
         }
+    }
+}
+
+@Composable
+fun NavigationSystem() {
+    val navController = rememberNavController()
+    val viewModel: ThemeViewModel = viewModel()
+    viewModel.setCurrentTheme(if(isSystemInDarkTheme()) MyAppTheme.Dark else MyAppTheme.Light)
+
+    NavHost(navController = navController, startDestination = "start") {
+        composable("start") { StartScreen(navController, viewModel) }
+        composable("main") { MainScreen(navController, viewModel) }
     }
 }

@@ -6,7 +6,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,13 +22,13 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -53,7 +52,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import cafe.adriel.voyager.core.screen.Screen
 import com.example.hits_android.blocks.AssignmentBlock
 import com.example.hits_android.blocks.BeginBlock
 import com.example.hits_android.blocks.BreakBlock
@@ -68,6 +66,7 @@ import com.example.hits_android.blocks.WhileBlock
 import com.example.hits_android.blocks.blockList
 import com.example.hits_android.model.FlowViewModel
 import com.example.hits_android.model.ReorderListViewModel
+import com.example.hits_android.model.ThemeViewModel
 import com.example.hits_android.ui.theme.Hits_androidTheme
 import com.example.hits_android.ui.theme.MyAppTheme
 import org.burnoutcrew.reorderable.ReorderableItem
@@ -75,14 +74,15 @@ import org.burnoutcrew.reorderable.detectReorderAfterLongPress
 import org.burnoutcrew.reorderable.rememberReorderableLazyListState
 import org.burnoutcrew.reorderable.reorderable
 
-class MainScreen(private var selectedTheme: MutableState<MyAppTheme>) : Screen {
-
-    @Composable
-    override fun Content() {
-        val vm = ReorderListViewModel()
-        Hits_androidTheme(selectedTheme.value) {
-            BottomNav(vm = vm, selectedTheme = selectedTheme)
-        }
+@Composable
+fun MainScreen(
+    navController: NavHostController,
+    themeVM: ThemeViewModel
+) {
+    val theme by themeVM.theme.collectAsState()
+    val vm = ReorderListViewModel()
+    Hits_androidTheme(theme) {
+        BottomNav(vm = vm, themeVM = themeVM)
     }
 }
 
@@ -291,18 +291,23 @@ sealed class BottomBarScreen(
 @Composable
 fun BottomNav(
     vm: ReorderListViewModel,
-    selectedTheme: MutableState<MyAppTheme>
+    themeVM: ThemeViewModel
 ) {
     val navController = rememberNavController()
-
     Scaffold(
-        bottomBar = { NavBottomBar(navController = navController, vm = vm, selectedTheme = selectedTheme) }
+        bottomBar = {
+            NavBottomBar(
+                navController = navController,
+                vm = vm,
+                themeVM = themeVM
+            )
+        }
     ) {
         Modifier.padding(it)
         BottomNavGraph(
             navController = navController,
             vm = vm,
-            selectedTheme = selectedTheme
+            themeVM = themeVM
         )
     }
 }
@@ -311,7 +316,7 @@ fun BottomNav(
 fun NavBottomBar(
     navController: NavHostController,
     vm: ReorderListViewModel,
-    selectedTheme: MutableState<MyAppTheme>
+    themeVM: ThemeViewModel
 ) {
     val viewModel: FlowViewModel = viewModel()
 
@@ -341,7 +346,7 @@ fun NavBottomBar(
                 navController = navController,
                 viewModel = viewModel,
                 vm = vm,
-                selectedTheme = selectedTheme
+                themeVM = themeVM
             )
         }
     }
@@ -350,7 +355,8 @@ fun NavBottomBar(
 @Composable
 fun BottomNavGraph(
     navController: NavHostController,
-    vm: ReorderListViewModel, selectedTheme: MutableState<MyAppTheme>
+    vm: ReorderListViewModel,
+    themeVM: ThemeViewModel
 ) {
 
     val viewModel: FlowViewModel = viewModel()
@@ -369,7 +375,7 @@ fun BottomNavGraph(
             Console(viewModel)
         }
         composable(route = BottomBarScreen.Settings.route) {
-            Settings(selectedTheme)
+            Settings(themeVM)
         }
     }
 }
@@ -381,8 +387,10 @@ fun RowScope.AddItem(
     navController: NavHostController,
     viewModel: FlowViewModel,
     vm: ReorderListViewModel,
-    selectedTheme: MutableState<MyAppTheme>
+    themeVM: ThemeViewModel
 ) {
+
+    val theme by themeVM.theme.collectAsState()
     val isProgramRunning by viewModel.isProgramRunning.collectAsState()
     val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
 
@@ -390,7 +398,7 @@ fun RowScope.AddItem(
         if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.6f) else Color.Transparent
 
     val contentColor =
-        when (selectedTheme.value) {
+        when (theme) {
             MyAppTheme.Light -> if (selected) Color.White else Color.Black
             MyAppTheme.Dark -> Color.White
         }
@@ -490,7 +498,7 @@ fun Console(viewModel: FlowViewModel) {
 }
 
 @Composable
-fun Settings(selectedTheme: MutableState<MyAppTheme>) {
+fun Settings(themeVM: ThemeViewModel) {
 
     LazyColumn(
         modifier = Modifier.fillMaxSize()
@@ -506,8 +514,14 @@ fun Settings(selectedTheme: MutableState<MyAppTheme>) {
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
-
             }
+        }
+        item {
+            Button(
+                onClick = {
+                    themeVM.setCurrentTheme(MyAppTheme.Light)
+                }
+            ) {}
         }
         item {
             Text(

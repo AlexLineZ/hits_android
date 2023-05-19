@@ -8,36 +8,34 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
+import androidx.navigation.NavController
+import com.example.hits_android.model.ThemeViewModel
 import com.example.hits_android.ui.theme.Hits_androidTheme
-import com.example.hits_android.ui.theme.MyAppTheme
 
-class StartScreen(private var selectedTheme: MutableState<MyAppTheme>) : Screen {
-    @Composable
-    override fun Content() {
-        val navigator = LocalNavigator.currentOrThrow
-        Hits_androidTheme(selectedTheme.value) {
-            Surface {
-                Box(
-                    modifier = Modifier.fillMaxSize()
+@Composable
+fun StartScreen(navController: NavController, themeVM: ThemeViewModel) {
+    val theme by themeVM.theme.collectAsState()
+
+    Hits_androidTheme(theme) {
+        Surface {
+            Box(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Button(
+                    onClick = {
+                        navController.navigate("main")
+                    },
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(10.dp)
+                        .fillMaxWidth(),
                 ) {
-                    Button(
-                        onClick = {
-                            navigator.push(MainScreen(selectedTheme))
-                        },
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(10.dp)
-                            .fillMaxWidth(),
-                    ) {
-                        Text(text = "Another activity")
-                    }
+                    Text(text = "Another activity")
                 }
             }
         }
