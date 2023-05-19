@@ -398,7 +398,6 @@ fun RowScope.AddItem(
             .background(background)
             .clickable(onClick = {
                 if (screen == BottomBarScreen.Start) {
-                    blocksBarSelected.value = false
                     if (isProgramRunning) {
                         viewModel.stopProgram()
                     } else {
