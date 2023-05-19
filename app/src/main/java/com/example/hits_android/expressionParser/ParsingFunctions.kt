@@ -221,8 +221,7 @@ class ParsingFunctions(private var tokens: List<Token>) {
         }
 
         if (resultStack.size > 1) {
-            throw Exception("Некорректное выражение, указаны несколько значений подряд " +
-                    "в блоке номер ${blockIndex + 1}")
+            throw Exception("Некорректное выражение в блоке номер ${blockIndex + 1}")
         }
         return resultStack.pop()
     }

@@ -74,7 +74,7 @@ class IfBlock(
             blockList[blockIndex].runCodeBlock()
 
             // Пропуск else
-            if (blockList[blockIndex].getNameOfBlock() == ElseBlock.BLOCK_NAME) {
+            if (blockIndex < blockList.size && blockList[blockIndex].getNameOfBlock() == ElseBlock.BLOCK_NAME) {
                 blockIndex++
                 skipBlock()
             }
