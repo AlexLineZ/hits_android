@@ -253,8 +253,8 @@ sealed class BottomBarScreen(
     object BlocksBar : BottomBarScreen(
         route = "blocksbar",
         title = "BlocksBar",
-        icon = R.drawable.ic_bottom_arrow_up,
-        icon_focused = R.drawable.ic_bottom_arrow_down
+        icon = R.drawable.ic_bottom_blocks_open,
+        icon_focused = R.drawable.ic_bottom_blocks_close
     )
 
     object Coding : BottomBarScreen(
@@ -407,7 +407,9 @@ fun RowScope.AddItem(
                     }
                 } else if (screen == BottomBarScreen.BlocksBar) {
                     blocksBarSelected.value = !blocksBarSelected.value
-                    navController.navigate(BottomBarScreen.Coding.route)
+//                    if () {
+//                        navController.navigate(BottomBarScreen.Coding.route)
+//                    }
                 } else {
                     navController.navigate(screen.route) {
                         popUpTo(navController.graph.findStartDestination().id)
