@@ -74,6 +74,7 @@ class InitializeVarBlock(
         val expression = ParsingFunctions(LexicalComponents(value + ";").getTokensFromCode())
         val newVariable = expression.parseExpression()!!
 
+        // Проверка соответсвтия типов переменной и значения
         if (type != newVariable.type &&
             !(type == Type.DOUBLE && newVariable.type == Type.INT) &&
             !(type == Type.INT && newVariable.type == Type.DOUBLE)

@@ -1,16 +1,26 @@
 package com.example.hits_android.blocks
 
+import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hits_android.expressionParser.LexicalComponents
@@ -39,51 +49,59 @@ class InitializeArrayBlock(
         blockList.add(this)
     }
 
-    var arrayName = ""   // Название массива
-    var arrayType = ""   // Тип элементов массива
-    var arraySize = ""   // Размер массива
+    var arrayName = ""      // Название массива
+    var arrayType = "Int"   // Тип элементов массива
+    var arraySize = ""      // Размер массива
 
     // Создание массива
     override fun runCodeBlock() {
+        if (!(Regex("^(?!true|false|\\d)\\w+").matches(arrayName))) {
+            throw Exception("Некорректное название массива")
+        }
+
         // Пересоздание массива
         if (variables[arrayName] != null) {
             throw Exception("Происходит пересоздание переменной")
         }
 
+        // Проверка размера массива
+        val expression = ParsingFunctions(LexicalComponents(arraySize + ";").getTokensFromCode())
+        val size = expression.parseExpression()!!
+
+        if (size.type != Type.INT || size < Variable("", Type.INT, "0")) {
+            throw Exception("Некорректный размер массива")
+        }
+
         // Создание массива с элементами типа Int
         if (arrayType == Type.INT) {
-            val expression = ParsingFunctions(LexicalComponents(arraySize).getTokensFromCode())
             variables[arrayName] = Variable(
                 arrayName,
-                "ArrayInt",
-                Array(expression.parseExpression()!!.value.toString().toInt()) { 0 })
+                Type.INT + "Array",
+                Array(size.value.toString().toInt()) { 0 })
         }
 
         // Создание массива с элементами типа Double
         else if (arrayType == Type.DOUBLE) {
-            val expression = ParsingFunctions(LexicalComponents(arraySize).getTokensFromCode())
             variables[arrayName] = Variable(
                 arrayName,
-                "ArrayDouble",
-                Array(expression.parseExpression()!!.value.toString().toInt()) { 0.0 })
+                Type.DOUBLE + "Array",
+                Array(size.value.toString().toInt()) { 0.0 })
         }
 
         // Создание массива с элементами типа String
         else if (arrayType == Type.STRING) {
-            val expression = ParsingFunctions(LexicalComponents(arraySize).getTokensFromCode())
             variables[arrayName] = Variable(
                 arrayName,
-                "ArrayString",
-                Array(expression.parseExpression()!!.value.toString().toInt()) { "" })
+                Type.STRING + "Array",
+                Array(size.value.toString().toInt()) { "" })
         }
 
         // Создание массива с элементами типа Bool
         else if (arrayType == Type.BOOL) {
-            val expression = ParsingFunctions(LexicalComponents(arraySize).getTokensFromCode())
             variables[arrayName] = Variable(
                 arrayName,
-                "ArrayBool",
-                Array(expression.parseExpression()!!.value.toString().toInt()) { "0" })
+                Type.BOOL + "Array",
+                Array(size.value.toString().toInt()) { "0" })
         }
 
         // Выполнение следующих блоков
