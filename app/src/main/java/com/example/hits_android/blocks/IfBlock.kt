@@ -68,7 +68,7 @@ class IfBlock(
         blockIndex++
 
         // Проверка условия
-        val conditionExpression = ParsingFunctions(LexicalComponents(condition).getTokensFromCode())
+        val conditionExpression = ParsingFunctions(LexicalComponents(condition + ";").getTokensFromCode())
         val conditionState = conditionExpression.parseExpression()!!
 
         // Если условие верно
@@ -82,7 +82,7 @@ class IfBlock(
             blockList[blockIndex].runCodeBlock()
 
             // Пропуск else
-            if (blockList[blockIndex].getNameOfBlock() == ElseBlock.BLOCK_NAME) {
+            if (blockIndex < blockList.size && blockList[blockIndex].getNameOfBlock() == ElseBlock.BLOCK_NAME) {
                 blockIndex++
                 skipBlock()
             }
@@ -148,7 +148,10 @@ class IfBlock(
 
         TextField(
             value = textState.value,
-            onValueChange = { textState.value = it },
+            onValueChange = {
+                textState.value = it
+                item.condition = textState.value.text
+            },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(6.dp),
             keyboardOptions = KeyboardOptions(

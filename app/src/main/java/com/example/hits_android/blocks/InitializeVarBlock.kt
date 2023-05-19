@@ -63,14 +63,24 @@ class InitializeVarBlock(
 
     // Создание новой переменной
     override fun runCodeBlock() {
+        if (!(Regex("^(?!true|false|\\d)\\w+").matches(name))) {
+            throw Exception("Некорректное название переменной")
+        }
+
         // Пересоздание переменной
         if (variables[name] != null) {
             throw Exception("Происходит пересоздание переменной");
         }
 
         // Вычисление значения переменной
-        val expression = ParsingFunctions(LexicalComponents(value).getTokensFromCode())
-        val newVariable = Variable(name, type, expression.parseExpression()!!.value)
+        val expression = ParsingFunctions(LexicalComponents(value + ";").getTokensFromCode())
+        val newVariable = expression.parseExpression()!!
+
+        if (type != newVariable.type &&
+            !(type == Type.DOUBLE && newVariable.type == Type.INT) &&
+                !(type == Type.INT && newVariable.type == Type.DOUBLE)) {
+            throw Exception("Переменной типа ${type} присваивается значение типа ${newVariable.type}")
+        }
 
         // Обрезка дробной части у переменной типа Int
         if (type == Type.INT && newVariable.value.toString().contains(".")) {
@@ -182,7 +192,10 @@ class InitializeVarBlock(
 
         TextField(
             value = textState.value,
-            onValueChange = { textState.value = it },
+            onValueChange = {
+                textState.value = it
+                item.name = textState.value.text
+            },
             modifier = Modifier.fillMaxWidth(0.5f),
             shape = RoundedCornerShape(4.dp),
             keyboardOptions = KeyboardOptions(
@@ -206,7 +219,10 @@ class InitializeVarBlock(
 
         TextField(
             value = textState.value,
-            onValueChange = { textState.value = it },
+            onValueChange = {
+                textState.value = it
+                item.value = textState.value.text
+            },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(4.dp),
             keyboardOptions = KeyboardOptions(

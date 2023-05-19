@@ -37,7 +37,7 @@ class MainBlock(
     override val blockName = "mainBlock"
 
     override fun runCodeBlock() {
-
+        blockIndex++
     }
 
     // Возврат названия блока
@@ -67,7 +67,7 @@ class FinishProgramBlock(
     override val blockName = "finishProgram"
 
     override fun runCodeBlock() {
-
+        blockIndex++
     }
 
     // Возврат названия блока

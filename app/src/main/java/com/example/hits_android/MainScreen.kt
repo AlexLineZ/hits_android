@@ -206,6 +206,10 @@ private fun BottomBar(
                                             vm.codeBlocksList.size,
                                             BeginBlock(key = "${vm.codeBlocksList.size + 1}")
                                         )
+
+                                        val temp = blockList[blockList.size - 1]
+                                        blockList[blockList.size - 1] = blockList[blockList.size - 2]
+                                        blockList[blockList.size - 2] = temp
                                     }
                                 }
                         }

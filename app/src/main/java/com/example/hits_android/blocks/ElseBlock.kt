@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.hits_android.expressionParser.scopes
 
 // Блок else
 class ElseBlock(
@@ -37,8 +38,36 @@ class ElseBlock(
 
     // Выполнение блока else
     override fun runCodeBlock() {
-        // Переход к следующим блокам
-        blockIndex++
+        // Запоминание позиции Else блока
+        val savedIndex = blockIndex
+
+        // Проверка наличия End блока перед Else
+        blockIndex--
+
+        if (blockIndex == -1 || blockList[blockIndex].getNameOfBlock() != BLOCK_NAME) {
+            throw Exception("Else не относится к условию.")
+        }
+
+        // Проверка того, что Else идёт после If
+        var balance = 0
+
+        do {
+            if (blockList[blockIndex].getNameOfBlock() == BLOCK_NAME) {
+                balance++
+            }
+            else if (blockList[blockIndex].getNameOfBlock() == BeginBlock.BLOCK_NAME) {
+                balance--
+            }
+
+            blockIndex--
+        }while (balance != 0 && blockIndex < 0)
+
+        if (blockIndex == -1 || blockList[blockIndex].getNameOfBlock() != IfBlock.BLOCK_NAME) {
+            throw Exception("Else не относится к условию.")
+        }
+
+        // Возвращение к телу блока Else
+        blockIndex = savedIndex + 1
 
         // Выполнение тела блока else
         while (blockList[blockIndex].getNameOfBlock() != EndBlock.BLOCK_NAME) {

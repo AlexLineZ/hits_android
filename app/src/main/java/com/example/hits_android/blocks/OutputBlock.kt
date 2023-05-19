@@ -59,7 +59,7 @@ class OutputBlock(
 
     // Вывод в консоль
     override fun runCodeBlock() {
-        val exp = ParsingFunctions(LexicalComponents(expression).getTokensFromCode())
+        val exp = ParsingFunctions(LexicalComponents(expression + ";").getTokensFromCode())
         val result = exp.parseExpression()
 
         when (result) {
@@ -128,7 +128,10 @@ class OutputBlock(
 
         TextField(
             value = textState.value,
-            onValueChange = { textState.value = it },
+            onValueChange = {
+                textState.value = it
+                item.expression = textState.value.text
+            },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(4.dp),
             keyboardOptions = KeyboardOptions(

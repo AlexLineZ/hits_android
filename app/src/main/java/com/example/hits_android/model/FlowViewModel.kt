@@ -1,7 +1,6 @@
 package com.example.hits_android.model
 
 import androidx.lifecycle.ViewModel
-import com.example.hits_android.TestProgram
 import com.example.hits_android.blocks.blockIndex
 import com.example.hits_android.blocks.blockList
 import kotlinx.coroutines.*
@@ -30,7 +29,6 @@ class FlowViewModel : ViewModel() {
     fun startProgram() {
         if (!isProgramRunning.value) {
             job = GlobalScope.launch {
-                TestProgram()
                 try{
                     while (blockIndex < blockList.size) {
                         blockList[blockIndex].runCodeBlock()
