@@ -8,6 +8,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -15,19 +16,20 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.example.hits_android.ui.theme.Hits_androidTheme
+import com.example.hits_android.ui.theme.MyAppTheme
 
-class StartScreen : Screen {
+class StartScreen(private var selectedTheme: MutableState<MyAppTheme>) : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        Hits_androidTheme {
+        Hits_androidTheme(selectedTheme.value) {
             Surface {
                 Box(
                     modifier = Modifier.fillMaxSize()
                 ) {
                     Button(
                         onClick = {
-                            navigator.push(MainScreen())
+                            navigator.push(MainScreen(selectedTheme))
                         },
                         modifier = Modifier
                             .align(Alignment.BottomCenter)

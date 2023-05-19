@@ -29,6 +29,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -68,18 +69,19 @@ import com.example.hits_android.blocks.blockList
 import com.example.hits_android.model.FlowViewModel
 import com.example.hits_android.model.ReorderListViewModel
 import com.example.hits_android.ui.theme.Hits_androidTheme
+import com.example.hits_android.ui.theme.MyAppTheme
 import org.burnoutcrew.reorderable.ReorderableItem
 import org.burnoutcrew.reorderable.detectReorderAfterLongPress
 import org.burnoutcrew.reorderable.rememberReorderableLazyListState
 import org.burnoutcrew.reorderable.reorderable
 
-class MainScreen : Screen {
+class MainScreen(private var selectedTheme: MutableState<MyAppTheme>) : Screen {
 
     @Composable
     override fun Content() {
         val vm = ReorderListViewModel()
-        Hits_androidTheme {
-            BottomNav(vm)
+        Hits_androidTheme(selectedTheme.value) {
+            BottomNav(vm = vm, selectedTheme = selectedTheme)
         }
     }
 }
@@ -288,23 +290,29 @@ sealed class BottomBarScreen(
 
 @Composable
 fun BottomNav(
-    vm: ReorderListViewModel
+    vm: ReorderListViewModel,
+    selectedTheme: MutableState<MyAppTheme>
 ) {
     val navController = rememberNavController()
 
     Scaffold(
-        bottomBar = { NavBottomBar(navController = navController, vm) }
+        bottomBar = { NavBottomBar(navController = navController, vm = vm, selectedTheme = selectedTheme) }
     ) {
         Modifier.padding(it)
         BottomNavGraph(
             navController = navController,
-            vm
+            vm = vm,
+            selectedTheme = selectedTheme
         )
     }
 }
 
 @Composable
-fun NavBottomBar(navController: NavHostController, vm: ReorderListViewModel) {
+fun NavBottomBar(
+    navController: NavHostController,
+    vm: ReorderListViewModel,
+    selectedTheme: MutableState<MyAppTheme>
+) {
     val viewModel: FlowViewModel = viewModel()
 
     val screens = listOf(
@@ -332,14 +340,18 @@ fun NavBottomBar(navController: NavHostController, vm: ReorderListViewModel) {
                 currentDestination = currentDestination,
                 navController = navController,
                 viewModel = viewModel,
-                vm
+                vm = vm,
+                selectedTheme = selectedTheme
             )
         }
     }
 }
 
 @Composable
-fun BottomNavGraph(navController: NavHostController, vm: ReorderListViewModel) {
+fun BottomNavGraph(
+    navController: NavHostController,
+    vm: ReorderListViewModel, selectedTheme: MutableState<MyAppTheme>
+) {
 
     val viewModel: FlowViewModel = viewModel()
     NavHost(
@@ -357,7 +369,7 @@ fun BottomNavGraph(navController: NavHostController, vm: ReorderListViewModel) {
             Console(viewModel)
         }
         composable(route = BottomBarScreen.Settings.route) {
-            Settings()
+            Settings(selectedTheme)
         }
     }
 }
@@ -368,7 +380,8 @@ fun RowScope.AddItem(
     currentDestination: NavDestination?,
     navController: NavHostController,
     viewModel: FlowViewModel,
-    vm: ReorderListViewModel
+    vm: ReorderListViewModel,
+    selectedTheme: MutableState<MyAppTheme>
 ) {
     val isProgramRunning by viewModel.isProgramRunning.collectAsState()
     val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
@@ -377,10 +390,9 @@ fun RowScope.AddItem(
         if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.6f) else Color.Transparent
 
     val contentColor =
-        if (isSystemInDarkTheme()) {
-            Color.White
-        } else {
-            if (selected) Color.White else Color.Black
+        when (selectedTheme.value) {
+            MyAppTheme.Light -> if (selected) Color.White else Color.Black
+            MyAppTheme.Dark -> Color.White
         }
 
     val buttonIcon = if (screen == BottomBarScreen.Start) {
@@ -478,7 +490,7 @@ fun Console(viewModel: FlowViewModel) {
 }
 
 @Composable
-fun Settings() {
+fun Settings(selectedTheme: MutableState<MyAppTheme>) {
 
     LazyColumn(
         modifier = Modifier.fillMaxSize()
