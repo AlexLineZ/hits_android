@@ -108,7 +108,7 @@ private fun VerticalReorderList(
     )
     LazyColumn(
         state = state.listState,
-        modifier = Modifier.reorderable(state),
+        modifier = Modifier.reorderable(state).padding(start = 4.dp, end = 4.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(vm.codeBlocksList, { item -> item.key }) { item ->
