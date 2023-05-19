@@ -6,6 +6,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -376,7 +377,11 @@ fun RowScope.AddItem(
         if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.6f) else Color.Transparent
 
     val contentColor =
-        if (selected) Color.White else Color.Black
+        if (isSystemInDarkTheme()) {
+            Color.White
+        } else {
+            if (selected) Color.White else Color.Black
+        }
 
     val buttonIcon = if (screen == BottomBarScreen.Start) {
         if (isProgramRunning) R.drawable.ic_bottom_stop else R.drawable.ic_bottom_play
@@ -393,6 +398,7 @@ fun RowScope.AddItem(
             .background(background)
             .clickable(onClick = {
                 if (screen == BottomBarScreen.Start) {
+                    blocksBarSelected.value = false
                     if (isProgramRunning) {
                         viewModel.stopProgram()
                     } else {
@@ -401,6 +407,7 @@ fun RowScope.AddItem(
                     }
                 } else if (screen == BottomBarScreen.BlocksBar) {
                     blocksBarSelected.value = !blocksBarSelected.value
+                    navController.navigate(BottomBarScreen.Coding.route)
                 } else {
                     navController.navigate(screen.route) {
                         popUpTo(navController.graph.findStartDestination().id)
