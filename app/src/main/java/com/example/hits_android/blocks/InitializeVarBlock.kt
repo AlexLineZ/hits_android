@@ -3,6 +3,7 @@ package com.example.hits_android.blocks
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -31,6 +32,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hits_android.expressionParser.*
@@ -133,10 +135,19 @@ class InitializeVarBlock(
         ) {
             Row(
                 modifier = Modifier
-                    .fillMaxSize(),
-                verticalAlignment = Alignment.CenterVertically
+                    .fillMaxSize()
+                    .padding(horizontal = 25.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                dropdownMenuExample(item)
+                Text(
+                    textAlign = TextAlign.Center,
+                    text = "Var",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 25.sp
+                )
+                DropdownMenu(item)
                 ItemNameField(item)
                 ItemValueField(item)
             }
@@ -144,7 +155,7 @@ class InitializeVarBlock(
     }
 
     @Composable
-    fun dropdownMenuExample(item: InitializeVarBlock) {
+    fun DropdownMenu(item: InitializeVarBlock) {
         val types = listOf("Int", "Double", "Bool", "String")
         val selectedType = remember { mutableStateOf<String?>(null) }
         val expanded = remember { mutableStateOf(false) }
@@ -161,14 +172,13 @@ class InitializeVarBlock(
                 maxLines = 1,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontWeight = FontWeight.Bold,
-                fontSize = 30.sp
+                fontSize = 25.sp,
+                textDecoration = TextDecoration.Underline
             )
         }
         DropdownMenu(
             expanded = expanded.value,
-            onDismissRequest = { expanded.value = false },
-            modifier = Modifier
-                .fillMaxWidth(0.3f)
+            onDismissRequest = { expanded.value = false }
         ) {
             types.forEach { type ->
                 DropdownMenuItem(
@@ -197,6 +207,7 @@ class InitializeVarBlock(
             },
             modifier = Modifier.fillMaxWidth(0.5f),
             shape = RoundedCornerShape(4.dp),
+            placeholder = { Text(text = "name") },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Done // Изменяем действие клавиатуры на "Готово"
@@ -222,8 +233,9 @@ class InitializeVarBlock(
                 textState.value = it
                 item.value = textState.value.text
             },
+            placeholder = { Text(text = "value") },
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(4.dp),
+            shape = RoundedCornerShape(5.dp),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Done // Изменяем действие клавиатуры на "Готово"
@@ -231,7 +243,6 @@ class InitializeVarBlock(
             keyboardActions = KeyboardActions(
                 onDone = {
                     item.value = textState.value.text
-                    Log.d("s", "${item.value}\n")
                     keyboardController?.hide() // Скрываем клавиатуру
                 }
             )

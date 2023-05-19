@@ -103,6 +103,7 @@ class IfBlock(
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .height(70.dp)
                 .padding(start = calculatePadding(codeBlocksList, item.key))
                 .clip(RoundedCornerShape(24.dp))
                 .background(MaterialTheme.colorScheme.surfaceVariant)
@@ -110,12 +111,12 @@ class IfBlock(
             Row(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(start = 10.dp, end = 20.dp),
+                    .padding(horizontal = 25.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth(0.3f)
+                        .fillMaxWidth(0.2f)
                         .height(70.dp),
                     contentAlignment = Alignment.Center
                 ) {
@@ -146,6 +147,7 @@ class IfBlock(
                 item.condition = textState.value.text
             },
             modifier = Modifier.fillMaxWidth(),
+            placeholder = { Text(text = "condition") },
             shape = RoundedCornerShape(6.dp),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,

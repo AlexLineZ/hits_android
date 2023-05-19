@@ -1,5 +1,6 @@
 package com.example.hits_android.blocks
 
+import android.graphics.Paint.Align
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -108,6 +109,7 @@ class WhileBlock(
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .height(70.dp)
                 .padding(start = calculatePadding(codeBlocksList, item.key))
                 .clip(RoundedCornerShape(24.dp))
                 .background(MaterialTheme.colorScheme.surfaceVariant)
@@ -115,7 +117,7 @@ class WhileBlock(
             Row(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(10.dp),
+                    .padding(horizontal = 25.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
@@ -152,6 +154,7 @@ class WhileBlock(
                 item.condition = textState.value.text
             },
             modifier = Modifier.fillMaxWidth(),
+            placeholder = { Text(text = "condition") },
             shape = RoundedCornerShape(4.dp),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,

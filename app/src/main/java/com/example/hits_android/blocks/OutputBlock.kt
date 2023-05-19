@@ -88,6 +88,7 @@ class OutputBlock(
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .height(70.dp)
                 .padding(start = calculatePadding(codeBlocksList, item.key))
                 .clip(RoundedCornerShape(24.dp))
                 .background(MaterialTheme.colorScheme.surfaceVariant)
@@ -95,13 +96,12 @@ class OutputBlock(
             Row(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(10.dp),
+                    .padding(horizontal = 25.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth(0.3f)
-                        .height(70.dp),
+                        .fillMaxWidth(0.25f),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -113,14 +113,14 @@ class OutputBlock(
                         fontSize = 30.sp
                     )
                 }
-                itemConditionField(item)
+                ItemConditionField(item)
             }
         }
     }
 
     @OptIn(ExperimentalComposeUiApi::class)
     @Composable
-    fun itemConditionField(item: OutputBlock) {
+    fun ItemConditionField(item: OutputBlock) {
         val textState = remember { mutableStateOf(TextFieldValue(text = item.expression)) }
         val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -131,6 +131,7 @@ class OutputBlock(
                 item.expression = textState.value.text
             },
             modifier = Modifier.fillMaxWidth(),
+            placeholder = { Text(text = "something") },
             shape = RoundedCornerShape(4.dp),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
