@@ -3,14 +3,7 @@ package com.example.hits_android.blocks
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -76,6 +69,7 @@ class InitializeVarBlock(
         val expression = ParsingFunctions(LexicalComponents(value + ";").getTokensFromCode())
         val newVariable = expression.parseExpression()!!
 
+        // Проверка соответсвтия типов переменной и значения
         if (type != newVariable.type &&
             !(type == Type.DOUBLE && newVariable.type == Type.INT) &&
             !(type == Type.INT && newVariable.type == Type.DOUBLE)

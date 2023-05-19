@@ -123,7 +123,7 @@ class ParsingFunctions(private var tokens: List<Token>) {
                 else if (findToken(Name.L_SQUARE_BRACKET.value) != null) {
                     try {
                         // Элемент Int массива
-                        if ((variables[nowToken.text]?.type == Type.INT/* as Array<*>)[0] is Int*/)) {
+                        if ((variables[nowToken.text]?.type == Type.INT + "Array"/* as Array<*>)[0] is Int*/)) {
                             resultStack.push(
                                 Variable(
                                     "", Type.INT,
@@ -143,7 +143,7 @@ class ParsingFunctions(private var tokens: List<Token>) {
                             )
 
                             // Элемент String массива
-                        } else if (variables[nowToken.text]?.type == Type.STRING) {
+                        } else if (variables[nowToken.text]?.type == Type.STRING + "Array") {
                             resultStack.push(
                                 Variable(
                                     "", Type.STRING,

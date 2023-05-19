@@ -30,7 +30,7 @@ val tokensList = mutableMapOf<String, TokenType>(
     "==" to TokenType(Name.EQUALS, Identifiers.BOOLEAN, Regex("^=="), 4),
 
     "+" to TokenType(Name.PLUS, Identifiers.OPERATORS, Regex("^\\+"), 5),
-    "-" to TokenType(Name.MINUS, Identifiers.OPERATORS, Regex("^-"), 5),
+    "-" to TokenType(Name.MINUS, Identifiers.OPERATORS, Regex("^-(?!\\d)"), 5),
     "*" to TokenType(Name.MULTIPLY, Identifiers.OPERATORS, Regex("^\\*"), 6),
     "/" to TokenType(Name.DIVIDE, Identifiers.OPERATORS, Regex("^/"), 6),
     "%" to TokenType(Name.MOD, Identifiers.OPERATORS, Regex("^%"), 6),
