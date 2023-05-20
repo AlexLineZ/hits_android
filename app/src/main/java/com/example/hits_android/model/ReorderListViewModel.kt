@@ -20,9 +20,18 @@ import com.example.hits_android.blocks.MainBlock
 import com.example.hits_android.blocks.OutputBlock
 import com.example.hits_android.blocks.WhileBlock
 import com.example.hits_android.blocks.blockList
+import com.example.hits_android.ui.theme.MyAppTheme
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import org.burnoutcrew.reorderable.ItemPosition
 
+var _theme = MutableStateFlow(MyAppTheme.DarkGreen)
+
 class ReorderListViewModel : ViewModel() {
+
+    val theme: StateFlow<MyAppTheme> = _theme.asStateFlow()
+
     var codeBlocksList by mutableStateOf(
         listOf(
             MainBlock(key = "0", isDragOverLocked = true, title = "Start program"),
@@ -50,7 +59,7 @@ class ReorderListViewModel : ViewModel() {
     }
 
     fun moveBlock(from: ItemPosition, to: ItemPosition) {
-        Log.d("a", "${ codeBlocksList }")
+        Log.d("a", "${codeBlocksList}")
         codeBlocksList = codeBlocksList.toMutableList().apply {
             add(to.index, removeAt(from.index))
         }
@@ -124,5 +133,9 @@ class ReorderListViewModel : ViewModel() {
                     keyCount += 2
                 }
             }
+    }
+
+    fun setCurrentTheme(newTheme: MyAppTheme) {
+        _theme.value = newTheme
     }
 }

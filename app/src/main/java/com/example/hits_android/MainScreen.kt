@@ -25,7 +25,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.Button
 import androidx.compose.material3.DismissDirection
 import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -46,6 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -60,21 +60,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.hits_android.blocks.AssignmentBlock
-import com.example.hits_android.blocks.BeginBlock
-import com.example.hits_android.blocks.BreakBlock
-import com.example.hits_android.blocks.ContinueBlock
-import com.example.hits_android.blocks.ElseBlock
-import com.example.hits_android.blocks.EndBlock
-import com.example.hits_android.blocks.IfBlock
-import com.example.hits_android.blocks.InitializeArrayBlock
-import com.example.hits_android.blocks.InitializeVarBlock
-import com.example.hits_android.blocks.OutputBlock
-import com.example.hits_android.blocks.WhileBlock
-import com.example.hits_android.blocks.blockList
 import com.example.hits_android.model.FlowViewModel
 import com.example.hits_android.model.ReorderListViewModel
-import com.example.hits_android.model.ThemeViewModel
 import com.example.hits_android.ui.theme.Hits_androidTheme
 import com.example.hits_android.ui.theme.MyAppTheme
 import org.burnoutcrew.reorderable.ReorderableItem
@@ -85,12 +72,11 @@ import org.burnoutcrew.reorderable.reorderable
 @Composable
 fun MainScreen(
     navController: NavHostController,
-    themeVM: ThemeViewModel
+    vm: ReorderListViewModel
 ) {
-    val theme by themeVM.theme.collectAsState()
-    val vm = ReorderListViewModel()
+    val theme by vm.theme.collectAsState()
     Hits_androidTheme(theme) {
-        BottomNav(vm = vm, themeVM = themeVM)
+        BottomNav(vm = vm)
     }
 }
 
@@ -128,9 +114,13 @@ private fun VerticalReorderList(
                 val elevation = if (dragging) 8.dp else 0.dp
                 val dismissState = rememberDismissState(
                     confirmValueChange = {
-                        if (it == DismissValue.DismissedToEnd || it == DismissValue.DismissedToStart) {
-                            vm.codeBlocksList = vm.codeBlocksList.toMutableList().apply {
-                                removeIf { it.key == item.key } // Remove the item with key "1"
+                        if ((it == DismissValue.DismissedToEnd || it == DismissValue.DismissedToStart)) {
+                            if (item.isDragOverLocked) {
+                                return@rememberDismissState false
+                            } else {
+                                vm.codeBlocksList = vm.codeBlocksList.toMutableList().apply {
+                                    removeIf { it.key == item.key }
+                                }
                             }
                         }
                         true
@@ -140,14 +130,55 @@ private fun VerticalReorderList(
                     state = dismissState,
                     background = {
                         val direction = dismissState.dismissDirection ?: return@SwipeToDismiss
-                        val color by animateColorAsState(targetValue = MaterialTheme.colorScheme.error)
+                        val color by animateColorAsState(
+                            targetValue =
+                            when (dismissState.targetValue) {
+                                DismissValue.Default -> MaterialTheme.colorScheme.errorContainer.copy(
+                                    0.1f
+                                )
+
+                                DismissValue.DismissedToEnd -> MaterialTheme.colorScheme.errorContainer
+                                DismissValue.DismissedToStart -> MaterialTheme.colorScheme.errorContainer
+                            }
+                        )
                         val icon = Icons.Default.Delete
 
-                        Box(
-                            modifier = Modifier.fillMaxSize().background(color)
-                                .padding(horizontal = 25.dp)
-                        ) {
-                            Icon(icon, contentDescription = "deleteIcon")
+                        if (item.isDragOverLocked) {
+                        } else {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(
+                                        brush =
+                                        when (direction) {
+                                            DismissDirection.StartToEnd -> Brush.horizontalGradient(
+                                                colors = listOf(color.copy(0.6f), color.copy(0f)),
+                                                startX = 0f,
+                                                endX = 300f
+                                            )
+
+                                            DismissDirection.EndToStart -> Brush.horizontalGradient(
+                                                colors = listOf(color.copy(0.6f), color.copy(0f)),
+                                                startX = 1000f,
+                                                endX = 700f
+                                            )
+                                        }
+                                    )
+                                    .padding(horizontal = 25.dp),
+                                contentAlignment = Alignment.CenterStart
+                            ) {
+                                Icon(
+                                    icon,
+                                    contentDescription = "deleteIcon",
+                                    tint = MaterialTheme.colorScheme.onErrorContainer,
+                                    modifier = Modifier.align(
+                                        when (direction) {
+                                            DismissDirection.StartToEnd -> Alignment.CenterStart
+                                            DismissDirection.EndToStart -> Alignment.CenterEnd
+                                        }
+                                    )
+                                )
+                            }
                         }
                     },
                     directions = setOf(DismissDirection.EndToStart, DismissDirection.StartToEnd),
@@ -156,8 +187,7 @@ private fun VerticalReorderList(
                             Box(
                                 contentAlignment = Alignment.Center,
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(70.dp)
+                                    .fillMaxSize()
                                     .scale(scale.value)
                                     .shadow(elevation, RoundedCornerShape(24.dp))
                             ) {
@@ -173,7 +203,7 @@ private fun VerticalReorderList(
                                     .shadow(elevation, RoundedCornerShape(24.dp))
                                     .clickable(
                                         onClick = {
-                                            Log.d("s", "${vm.codeBlocksList.size}")
+                                            Log.d("a", "${vm.codeBlocksList}")
                                         }
                                     )
                             ) {
@@ -262,24 +292,22 @@ sealed class BottomBarScreen(
 
 @Composable
 fun BottomNav(
-    vm: ReorderListViewModel,
-    themeVM: ThemeViewModel
+    vm: ReorderListViewModel
 ) {
     val navController = rememberNavController()
+
     Scaffold(
         bottomBar = {
             NavBottomBar(
                 navController = navController,
-                vm = vm,
-                themeVM = themeVM
+                vm = vm
             )
         }
     ) {
         Modifier.padding(it)
         BottomNavGraph(
             navController = navController,
-            vm = vm,
-            themeVM = themeVM
+            vm = vm
         )
     }
 }
@@ -287,8 +315,7 @@ fun BottomNav(
 @Composable
 fun NavBottomBar(
     navController: NavHostController,
-    vm: ReorderListViewModel,
-    themeVM: ThemeViewModel
+    vm: ReorderListViewModel
 ) {
     val viewModel: FlowViewModel = viewModel()
 
@@ -317,8 +344,7 @@ fun NavBottomBar(
                 currentDestination = currentDestination,
                 navController = navController,
                 viewModel = viewModel,
-                vm = vm,
-                themeVM = themeVM
+                vm = vm
             )
         }
     }
@@ -327,8 +353,7 @@ fun NavBottomBar(
 @Composable
 fun BottomNavGraph(
     navController: NavHostController,
-    vm: ReorderListViewModel,
-    themeVM: ThemeViewModel
+    vm: ReorderListViewModel
 ) {
 
     val viewModel: FlowViewModel = viewModel()
@@ -347,7 +372,7 @@ fun BottomNavGraph(
             Console(viewModel)
         }
         composable(route = BottomBarScreen.Settings.route) {
-            Settings(themeVM)
+            Settings(vm)
         }
     }
 }
@@ -358,13 +383,11 @@ fun RowScope.AddItem(
     currentDestination: NavDestination?,
     navController: NavHostController,
     viewModel: FlowViewModel,
-    vm: ReorderListViewModel,
-    themeVM: ThemeViewModel
+    vm: ReorderListViewModel
 ) {
-
-    val theme by themeVM.theme.collectAsState()
     val isProgramRunning by viewModel.isProgramRunning.collectAsState()
     val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
+    val theme by vm.theme.collectAsState()
 
     val background =
         if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.6f) else Color.Transparent
@@ -372,8 +395,8 @@ fun RowScope.AddItem(
     val contentColor =
         when (theme) {
             MyAppTheme.LightGreen -> if (selected) Color.White else Color.Black
-            MyAppTheme.DarkGreen -> Color.White
             MyAppTheme.LightPurple -> if (selected) Color.White else Color.Black
+            MyAppTheme.DarkGreen -> Color.White
             MyAppTheme.DarkPurple -> Color.White
         }
 
@@ -472,7 +495,7 @@ fun Console(viewModel: FlowViewModel) {
 }
 
 @Composable
-fun Settings(themeVM: ThemeViewModel) {
+fun Settings(vm: ReorderListViewModel) {
 
     LazyColumn(
         modifier = Modifier.fillMaxSize()
@@ -488,14 +511,8 @@ fun Settings(themeVM: ThemeViewModel) {
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
+
             }
-        }
-        item {
-            Button(
-                onClick = {
-                    themeVM.setCurrentTheme(MyAppTheme.DarkPurple)
-                }
-            ) {}
         }
         item {
             Text(
