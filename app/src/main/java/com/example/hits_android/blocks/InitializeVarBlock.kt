@@ -73,7 +73,8 @@ class InitializeVarBlock(
         if (type != newVariable.type &&
             !(type == Type.DOUBLE && newVariable.type == Type.INT) &&
             !(type == Type.INT && newVariable.type == Type.DOUBLE) &&
-            !(type == Type.STRING && newVariable.type == Type.CHAR)
+            !(type == Type.STRING && newVariable.type == Type.CHAR) &&
+            !(type == Type.CHAR && newVariable.type == Type.INT)
         ) {
             throw Exception("Переменной типа ${type} присваивается значение типа ${newVariable.type}")
         }
@@ -99,7 +100,12 @@ class InitializeVarBlock(
         }
 
         // Сохранение переменной
-        variables[name] = newVariable
+        if (type == Type.CHAR && newVariable.type == Type.INT) {
+            variables[name] = Variable(newVariable.name, Type.CHAR, newVariable.value.toString().toInt().toChar().toString())
+        }
+        else {
+            variables[name] = newVariable
+        }
 
         // Выполнение следующего блока
         blockIndex++

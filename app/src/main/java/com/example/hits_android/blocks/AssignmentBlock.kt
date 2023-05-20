@@ -79,12 +79,18 @@ class AssignmentBlock(
             if (variables[variableName]?.type != newVariable.type &&
                 !(variables[variableName]?.type == Type.DOUBLE && newVariable.type == Type.INT) &&
                 !(variables[variableName]?.type == Type.INT && newVariable.type == Type.DOUBLE) &&
-                !(variables[variableName]?.type == Type.STRING && newVariable.type == Type.CHAR)
+                !(variables[variableName]?.type == Type.STRING && newVariable.type == Type.CHAR) &&
+                !(variables[variableName]?.type == Type.CHAR && newVariable.type == Type.INT)
             ) {
                 throw Exception("Переменной типа ${variables[variableName]?.type} присваивается значение типа ${newVariable.type}")
             }
 
-            variables[variableName] = newVariable
+            if (variables[variableName]?.type == Type.CHAR && newVariable.type == Type.INT) {
+                variables[variableName] = Variable(newVariable.name, Type.CHAR, newVariable.value.toString().toInt().toChar().toString())
+            }
+            else {
+                variables[variableName] = newVariable
+            }
         }
 
         // Присвоение значения элементу массива
@@ -102,20 +108,36 @@ class AssignmentBlock(
             if (variables[arrName]?.type == Type.INT + "Array") {
                 (variables[arrName]?.value as Array<Int>)[arrayIndex] =
                     newVariable.value.toString().toInt()
-            } else if (variables[arrName]?.type == Type.DOUBLE + "Array") {
+            }
+
+            else if (variables[arrName]?.type == Type.DOUBLE + "Array") {
                 (variables[arrName]?.value as Array<Double>)[arrayIndex] =
                     newVariable.value.toString().toDouble()
-            } else if (variables[arrName]?.type == Type.CHAR + "Array") {
-                (variables[arrName]?.value as Array<String>)[arrayIndex] =
-                    newVariable.value.toString()
-            } else if (variables[arrName]?.type == Type.STRING) {
+            }
+
+            else if (variables[arrName]?.type == Type.CHAR + "Array") {
+                if (newVariable.type != Type.INT) {
+                    (variables[arrName]?.value as Array<String>)[arrayIndex] =
+                        newVariable.value.toString()
+                }
+                else {
+                    (variables[arrName]?.value as Array<String>)[arrayIndex] =
+                        newVariable.value.toString().toInt().toChar().toString()
+                }
+            }
+
+            else if (variables[arrName]?.type == Type.STRING) {
                 val str = variables[arrName]?.value as String
                 variables[arrName] = Variable(arrName, Type.STRING,
                     str.substring(0, arrayIndex) + newVariable.value.toString() + str.substring(arrayIndex + 1))
-            }else if (variables[arrName]?.type == Type.STRING + "Array") {
+            }
+
+            else if (variables[arrName]?.type == Type.STRING + "Array") {
                 (variables[arrName]?.value as Array<String>)[arrayIndex] =
                     newVariable.value.toString()
-            } else if (variables[arrName]?.type == Type.BOOL + "Array"){
+            }
+
+            else if (variables[arrName]?.type == Type.BOOL + "Array"){
                 val result = newVariable.value.toString()
 
                 if (result == "0" || result == "false") {
@@ -123,7 +145,9 @@ class AssignmentBlock(
                 } else {
                     (variables[arrName]?.value as Array<String>)[arrayIndex] = "1"
                 }
-            } else {
+            }
+
+            else {
                 variables[arrName] = newVariable
             }
         }

@@ -32,7 +32,7 @@ class Variable(var name: String, var type: String, var value: Any) {
             )
         }
 
-        // Сложение Char
+        // Сложение Char и Char
         else if (type == Type.CHAR && otherVariable.type == Type.CHAR) {
             return Variable(
                 "newVariable",
@@ -40,6 +40,25 @@ class Variable(var name: String, var type: String, var value: Any) {
                 (value.toString()[0].code + otherVariable.value.toString()[0].code).toChar()
             )
         }
+
+        // Сложение Char и Int
+        else if (type == Type.CHAR && otherVariable.type == Type.INT) {
+            return Variable(
+                "newVariable",
+                Type.CHAR,
+                (value.toString()[0].code + otherVariable.value.toString().toInt()).toChar()
+            )
+        }
+
+        // Сложение Int и Char
+        else if (type == Type.INT && otherVariable.type == Type.CHAR) {
+            return Variable(
+                "newVariable",
+                Type.CHAR,
+                (value.toString().toInt() + otherVariable.value.toString()[0].code).toChar()
+            )
+        }
+
         throw Exception("Сложение переменных типов ${type} и ${otherVariable.type}")
     }
 
@@ -70,6 +89,24 @@ class Variable(var name: String, var type: String, var value: Any) {
                 "newVariable",
                 Type.CHAR,
                 (value.toString()[0].code - otherVariable.value.toString()[0].code).toChar()
+            )
+        }
+
+        // Вычитание Char и Int
+        else if (type == Type.CHAR && otherVariable.type == Type.INT) {
+            return Variable(
+                "newVariable",
+                Type.CHAR,
+                (value.toString()[0].code - otherVariable.value.toString().toInt()).toChar()
+            )
+        }
+
+        // Вычитание Int и Char
+        else if (type == Type.INT && otherVariable.type == Type.CHAR) {
+            return Variable(
+                "newVariable",
+                Type.CHAR,
+                (value.toString().toInt() - otherVariable.value.toString()[0].code).toChar()
             )
         }
 
@@ -106,12 +143,38 @@ class Variable(var name: String, var type: String, var value: Any) {
             }
         }
 
-        // Сравнение Char
+        // Сравнение Char и Char
         else if (type == Type.CHAR && otherVariable.type == Type.CHAR) {
             if (value.toString()[0].code > otherVariable.value.toString()[0].code) {
                 return 1
             }
             else if (value.toString()[0].code == otherVariable.value.toString()[0].code) {
+                return 0
+            }
+            else {
+                return -1
+            }
+        }
+
+        // Сравнение Char и Int
+        else if (type == Type.CHAR && otherVariable.type == Type.INT) {
+            if (value.toString()[0].code > otherVariable.value.toString().toInt()) {
+                return 1
+            }
+            else if (value.toString()[0].code == otherVariable.value.toString().toInt()) {
+                return 0
+            }
+            else {
+                return -1
+            }
+        }
+
+        // Сравнение Int и Char
+        else if (type == Type.INT && otherVariable.type == Type.INT) {
+            if (value.toString().toInt() > otherVariable.value.toString().toInt()) {
+                return 1
+            }
+            else if (value.toString().toInt() == otherVariable.value.toString().toInt()) {
                 return 0
             }
             else {
@@ -203,9 +266,19 @@ class Variable(var name: String, var type: String, var value: Any) {
             return value.toString() == (otherVariable as Variable).value.toString()
         }
 
-        // Сравнение Char
+        // Сравнение Char и Char
         else if (type == Type.CHAR && (otherVariable as Variable).type == Type.CHAR) {
             return value.toString()[0].code == otherVariable.value.toString()[0].code
+        }
+
+        // Сравнение Char и Int
+        else if (type == Type.CHAR && (otherVariable as Variable).type == Type.INT) {
+            return value.toString()[0].code == otherVariable.value.toString().toInt()
+        }
+
+        // Сравнение Int и Char
+        else if (type == Type.INT && (otherVariable as Variable).type == Type.CHAR) {
+            return value.toString().toInt() == otherVariable.value.toString()[0].code
         }
 
         throw Exception("Сравнение переменных типов ${type} и ${(otherVariable as Variable).type}")
