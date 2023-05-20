@@ -3,6 +3,7 @@ package com.example.hits_android
 
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -22,12 +23,19 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
+import androidx.compose.material3.DismissDirection
+import androidx.compose.material3.DismissValue
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -100,6 +108,7 @@ fun Sandbox(
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun VerticalReorderList(
     vm: ReorderListViewModel
@@ -117,34 +126,62 @@ private fun VerticalReorderList(
             ReorderableItem(state, item.key) { dragging ->
                 val scale = animateFloatAsState(if (dragging) 1.1f else 1.0f)
                 val elevation = if (dragging) 8.dp else 0.dp
-                if (item.isDragOverLocked) {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(70.dp)
-                            .scale(scale.value)
-                            .shadow(elevation, RoundedCornerShape(24.dp))
-                    ) {
-                        item.BlockComposable(item, vm.codeBlocksList)
+                val dismissState = rememberDismissState(
+                    confirmValueChange = {
+                        if (it == DismissValue.DismissedToEnd || it == DismissValue.DismissedToStart) {
+                            vm.codeBlocksList = vm.codeBlocksList.toMutableList().apply {
+                                removeIf { it.key == item.key } // Remove the item with key "1"
+                            }
+                        }
+                        true
                     }
-                } else {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .detectReorderAfterLongPress(state)
-                            .scale(scale.value)
-                            .shadow(elevation, RoundedCornerShape(24.dp))
-                            .clickable(
-                                onClick = {
-                                    Log.d("s", "${vm.codeBlocksList.size}")
-                                }
-                            )
-                    ) {
-                        item.BlockComposable(item, vm.codeBlocksList)
+                )
+                SwipeToDismiss(
+                    state = dismissState,
+                    background = {
+                        val direction = dismissState.dismissDirection ?: return@SwipeToDismiss
+                        val color by animateColorAsState(targetValue = MaterialTheme.colorScheme.error)
+                        val icon = Icons.Default.Delete
+
+                        Box(
+                            modifier = Modifier.fillMaxSize().background(color)
+                                .padding(horizontal = 25.dp)
+                        ) {
+                            Icon(icon, contentDescription = "deleteIcon")
+                        }
+                    },
+                    directions = setOf(DismissDirection.EndToStart, DismissDirection.StartToEnd),
+                    dismissContent = {
+                        if (item.isDragOverLocked) {
+                            Box(
+                                contentAlignment = Alignment.Center,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(70.dp)
+                                    .scale(scale.value)
+                                    .shadow(elevation, RoundedCornerShape(24.dp))
+                            ) {
+                                item.BlockComposable(item, vm.codeBlocksList)
+                            }
+                        } else {
+                            Box(
+                                contentAlignment = Alignment.Center,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .detectReorderAfterLongPress(state)
+                                    .scale(scale.value)
+                                    .shadow(elevation, RoundedCornerShape(24.dp))
+                                    .clickable(
+                                        onClick = {
+                                            Log.d("s", "${vm.codeBlocksList.size}")
+                                        }
+                                    )
+                            ) {
+                                item.BlockComposable(item, vm.codeBlocksList)
+                            }
+                        }
                     }
-                }
+                )
             }
         }
     }
@@ -166,72 +203,7 @@ private fun BottomBar(
                     .background(MaterialTheme.colorScheme.surfaceVariant)
                     .clickable(
                         onClick = {
-                            vm.codeBlocksList = vm.codeBlocksList
-                                .toMutableList()
-                                .apply {
-                                    add(
-                                        vm.codeBlocksList.size - 1,
-                                        when (item.blockName) {
-                                            "assignmentBlock" -> {
-                                                AssignmentBlock(key = "${vm.codeBlocksList.size}")
-                                            }
-
-                                            "breakBlock" -> {
-                                                BreakBlock(key = "${vm.codeBlocksList.size}")
-                                            }
-
-                                            "continueBlock" -> {
-                                                ContinueBlock(key = "${vm.codeBlocksList.size}")
-                                            }
-
-                                            "ElseBlock" -> {
-                                                ElseBlock(key = "${vm.codeBlocksList.size}")
-                                            }
-
-                                            "IfBlock" -> {
-                                                IfBlock(key = "${vm.codeBlocksList.size}")
-                                            }
-
-                                            "initArrayBlock" -> {
-                                                InitializeArrayBlock(key = "${vm.codeBlocksList.size}")
-                                            }
-
-                                            "initVarBlock" -> {
-                                                InitializeVarBlock(key = "${vm.codeBlocksList.size}")
-                                            }
-
-                                            "outputBlock" -> {
-                                                OutputBlock(key = "${vm.codeBlocksList.size}")
-                                            }
-
-                                            "WhileBlock" -> {
-                                                WhileBlock(key = "${vm.codeBlocksList.size}")
-                                            }
-
-                                            else -> {
-                                                AssignmentBlock(key = "${vm.codeBlocksList.size}")
-                                            }
-                                        }
-                                    )
-                                    if (item.blockName == "ElseBlock" ||
-                                        item.blockName == "IfBlock" ||
-                                        item.blockName == "WhileBlock"
-                                    ) {
-                                        add(
-                                            vm.codeBlocksList.size,
-                                            EndBlock(key = "${vm.codeBlocksList.size + 2}")
-                                        )
-                                        add(
-                                            vm.codeBlocksList.size,
-                                            BeginBlock(key = "${vm.codeBlocksList.size + 1}")
-                                        )
-
-                                        val temp = blockList[blockList.size - 1]
-                                        blockList[blockList.size - 1] =
-                                            blockList[blockList.size - 2]
-                                        blockList[blockList.size - 2] = temp
-                                    }
-                                }
+                            vm.addBlock(item)
                         }
                     )
             ) {
@@ -399,8 +371,10 @@ fun RowScope.AddItem(
 
     val contentColor =
         when (theme) {
-            MyAppTheme.Light -> if (selected) Color.White else Color.Black
-            MyAppTheme.Dark -> Color.White
+            MyAppTheme.LightGreen -> if (selected) Color.White else Color.Black
+            MyAppTheme.DarkGreen -> Color.White
+            MyAppTheme.LightPurple -> if (selected) Color.White else Color.Black
+            MyAppTheme.DarkPurple -> Color.White
         }
 
     val buttonIcon = if (screen == BottomBarScreen.Start) {
@@ -519,7 +493,7 @@ fun Settings(themeVM: ThemeViewModel) {
         item {
             Button(
                 onClick = {
-                    themeVM.setCurrentTheme(MyAppTheme.Light)
+                    themeVM.setCurrentTheme(MyAppTheme.DarkPurple)
                 }
             ) {}
         }

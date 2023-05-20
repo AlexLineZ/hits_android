@@ -2,88 +2,152 @@ package com.example.hits_android.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 
 
-private val LightColors = lightColorScheme(
-    primary = md_theme_light_primary,
-    onPrimary = md_theme_light_onPrimary,
-    primaryContainer = md_theme_light_primaryContainer,
-    onPrimaryContainer = md_theme_light_onPrimaryContainer,
-    secondary = md_theme_light_secondary,
-    onSecondary = md_theme_light_onSecondary,
-    secondaryContainer = md_theme_light_secondaryContainer,
-    onSecondaryContainer = md_theme_light_onSecondaryContainer,
-    tertiary = md_theme_light_tertiary,
-    onTertiary = md_theme_light_onTertiary,
-    tertiaryContainer = md_theme_light_tertiaryContainer,
-    onTertiaryContainer = md_theme_light_onTertiaryContainer,
-    error = md_theme_light_error,
-    errorContainer = md_theme_light_errorContainer,
-    onError = md_theme_light_onError,
-    onErrorContainer = md_theme_light_onErrorContainer,
-    background = md_theme_light_background,
-    onBackground = md_theme_light_onBackground,
-    surface = md_theme_light_surface,
-    onSurface = md_theme_light_onSurface,
-    surfaceVariant = md_theme_light_surfaceVariant,
-    onSurfaceVariant = md_theme_light_onSurfaceVariant,
-    outline = md_theme_light_outline,
-    inverseOnSurface = md_theme_light_inverseOnSurface,
-    inverseSurface = md_theme_light_inverseSurface,
-    inversePrimary = md_theme_light_inversePrimary,
-    surfaceTint = md_theme_light_surfaceTint,
-    outlineVariant = md_theme_light_outlineVariant,
-    scrim = md_theme_light_scrim,
+private val lightGreenColors = lightColorScheme(
+    primary = md_theme_lightGreen_primary,
+    onPrimary = md_theme_lightGreen_onPrimary,
+    primaryContainer = md_theme_lightGreen_primaryContainer,
+    onPrimaryContainer = md_theme_lightGreen_onPrimaryContainer,
+    secondary = md_theme_lightGreen_secondary,
+    onSecondary = md_theme_lightGreen_onSecondary,
+    secondaryContainer = md_theme_lightGreen_secondaryContainer,
+    onSecondaryContainer = md_theme_lightGreen_onSecondaryContainer,
+    tertiary = md_theme_lightGreen_tertiary,
+    onTertiary = md_theme_lightGreen_onTertiary,
+    tertiaryContainer = md_theme_lightGreen_tertiaryContainer,
+    onTertiaryContainer = md_theme_lightGreen_onTertiaryContainer,
+    error = md_theme_lightGreen_error,
+    errorContainer = md_theme_lightGreen_errorContainer,
+    onError = md_theme_lightGreen_onError,
+    onErrorContainer = md_theme_lightGreen_onErrorContainer,
+    background = md_theme_lightGreen_background,
+    onBackground = md_theme_lightGreen_onBackground,
+    surface = md_theme_lightGreen_surface,
+    onSurface = md_theme_lightGreen_onSurface,
+    surfaceVariant = md_theme_lightGreen_surfaceVariant,
+    onSurfaceVariant = md_theme_lightGreen_onSurfaceVariant,
+    outline = md_theme_lightGreen_outline,
+    inverseOnSurface = md_theme_lightGreen_inverseOnSurface,
+    inverseSurface = md_theme_lightGreen_inverseSurface,
+    inversePrimary = md_theme_lightGreen_inversePrimary,
+    surfaceTint = md_theme_lightGreen_surfaceTint,
+    outlineVariant = md_theme_lightGreen_outlineVariant,
+    scrim = md_theme_lightGreen_scrim,
 )
 
 
-private val DarkColors = darkColorScheme(
-    primary = md_theme_dark_primary,
-    onPrimary = md_theme_dark_onPrimary,
-    primaryContainer = md_theme_dark_primaryContainer,
-    onPrimaryContainer = md_theme_dark_onPrimaryContainer,
-    secondary = md_theme_dark_secondary,
-    onSecondary = md_theme_dark_onSecondary,
-    secondaryContainer = md_theme_dark_secondaryContainer,
-    onSecondaryContainer = md_theme_dark_onSecondaryContainer,
-    tertiary = md_theme_dark_tertiary,
-    onTertiary = md_theme_dark_onTertiary,
-    tertiaryContainer = md_theme_dark_tertiaryContainer,
-    onTertiaryContainer = md_theme_dark_onTertiaryContainer,
-    error = md_theme_dark_error,
-    errorContainer = md_theme_dark_errorContainer,
-    onError = md_theme_dark_onError,
-    onErrorContainer = md_theme_dark_onErrorContainer,
-    background = md_theme_dark_background,
-    onBackground = md_theme_dark_onBackground,
-    surface = md_theme_dark_surface,
-    onSurface = md_theme_dark_onSurface,
-    surfaceVariant = md_theme_dark_surfaceVariant,
-    onSurfaceVariant = md_theme_dark_onSurfaceVariant,
-    outline = md_theme_dark_outline,
-    inverseOnSurface = md_theme_dark_inverseOnSurface,
-    inverseSurface = md_theme_dark_inverseSurface,
-    inversePrimary = md_theme_dark_inversePrimary,
-    surfaceTint = md_theme_dark_surfaceTint,
-    outlineVariant = md_theme_dark_outlineVariant,
-    scrim = md_theme_dark_scrim,
+private val darkGreenColors = darkColorScheme(
+    primary = md_theme_darkGreen_primary,
+    onPrimary = md_theme_darkGreen_onPrimary,
+    primaryContainer = md_theme_darkGreen_primaryContainer,
+    onPrimaryContainer = md_theme_darkGreen_onPrimaryContainer,
+    secondary = md_theme_darkGreen_secondary,
+    onSecondary = md_theme_darkGreen_onSecondary,
+    secondaryContainer = md_theme_darkGreen_secondaryContainer,
+    onSecondaryContainer = md_theme_darkGreen_onSecondaryContainer,
+    tertiary = md_theme_darkGreen_tertiary,
+    onTertiary = md_theme_darkGreen_onTertiary,
+    tertiaryContainer = md_theme_darkGreen_tertiaryContainer,
+    onTertiaryContainer = md_theme_darkGreen_onTertiaryContainer,
+    error = md_theme_darkGreen_error,
+    errorContainer = md_theme_darkGreen_errorContainer,
+    onError = md_theme_darkGreen_onError,
+    onErrorContainer = md_theme_darkGreen_onErrorContainer,
+    background = md_theme_darkGreen_background,
+    onBackground = md_theme_darkGreen_onBackground,
+    surface = md_theme_darkGreen_surface,
+    onSurface = md_theme_darkGreen_onSurface,
+    surfaceVariant = md_theme_darkGreen_surfaceVariant,
+    onSurfaceVariant = md_theme_darkGreen_onSurfaceVariant,
+    outline = md_theme_darkGreen_outline,
+    inverseOnSurface = md_theme_darkGreen_inverseOnSurface,
+    inverseSurface = md_theme_darkGreen_inverseSurface,
+    inversePrimary = md_theme_darkGreen_inversePrimary,
+    surfaceTint = md_theme_darkGreen_surfaceTint,
+    outlineVariant = md_theme_darkGreen_outlineVariant,
+    scrim = md_theme_darkGreen_scrim,
+)
+
+private val lightPurpleColors = lightColorScheme(
+    primary = md_theme_lightPurple_primary,
+    onPrimary = md_theme_lightPurple_onPrimary,
+    primaryContainer = md_theme_lightPurple_primaryContainer,
+    onPrimaryContainer = md_theme_lightPurple_onPrimaryContainer,
+    secondary = md_theme_lightPurple_secondary,
+    onSecondary = md_theme_lightPurple_onSecondary,
+    secondaryContainer = md_theme_lightPurple_secondaryContainer,
+    onSecondaryContainer = md_theme_lightPurple_onSecondaryContainer,
+    tertiary = md_theme_lightPurple_tertiary,
+    onTertiary = md_theme_lightPurple_onTertiary,
+    tertiaryContainer = md_theme_lightPurple_tertiaryContainer,
+    onTertiaryContainer = md_theme_lightPurple_onTertiaryContainer,
+    error = md_theme_lightPurple_error,
+    errorContainer = md_theme_lightPurple_errorContainer,
+    onError = md_theme_lightPurple_onError,
+    onErrorContainer = md_theme_lightPurple_onErrorContainer,
+    background = md_theme_lightPurple_background,
+    onBackground = md_theme_lightPurple_onBackground,
+    surface = md_theme_lightPurple_surface,
+    onSurface = md_theme_lightPurple_onSurface,
+    surfaceVariant = md_theme_lightPurple_surfaceVariant,
+    onSurfaceVariant = md_theme_lightPurple_onSurfaceVariant,
+    outline = md_theme_lightPurple_outline,
+    inverseOnSurface = md_theme_lightPurple_inverseOnSurface,
+    inverseSurface = md_theme_lightPurple_inverseSurface,
+    inversePrimary = md_theme_lightPurple_inversePrimary,
+    surfaceTint = md_theme_lightPurple_surfaceTint,
+    outlineVariant = md_theme_lightPurple_outlineVariant,
+    scrim = md_theme_lightPurple_scrim,
+)
+
+
+private val darkPurpleColors = darkColorScheme(
+    primary = md_theme_darkPurple_primary,
+    onPrimary = md_theme_darkPurple_onPrimary,
+    primaryContainer = md_theme_darkPurple_primaryContainer,
+    onPrimaryContainer = md_theme_darkPurple_onPrimaryContainer,
+    secondary = md_theme_darkPurple_secondary,
+    onSecondary = md_theme_darkPurple_onSecondary,
+    secondaryContainer = md_theme_darkPurple_secondaryContainer,
+    onSecondaryContainer = md_theme_darkPurple_onSecondaryContainer,
+    tertiary = md_theme_darkPurple_tertiary,
+    onTertiary = md_theme_darkPurple_onTertiary,
+    tertiaryContainer = md_theme_darkPurple_tertiaryContainer,
+    onTertiaryContainer = md_theme_darkPurple_onTertiaryContainer,
+    error = md_theme_darkPurple_error,
+    errorContainer = md_theme_darkPurple_errorContainer,
+    onError = md_theme_darkPurple_onError,
+    onErrorContainer = md_theme_darkPurple_onErrorContainer,
+    background = md_theme_darkPurple_background,
+    onBackground = md_theme_darkPurple_onBackground,
+    surface = md_theme_darkPurple_surface,
+    onSurface = md_theme_darkPurple_onSurface,
+    surfaceVariant = md_theme_darkPurple_surfaceVariant,
+    onSurfaceVariant = md_theme_darkPurple_onSurfaceVariant,
+    outline = md_theme_darkPurple_outline,
+    inverseOnSurface = md_theme_darkPurple_inverseOnSurface,
+    inverseSurface = md_theme_darkPurple_inverseSurface,
+    inversePrimary = md_theme_darkPurple_inversePrimary,
+    surfaceTint = md_theme_darkPurple_surfaceTint,
+    outlineVariant = md_theme_darkPurple_outlineVariant,
+    scrim = md_theme_darkPurple_scrim,
 )
 
 @Composable
 fun Hits_androidTheme(
-    selectedTheme: MyAppTheme = if (isSystemInDarkTheme()) MyAppTheme.Dark else MyAppTheme.Light,
+    selectedTheme: MyAppTheme = if (isSystemInDarkTheme()) MyAppTheme.DarkGreen else MyAppTheme.LightGreen,
     content: @Composable() () -> Unit
 ) {
 
     val colors = when (selectedTheme) {
-        MyAppTheme.Light -> LightColors
-        MyAppTheme.Dark -> DarkColors
+        MyAppTheme.LightGreen -> lightGreenColors
+        MyAppTheme.DarkGreen -> darkGreenColors
+        MyAppTheme.LightPurple -> lightPurpleColors
+        MyAppTheme.DarkPurple -> darkPurpleColors
     }
 
     MaterialTheme(
@@ -94,6 +158,8 @@ fun Hits_androidTheme(
 
 
 enum class MyAppTheme {
-    Light,
-    Dark
+    LightGreen,
+    DarkGreen,
+    LightPurple,
+    DarkPurple
 }

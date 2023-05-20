@@ -1,13 +1,17 @@
 package com.example.hits_android.model
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.hits_android.blocks.AssignmentBlock
+import com.example.hits_android.blocks.BeginBlock
+import com.example.hits_android.blocks.Block
 import com.example.hits_android.blocks.BreakBlock
 import com.example.hits_android.blocks.ContinueBlock
 import com.example.hits_android.blocks.ElseBlock
+import com.example.hits_android.blocks.EndBlock
 import com.example.hits_android.blocks.FinishProgramBlock
 import com.example.hits_android.blocks.IfBlock
 import com.example.hits_android.blocks.InitializeArrayBlock
@@ -39,19 +43,86 @@ class ReorderListViewModel : ViewModel() {
         )
     )
 
+    var keyCount = 1
+
     init {
         blockList.clear()
     }
 
     fun moveBlock(from: ItemPosition, to: ItemPosition) {
+        Log.d("a", "${ codeBlocksList }")
         codeBlocksList = codeBlocksList.toMutableList().apply {
             add(to.index, removeAt(from.index))
         }
-        println("s " + "${codeBlocksList.size}")
 
         blockList = codeBlocksList.slice(1..(codeBlocksList.size - 2)).toMutableList()
     }
 
     fun isDogDragOverEnabled(draggedOver: ItemPosition, dragging: ItemPosition) =
         codeBlocksList.getOrNull(draggedOver.index)?.isDragOverLocked != true
+
+    fun addBlock(item: Block) {
+        codeBlocksList = codeBlocksList
+            .toMutableList()
+            .apply {
+                add(
+                    codeBlocksList.size - 1,
+                    when (item.blockName) {
+                        "assignmentBlock" -> {
+                            AssignmentBlock(key = "${++keyCount}")
+                        }
+
+                        "breakBlock" -> {
+                            BreakBlock(key = "${++keyCount}")
+                        }
+
+                        "continueBlock" -> {
+                            ContinueBlock(key = "${++keyCount}")
+                        }
+
+                        "ElseBlock" -> {
+                            ElseBlock(key = "${++keyCount}")
+                        }
+
+                        "IfBlock" -> {
+                            IfBlock(key = "${++keyCount}")
+                        }
+
+                        "initArrayBlock" -> {
+                            InitializeArrayBlock(key = "${++keyCount}")
+                        }
+
+                        "initVarBlock" -> {
+                            InitializeVarBlock(key = "${++keyCount}")
+                        }
+
+                        "outputBlock" -> {
+                            OutputBlock(key = "${++keyCount}")
+                        }
+
+                        "WhileBlock" -> {
+                            WhileBlock(key = "${++keyCount}")
+                        }
+
+                        else -> {
+                            AssignmentBlock(key = "${++keyCount}")
+                        }
+                    }
+                )
+                if (item.blockName == "ElseBlock" ||
+                    item.blockName == "IfBlock" ||
+                    item.blockName == "WhileBlock"
+                ) {
+                    add(
+                        codeBlocksList.size,
+                        EndBlock(key = "${keyCount + 2}")
+                    )
+                    add(
+                        codeBlocksList.size,
+                        BeginBlock(key = "${keyCount + 1}")
+                    )
+                    keyCount += 2
+                }
+            }
+    }
 }

@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-var _theme = MutableStateFlow(MyAppTheme.Dark)
+var _theme = MutableStateFlow(MyAppTheme.DarkGreen)
 
 class ThemeViewModel() : ViewModel() {
     val theme: StateFlow<MyAppTheme> = _theme.asStateFlow()
