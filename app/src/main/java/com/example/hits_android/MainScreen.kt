@@ -60,6 +60,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.hits_android.blocks.blockList
 import com.example.hits_android.model.FlowViewModel
 import com.example.hits_android.model.ReorderListViewModel
 import com.example.hits_android.ui.theme.Hits_androidTheme
@@ -121,6 +122,8 @@ private fun VerticalReorderList(
                                 vm.codeBlocksList = vm.codeBlocksList.toMutableList().apply {
                                     removeIf { it.key == item.key }
                                 }
+
+                                blockList = vm.codeBlocksList.toMutableList()
                             }
                         }
                         true
