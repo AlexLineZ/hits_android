@@ -137,6 +137,73 @@ private val darkPurpleColors = darkColorScheme(
     scrim = md_theme_darkPurple_scrim,
 )
 
+
+
+private val lightPinkColors = lightColorScheme(
+    primary = md_theme_lightPink_primary,
+    onPrimary = md_theme_lightPink_onPrimary,
+    primaryContainer = md_theme_lightPink_primaryContainer,
+    onPrimaryContainer = md_theme_lightPink_onPrimaryContainer,
+    secondary = md_theme_lightPink_secondary,
+    onSecondary = md_theme_lightPink_onSecondary,
+    secondaryContainer = md_theme_lightPink_secondaryContainer,
+    onSecondaryContainer = md_theme_lightPink_onSecondaryContainer,
+    tertiary = md_theme_lightPink_tertiary,
+    onTertiary = md_theme_lightPink_onTertiary,
+    tertiaryContainer = md_theme_lightPink_tertiaryContainer,
+    onTertiaryContainer = md_theme_lightPink_onTertiaryContainer,
+    error = md_theme_lightPink_error,
+    errorContainer = md_theme_lightPink_errorContainer,
+    onError = md_theme_lightPink_onError,
+    onErrorContainer = md_theme_lightPink_onErrorContainer,
+    background = md_theme_lightPink_background,
+    onBackground = md_theme_lightPink_onBackground,
+    surface = md_theme_lightPink_surface,
+    onSurface = md_theme_lightPink_onSurface,
+    surfaceVariant = md_theme_lightPink_surfaceVariant,
+    onSurfaceVariant = md_theme_lightPink_onSurfaceVariant,
+    outline = md_theme_lightPink_outline,
+    inverseOnSurface = md_theme_lightPink_inverseOnSurface,
+    inverseSurface = md_theme_lightPink_inverseSurface,
+    inversePrimary = md_theme_lightPink_inversePrimary,
+    surfaceTint = md_theme_lightPink_surfaceTint,
+    outlineVariant = md_theme_lightPink_outlineVariant,
+    scrim = md_theme_lightPink_scrim,
+)
+
+
+private val darkPinkColors = darkColorScheme(
+    primary = md_theme_darkPink_primary,
+    onPrimary = md_theme_darkPink_onPrimary,
+    primaryContainer = md_theme_darkPink_primaryContainer,
+    onPrimaryContainer = md_theme_darkPink_onPrimaryContainer,
+    secondary = md_theme_darkPink_secondary,
+    onSecondary = md_theme_darkPink_onSecondary,
+    secondaryContainer = md_theme_darkPink_secondaryContainer,
+    onSecondaryContainer = md_theme_darkPink_onSecondaryContainer,
+    tertiary = md_theme_darkPink_tertiary,
+    onTertiary = md_theme_darkPink_onTertiary,
+    tertiaryContainer = md_theme_darkPink_tertiaryContainer,
+    onTertiaryContainer = md_theme_darkPink_onTertiaryContainer,
+    error = md_theme_darkPink_error,
+    errorContainer = md_theme_darkPink_errorContainer,
+    onError = md_theme_darkPink_onError,
+    onErrorContainer = md_theme_darkPink_onErrorContainer,
+    background = md_theme_darkPink_background,
+    onBackground = md_theme_darkPink_onBackground,
+    surface = md_theme_darkPink_surface,
+    onSurface = md_theme_darkPink_onSurface,
+    surfaceVariant = md_theme_darkPink_surfaceVariant,
+    onSurfaceVariant = md_theme_darkPink_onSurfaceVariant,
+    outline = md_theme_darkPink_outline,
+    inverseOnSurface = md_theme_darkPink_inverseOnSurface,
+    inverseSurface = md_theme_darkPink_inverseSurface,
+    inversePrimary = md_theme_darkPink_inversePrimary,
+    surfaceTint = md_theme_darkPink_surfaceTint,
+    outlineVariant = md_theme_darkPink_outlineVariant,
+    scrim = md_theme_darkPink_scrim,
+)
+
 @Composable
 fun Hits_androidTheme(
     selectedTheme: MyAppTheme = if (isSystemInDarkTheme()) MyAppTheme.DarkGreen else MyAppTheme.LightGreen,
@@ -148,6 +215,8 @@ fun Hits_androidTheme(
         MyAppTheme.DarkGreen -> darkGreenColors
         MyAppTheme.LightPurple -> lightPurpleColors
         MyAppTheme.DarkPurple -> darkPurpleColors
+        MyAppTheme.LightPink -> lightPinkColors
+        MyAppTheme.DarkPink -> darkPinkColors
     }
 
     MaterialTheme(
@@ -161,5 +230,7 @@ enum class MyAppTheme {
     LightGreen,
     DarkGreen,
     LightPurple,
-    DarkPurple
+    DarkPurple,
+    LightPink,
+    DarkPink
 }

@@ -30,8 +30,6 @@ fun NavigationSystem() {
     val navController = rememberNavController()
     val viewModel: ReorderListViewModel = viewModel()
 
-    viewModel.setCurrentTheme(if(isSystemInDarkTheme()) MyAppTheme.DarkGreen else MyAppTheme.LightGreen)
-
     NavHost(navController = navController, startDestination = "start",) {
         composable("start") { StartScreen(navController, viewModel) }
         composable("main") { MainScreen(navController, viewModel) }

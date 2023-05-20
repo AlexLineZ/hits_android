@@ -28,7 +28,7 @@ import org.burnoutcrew.reorderable.ItemPosition
 
 class ReorderListViewModel : ViewModel() {
 
-    var _theme = MutableStateFlow(MyAppTheme.DarkGreen)
+    var _theme = MutableStateFlow(MyAppTheme.LightGreen)
 
     val theme: StateFlow<MyAppTheme> = _theme.asStateFlow()
 

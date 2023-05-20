@@ -8,6 +8,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -401,8 +402,10 @@ fun RowScope.AddItem(
         when (theme) {
             MyAppTheme.LightGreen -> if (selected) Color.White else Color.Black
             MyAppTheme.LightPurple -> if (selected) Color.White else Color.Black
+            MyAppTheme.LightPink -> if (selected) Color.White else Color.Black
             MyAppTheme.DarkGreen -> Color.White
             MyAppTheme.DarkPurple -> Color.White
+            MyAppTheme.DarkPink -> Color.White
         }
 
     val buttonIcon = if (screen == BottomBarScreen.Start) {
@@ -521,12 +524,58 @@ fun Settings(vm: ReorderListViewModel) {
             }
         }
         item {
-            Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-                Text(text = "Theme: ")
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(25.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Theme: ",
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
                 Box(
                     modifier = Modifier
                         .height(70.dp)
-                        .width(200.dp)
+                        .fillMaxWidth(0.5f)
+                        .clip(shape = RoundedCornerShape(24.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant)
+                        .clickable {
+                            vm.setCurrentTheme(
+                                when (theme) {
+                                    MyAppTheme.LightGreen -> MyAppTheme.DarkGreen
+                                    MyAppTheme.DarkGreen -> MyAppTheme.LightGreen
+                                    MyAppTheme.LightPurple -> MyAppTheme.DarkPurple
+                                    MyAppTheme.DarkPurple -> MyAppTheme.LightPurple
+                                    MyAppTheme.LightPink -> MyAppTheme.DarkPink
+                                    MyAppTheme.DarkPink -> MyAppTheme.LightPink
+                                }
+                            )
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = when (theme) {
+                            MyAppTheme.LightGreen -> "Light"
+                            MyAppTheme.DarkGreen -> "Dark"
+                            MyAppTheme.LightPurple -> "Light"
+                            MyAppTheme.DarkPurple -> "Dark"
+                            MyAppTheme.LightPink -> "Light"
+                            MyAppTheme.DarkPink -> "Dark"
+                        },
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 30.sp
+
+                    )
+                }
+                Box(
+                    modifier = Modifier
+                        .height(70.dp)
+                        .fillMaxWidth()
                         .clip(shape = RoundedCornerShape(24.dp))
                         .background(MaterialTheme.colorScheme.primary)
                         .clickable {
@@ -534,8 +583,10 @@ fun Settings(vm: ReorderListViewModel) {
                                 when (theme) {
                                     MyAppTheme.LightGreen -> MyAppTheme.LightPurple
                                     MyAppTheme.DarkGreen -> MyAppTheme.DarkPurple
-                                    MyAppTheme.LightPurple -> MyAppTheme.LightGreen
-                                    MyAppTheme.DarkPurple -> MyAppTheme.DarkGreen
+                                    MyAppTheme.LightPurple -> MyAppTheme.LightPink
+                                    MyAppTheme.DarkPurple -> MyAppTheme.DarkPink
+                                    MyAppTheme.LightPink -> MyAppTheme.LightGreen
+                                    MyAppTheme.DarkPink -> MyAppTheme.DarkGreen
                                 }
                             )
                         },
@@ -547,10 +598,12 @@ fun Settings(vm: ReorderListViewModel) {
                             MyAppTheme.DarkGreen -> "Green"
                             MyAppTheme.LightPurple -> "Purple"
                             MyAppTheme.DarkPurple -> "Purple"
+                            MyAppTheme.LightPink -> "Pink"
+                            MyAppTheme.DarkPink -> "Pink"
                         },
                         color = MaterialTheme.colorScheme.onPrimary,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 50.sp
+                        fontSize = 30.sp
 
                     )
                 }
