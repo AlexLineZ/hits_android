@@ -396,7 +396,7 @@ fun RowScope.AddItem(
     val theme by vm.theme.collectAsState()
 
     val background =
-        if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.6f) else Color.Transparent
+        if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.8f) else Color.Transparent
 
     val contentColor =
         when (theme) {
