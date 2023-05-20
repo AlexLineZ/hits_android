@@ -30,6 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hits_android.expressionParser.LexicalComponents
 import com.example.hits_android.expressionParser.ParsingFunctions
+import com.example.hits_android.expressionParser.Type
+import com.example.hits_android.expressionParser.Variable
 import com.example.hits_android.model.FlowViewModel
 
 // Блок вывода
@@ -58,12 +60,23 @@ class OutputBlock(
     // Вывод в консоль
     override fun runCodeBlock() {
         val exp = ParsingFunctions(LexicalComponents(expression + ";").getTokensFromCode())
-        val result = exp.parseExpression()
+        var result = exp.parseExpression()
+
+        if (result!!.type.length >= 5 &&
+            result!!.type.slice((result!!.type.length - 5)..(result!!.type.length - 1)) == "Array") {
+            var arr = ""
+
+            for (i in (result.value as Array<*>).indices) {
+                arr += (result.value as Array<*>)[i].toString() + ", "
+            }
+
+            arr = arr.slice(0..arr.length - 3)
+            result = Variable("result", Type.STRING, arr)
+        }
 
         when (result) {
             null -> println("ඞ Empty")
             else -> {
-                //println("ඞ ${result.value}")
                 FlowViewModel().setCurrentValue("ඞ ${result.value}\n")
             }
         }
