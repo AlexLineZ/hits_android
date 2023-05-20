@@ -24,7 +24,7 @@ class Variable(var name: String, var type: String, var value: Any) {
         }
 
         // Сложение строк
-        else if (type == Type.STRING && otherVariable.type == Type.STRING) {
+        else if (type == Type.STRING && (otherVariable.type == Type.STRING || otherVariable.type == Type.CHAR)) {
             return Variable(
                 "newVariable",
                 Type.STRING,
@@ -32,6 +32,14 @@ class Variable(var name: String, var type: String, var value: Any) {
             )
         }
 
+        // Сложение Char
+        else if (type == Type.CHAR && otherVariable.type == Type.CHAR) {
+            return Variable(
+                "newVariable",
+                Type.CHAR,
+                (value.toString()[0].code + otherVariable.value.toString()[0].code).toChar()
+            )
+        }
         throw Exception("Сложение переменных типов ${type} и ${otherVariable.type}")
     }
 
@@ -53,6 +61,15 @@ class Variable(var name: String, var type: String, var value: Any) {
             return Variable(
                 "newVariable", Type.DOUBLE,
                 (value.toString().toDouble() - otherVariable.value.toString().toDouble()).toString()
+            )
+        }
+
+        // Вычитание Char
+        else if (type == Type.CHAR && otherVariable.type == Type.CHAR) {
+            return Variable(
+                "newVariable",
+                Type.CHAR,
+                (value.toString()[0].code - otherVariable.value.toString()[0].code).toChar()
             )
         }
 
@@ -88,6 +105,20 @@ class Variable(var name: String, var type: String, var value: Any) {
                 return -1
             }
         }
+
+        // Сравнение Char
+        else if (type == Type.CHAR && otherVariable.type == Type.CHAR) {
+            if (value.toString()[0].code > otherVariable.value.toString()[0].code) {
+                return 1
+            }
+            else if (value.toString()[0].code == otherVariable.value.toString()[0].code) {
+                return 0
+            }
+            else {
+                return -1
+            }
+        }
+
         throw Exception("Сравнение переменных типов ${type} и ${otherVariable.type}")
     }
 
@@ -170,6 +201,11 @@ class Variable(var name: String, var type: String, var value: Any) {
             type == Type.BOOL && (otherVariable as Variable).type == Type.BOOL
         ) {
             return value.toString() == (otherVariable as Variable).value.toString()
+        }
+
+        // Сравнение Char
+        else if (type == Type.CHAR && (otherVariable as Variable).type == Type.CHAR) {
+            return value.toString()[0].code == otherVariable.value.toString()[0].code
         }
 
         throw Exception("Сравнение переменных типов ${type} и ${(otherVariable as Variable).type}")

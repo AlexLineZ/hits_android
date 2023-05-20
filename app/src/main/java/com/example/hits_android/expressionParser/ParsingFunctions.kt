@@ -16,6 +16,7 @@ class ParsingFunctions(private var tokens: List<Token>) {
         Name.BOOL.value,
         Name.STRING.value,
         Name.DOUBLE.value,
+        Name.CHAR.value,
         Name.RAND.value,
         Name.NUMBER.value,
         Name.SPACE.value,
@@ -47,6 +48,7 @@ class ParsingFunctions(private var tokens: List<Token>) {
         // Ищем ожидаемый токен начала выражения
         var nowToken = getTokenOrError(
             Name.STRING.value,
+            Name.CHAR.value,
             Name.RAND.value,
             Name.DOUBLE.value,
             Name.NUMBER.value,
@@ -103,6 +105,17 @@ class ParsingFunctions(private var tokens: List<Token>) {
                 )
             }
 
+            // Если текущий токен - это Char
+            else if (nowToken.type.name == Name.CHAR) {
+                resultStack.push(
+                    Variable(
+                        "",
+                        Type.CHAR,
+                        nowToken.text.slice(1..nowToken.text.length - 2)
+                    )
+                )
+            }
+
             // Если текущий токен - это Bool
             else if (nowToken.type.name == Name.BOOL) {
                 if (nowToken.text != "0" && nowToken.text != "false") {
@@ -121,23 +134,39 @@ class ParsingFunctions(private var tokens: List<Token>) {
 
                 // Если следующий токен - квадратная скобка, то закинуть элемент массива
                 else if (findToken(Name.L_SQUARE_BRACKET.value) != null) {
+                    val index = parseExpression()!!
+
+                    if (index.type != Type.INT) {
+                        throw Exception("Некорректный индекс элемента массива")
+                    }
+
                     try {
                         // Элемент Int массива
-                        if ((variables[nowToken.text]?.type == Type.INT + "Array"/* as Array<*>)[0] is Int*/)) {
+                        if (variables[nowToken.text]?.type == Type.INT + "Array") {
                             resultStack.push(
                                 Variable(
                                     "", Type.INT,
-                                    (variables[nowToken.text]?.value as Array<Int>)[parseExpression()!!.value.toString()
+                                    (variables[nowToken.text]?.value as Array<Int>)[index.value.toString()
                                         .toInt()]
                                 )
                             )
 
+                            // Символ строки
+                        } else if (variables[nowToken.text]?.type == Type.STRING) {
+                            resultStack.push(
+                                Variable(
+                                    "",
+                                    Type.CHAR,
+                                    (variables[nowToken.text]?.value as String)[index.value.toString().toInt()]
+                                )
+                            )
+
                             // Элемент Double массива
-                        } else if ((variables[nowToken.text]?.value as Array<*>)[0] is Double) {
+                        } else if (variables[nowToken.text]?.type == Type.DOUBLE + "Array") {
                             resultStack.push(
                                 Variable(
                                     "", Type.DOUBLE,
-                                    (variables[nowToken.text]?.value as Array<Double>)[parseExpression()!!.value.toString()
+                                    (variables[nowToken.text]?.value as Array<Double>)[index.value.toString()
                                         .toInt()]
                                 )
                             )
@@ -147,26 +176,72 @@ class ParsingFunctions(private var tokens: List<Token>) {
                             resultStack.push(
                                 Variable(
                                     "", Type.STRING,
-                                    (variables[nowToken.text]?.value as Array<String>)[parseExpression()!!.value.toString()
+                                    (variables[nowToken.text]?.value as Array<String>)[index.value.toString()
                                         .toInt()]
                                 )
                             )
                         }
 
                         // Элемент Bool массива
-                        else {
+                        else if (variables[nowToken.text]?.type == Type.BOOL + "Array"){
                             resultStack.push(
                                 Variable(
                                     "", Type.BOOL,
-                                    (variables[nowToken.text]?.value as Array<String>)[parseExpression()!!.value.toString()
+                                    (variables[nowToken.text]?.value as Array<String>)[index.value.toString()
                                         .toInt()]
                                 )
                             )
                         }
+
+                        // Элемент Char массива
+                        else if (variables[nowToken.text]?.type == Type.CHAR + "Array"){
+                            resultStack.push(
+                                Variable(
+                                    "", Type.CHAR,
+                                    (variables[nowToken.text]?.value as Array<String>)[index.value.toString()
+                                        .toInt()]
+                                )
+                            )
+                        }
+
+                        else {
+                            throw Exception("${nowToken.text} не является массивом.")
+                        }
                     }
                     // Выход за пределы массива
-                    catch (e: ArrayIndexOutOfBoundsException) {
+                    catch (e: java.lang.Exception) {
+                        if (e.message == "${nowToken.text} не является массивом.") {
+                            throw Exception(e.message)
+                        }
                         throw Exception("Произошел выход за пределы массива")
+                    }
+
+                    // Нахождение символа в массиве строк
+                    if (findToken(Name.L_SQUARE_BRACKET.value) != null) {
+                        val currentVar = resultStack.pop()
+
+                        if (currentVar.type != Type.STRING) {
+                            throw Exception("${nowToken.text} не является многомерным массивом.")
+                        }
+
+                        val index = parseExpression()!!
+
+                        if (index.type != Type.INT) {
+                            throw Exception("Некорректный индекс элемента массива")
+                        }
+
+                        try {
+                            resultStack.push(
+                                Variable(
+                                    "",
+                                    Type.CHAR,
+                                    (currentVar.value as String)[index.value.toString().toInt()]
+                                )
+                            )
+                        }
+                        catch (e: Exception) {
+                            throw Exception("Выход за пределы массива")
+                        }
                     }
                 }
 

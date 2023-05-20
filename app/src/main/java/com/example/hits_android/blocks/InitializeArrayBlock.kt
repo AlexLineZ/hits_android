@@ -105,6 +105,15 @@ class InitializeArrayBlock(
                 Array(size.value.toString().toInt()) { "0" })
         }
 
+        // Создание массива с элементами типа Char
+        else if (arrayType == Type.CHAR) {
+            variables[arrayName] = Variable(
+                arrayName,
+                Type.CHAR + "Array",
+                Array(size.value.toString().toInt()) {""}
+            )
+        }
+
         // Выполнение следующих блоков
         blockIndex++
     }
@@ -155,7 +164,7 @@ class InitializeArrayBlock(
 
     @Composable
     fun DropdownMenu(item: InitializeArrayBlock) {
-        val types = listOf("Int", "Double", "Bool", "String")
+        val types = listOf("Int", "Double", "Bool", "String", "Char")
         val selectedType = remember { mutableStateOf<String?>(null) }
         val expanded = remember { mutableStateOf(false) }
         Box(

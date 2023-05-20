@@ -72,7 +72,8 @@ class InitializeVarBlock(
         // Проверка соответсвтия типов переменной и значения
         if (type != newVariable.type &&
             !(type == Type.DOUBLE && newVariable.type == Type.INT) &&
-            !(type == Type.INT && newVariable.type == Type.DOUBLE)
+            !(type == Type.INT && newVariable.type == Type.DOUBLE) &&
+            !(type == Type.STRING && newVariable.type == Type.CHAR)
         ) {
             throw Exception("Переменной типа ${type} присваивается значение типа ${newVariable.type}")
         }
@@ -150,7 +151,7 @@ class InitializeVarBlock(
 
     @Composable
     fun DropdownMenu(item: InitializeVarBlock) {
-        val types = listOf("Int", "Double", "Bool", "String")
+        val types = listOf("Int", "Double", "Bool", "String", "Char")
         val selectedType = remember { mutableStateOf<String?>(null) }
         val expanded = remember { mutableStateOf(false) }
         Box(
