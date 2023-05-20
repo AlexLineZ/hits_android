@@ -4,6 +4,7 @@ package com.example.hits_android
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -111,7 +113,7 @@ private fun VerticalReorderList(
         items(vm.codeBlocksList, { item -> item.key }) { item ->
             ReorderableItem(state, item.key) { dragging ->
                 val scale = animateFloatAsState(if (dragging) 1.1f else 1.0f)
-                val elevation = if (dragging) 8.dp else 0.dp
+                val elevation = animateDpAsState(if (dragging) 8.dp else 0.dp)
                 val dismissState = rememberDismissState(
                     confirmValueChange = {
                         if ((it == DismissValue.DismissedToEnd || it == DismissValue.DismissedToStart)) {
@@ -189,7 +191,7 @@ private fun VerticalReorderList(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .scale(scale.value)
-                                    .shadow(elevation, RoundedCornerShape(24.dp))
+                                    .shadow(elevation.value, RoundedCornerShape(24.dp))
                             ) {
                                 item.BlockComposable(item, vm.codeBlocksList)
                             }
@@ -200,7 +202,7 @@ private fun VerticalReorderList(
                                     .fillMaxSize()
                                     .detectReorderAfterLongPress(state)
                                     .scale(scale.value)
-                                    .shadow(elevation, RoundedCornerShape(24.dp))
+                                    .shadow(elevation.value, RoundedCornerShape(24.dp))
                                     .clickable(
                                         onClick = {
                                             Log.d("a", "${vm.codeBlocksList}")
@@ -497,6 +499,7 @@ fun Console(viewModel: FlowViewModel) {
 @Composable
 fun Settings(vm: ReorderListViewModel) {
 
+    val theme by vm.theme.collectAsState()
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -512,6 +515,42 @@ fun Settings(vm: ReorderListViewModel) {
                     fontWeight = FontWeight.Bold
                 )
 
+            }
+        }
+        item {
+            Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+                Text(text = "Theme: ")
+                Box(
+                    modifier = Modifier
+                        .height(70.dp)
+                        .width(200.dp)
+                        .clip(shape = RoundedCornerShape(24.dp))
+                        .background(MaterialTheme.colorScheme.primary)
+                        .clickable {
+                            vm.setCurrentTheme(
+                                when (theme) {
+                                    MyAppTheme.LightGreen -> MyAppTheme.LightPurple
+                                    MyAppTheme.DarkGreen -> MyAppTheme.DarkPurple
+                                    MyAppTheme.LightPurple -> MyAppTheme.LightGreen
+                                    MyAppTheme.DarkPurple -> MyAppTheme.DarkGreen
+                                }
+                            )
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = when (theme) {
+                            MyAppTheme.LightGreen -> "Green"
+                            MyAppTheme.DarkGreen -> "Green"
+                            MyAppTheme.LightPurple -> "Purple"
+                            MyAppTheme.DarkPurple -> "Purple"
+                        },
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 50.sp
+
+                    )
+                }
             }
         }
         item {

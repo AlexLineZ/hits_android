@@ -26,9 +26,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.burnoutcrew.reorderable.ItemPosition
 
-var _theme = MutableStateFlow(MyAppTheme.DarkGreen)
-
 class ReorderListViewModel : ViewModel() {
+
+    var _theme = MutableStateFlow(MyAppTheme.DarkGreen)
 
     val theme: StateFlow<MyAppTheme> = _theme.asStateFlow()
 
