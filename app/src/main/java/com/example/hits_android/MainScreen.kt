@@ -63,6 +63,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.hits_android.blocks.ElseBlock
+import com.example.hits_android.blocks.IfBlock
+import com.example.hits_android.blocks.WhileBlock
 import com.example.hits_android.blocks.blockList
 import com.example.hits_android.model.FlowViewModel
 import com.example.hits_android.model.ReorderListViewModel
@@ -127,11 +130,36 @@ private fun VerticalReorderList(
                                     removeIf { it.key != "0" && it.key != "1" }
                                 }
                                 return@rememberDismissState false
+                            } else if (item.blockName == "endBlock" || item.blockName == "beginBlock") {
+                                return@rememberDismissState false
                             } else {
-                                vm.codeBlocksList = vm.codeBlocksList.toMutableList().apply {
-                                    removeIf { it.key == item.key }
-                                }
+                                if (item.blockName == "ElseBlock" || item.blockName == "IfBlock" || item.blockName == "WhileBlock") {
+                                    when (item.blockName) {
+                                        "ElseBlock" -> {
+                                            item as ElseBlock
+                                            vm.codeBlocksList = vm.codeBlocksList.toMutableList().apply {
+                                                removeIf { it.key == item.key || it.key == item.beginKey || it.key == item.endKey }
+                                            }
+                                        }
+                                        "IfBlock" -> {
+                                            item as IfBlock
+                                            vm.codeBlocksList = vm.codeBlocksList.toMutableList().apply {
+                                                removeIf { it.key == item.key || it.key == item.beginKey || it.key == item.endKey }
+                                            }
+                                        }
+                                        "WhileBlock" -> {
+                                            item as WhileBlock
+                                            vm.codeBlocksList = vm.codeBlocksList.toMutableList().apply {
+                                                removeIf { it.key == item.key || it.key == item.beginKey || it.key == item.endKey }
+                                            }
+                                        }
+                                    }
 
+                                } else {
+                                    vm.codeBlocksList = vm.codeBlocksList.toMutableList().apply {
+                                        removeIf { it.key == item.key }
+                                    }
+                                }
                                 blockList = vm.codeBlocksList.toMutableList()
                             }
                         }
@@ -155,8 +183,7 @@ private fun VerticalReorderList(
                         )
                         val icon = Icons.Default.Delete
 
-                        if (item.isDragOverLocked) {
-                        } else {
+                        if (!(item.isDragOverLocked || item.blockName == "endBlock" || item.blockName == "beginBlock")) {
                             Box(
                                 modifier = Modifier
                                     .fillMaxSize()

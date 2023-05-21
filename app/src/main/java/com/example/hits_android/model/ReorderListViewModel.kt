@@ -92,11 +92,19 @@ class ReorderListViewModel : ViewModel() {
                         }
 
                         "ElseBlock" -> {
-                            ElseBlock(key = "${++keyCount}")
+                            ElseBlock(
+                                key = "${++keyCount}",
+                                beginKey = "${keyCount + 1}",
+                                endKey = "${keyCount + 2}"
+                            )
                         }
 
                         "IfBlock" -> {
-                            IfBlock(key = "${++keyCount}")
+                            IfBlock(
+                                key = "${++keyCount}",
+                                beginKey = "${keyCount + 1}",
+                                endKey = "${keyCount + 2}"
+                            )
                         }
 
                         "initArrayBlock" -> {
@@ -112,7 +120,11 @@ class ReorderListViewModel : ViewModel() {
                         }
 
                         "WhileBlock" -> {
-                            WhileBlock(key = "${++keyCount}")
+                            WhileBlock(
+                                key = "${++keyCount}",
+                                beginKey = "${keyCount + 1}",
+                                endKey = "${keyCount + 2}"
+                            )
                         }
 
                         else -> {
@@ -137,7 +149,7 @@ class ReorderListViewModel : ViewModel() {
             }
     }
 
-    fun setCurrentTheme(newTheme:  Pair<AppThemeBrightness, AppThemeColor>) {
+    fun setCurrentTheme(newTheme: Pair<AppThemeBrightness, AppThemeColor>) {
         _theme.value = newTheme
     }
 }

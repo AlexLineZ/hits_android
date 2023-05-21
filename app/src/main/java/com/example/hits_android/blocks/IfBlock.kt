@@ -37,7 +37,9 @@ class IfBlock(
     override var nextID: Int = -1,
     override val key: String,
     override val title: String = "If",
-    override val isDragOverLocked: Boolean = false
+    override val isDragOverLocked: Boolean = false,
+    val beginKey: String = "",
+    val endKey: String = ""
 ) : Block {
     // Название блока
     companion object {
