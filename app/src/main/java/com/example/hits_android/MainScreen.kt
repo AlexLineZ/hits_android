@@ -123,6 +123,9 @@ private fun VerticalReorderList(
                     confirmValueChange = {
                         if ((it == DismissValue.DismissedToEnd || it == DismissValue.DismissedToStart)) {
                             if (item.isDragOverLocked) {
+                                vm.codeBlocksList = vm.codeBlocksList.toMutableList().apply {
+                                    removeIf { it.key != "0" && it.key != "1" }
+                                }
                                 return@rememberDismissState false
                             } else {
                                 vm.codeBlocksList = vm.codeBlocksList.toMutableList().apply {
