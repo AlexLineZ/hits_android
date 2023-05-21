@@ -67,7 +67,10 @@ import com.example.hits_android.blocks.blockList
 import com.example.hits_android.model.FlowViewModel
 import com.example.hits_android.model.ReorderListViewModel
 import com.example.hits_android.ui.theme.Hits_androidTheme
-import com.example.hits_android.ui.theme.MyAppTheme
+import com.example.hits_android.ui.theme.AppTheme
+import com.example.hits_android.ui.theme.AppThemeBrightness
+import com.example.hits_android.ui.theme.AppThemeColor
+import com.example.hits_android.ui.theme.BuildTheme
 import org.burnoutcrew.reorderable.ReorderableItem
 import org.burnoutcrew.reorderable.detectReorderAfterLongPress
 import org.burnoutcrew.reorderable.rememberReorderableLazyListState
@@ -79,7 +82,7 @@ fun MainScreen(
     vm: ReorderListViewModel
 ) {
     val theme by vm.theme.collectAsState()
-    Hits_androidTheme(theme) {
+    Hits_androidTheme(BuildTheme(theme)) {
         BottomNav(vm = vm)
     }
 }
@@ -399,13 +402,10 @@ fun RowScope.AddItem(
         if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.8f) else Color.Transparent
 
     val contentColor =
-        when (theme) {
-            MyAppTheme.LightGreen -> if (selected) Color.White else Color.Black
-            MyAppTheme.LightPurple -> if (selected) Color.White else Color.Black
-            MyAppTheme.LightPink -> if (selected) Color.White else Color.Black
-            MyAppTheme.DarkGreen -> Color.White
-            MyAppTheme.DarkPurple -> Color.White
-            MyAppTheme.DarkPink -> Color.White
+        when (theme.first) {
+            AppThemeBrightness.Light -> if (selected) Color.White else Color.Black
+            AppThemeBrightness.Dark -> Color.White
+            AppThemeBrightness.System -> if (isSystemInDarkTheme()) Color.White else (if (selected) Color.White else Color.Black)
         }
 
     val buttonIcon = if (screen == BottomBarScreen.Start) {
@@ -545,26 +545,24 @@ fun Settings(vm: ReorderListViewModel) {
                         .background(MaterialTheme.colorScheme.surfaceVariant)
                         .clickable {
                             vm.setCurrentTheme(
-                                when (theme) {
-                                    MyAppTheme.LightGreen -> MyAppTheme.DarkGreen
-                                    MyAppTheme.DarkGreen -> MyAppTheme.LightGreen
-                                    MyAppTheme.LightPurple -> MyAppTheme.DarkPurple
-                                    MyAppTheme.DarkPurple -> MyAppTheme.LightPurple
-                                    MyAppTheme.LightPink -> MyAppTheme.DarkPink
-                                    MyAppTheme.DarkPink -> MyAppTheme.LightPink
-                                }
+                                Pair(
+                                    when (theme.first) {
+                                        AppThemeBrightness.Light -> AppThemeBrightness.Dark
+                                        AppThemeBrightness.Dark -> AppThemeBrightness.System
+                                        AppThemeBrightness.System -> AppThemeBrightness.Light
+                                    },
+                                    theme.second
+                                )
                             )
                         },
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = when (theme) {
-                            MyAppTheme.LightGreen -> "Light"
-                            MyAppTheme.DarkGreen -> "Dark"
-                            MyAppTheme.LightPurple -> "Light"
-                            MyAppTheme.DarkPurple -> "Dark"
-                            MyAppTheme.LightPink -> "Light"
-                            MyAppTheme.DarkPink -> "Dark"
+                        text = when (theme.first) {
+                            AppThemeBrightness.Light -> "Light"
+                            AppThemeBrightness.Dark -> "Dark"
+                            AppThemeBrightness.System -> "System"
+
                         },
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontWeight = FontWeight.Bold,
@@ -580,26 +578,25 @@ fun Settings(vm: ReorderListViewModel) {
                         .background(MaterialTheme.colorScheme.primary)
                         .clickable {
                             vm.setCurrentTheme(
-                                when (theme) {
-                                    MyAppTheme.LightGreen -> MyAppTheme.LightPurple
-                                    MyAppTheme.DarkGreen -> MyAppTheme.DarkPurple
-                                    MyAppTheme.LightPurple -> MyAppTheme.LightPink
-                                    MyAppTheme.DarkPurple -> MyAppTheme.DarkPink
-                                    MyAppTheme.LightPink -> MyAppTheme.LightGreen
-                                    MyAppTheme.DarkPink -> MyAppTheme.DarkGreen
-                                }
+                                Pair(
+                                    theme.first,
+                                    when (theme.second) {
+                                        AppThemeColor.Green -> AppThemeColor.Purple
+                                        AppThemeColor.Purple -> AppThemeColor.Pink
+                                        AppThemeColor.Pink -> AppThemeColor.Blue
+                                        AppThemeColor.Blue -> AppThemeColor.Green
+                                    }
+                                )
                             )
                         },
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = when (theme) {
-                            MyAppTheme.LightGreen -> "Green"
-                            MyAppTheme.DarkGreen -> "Green"
-                            MyAppTheme.LightPurple -> "Purple"
-                            MyAppTheme.DarkPurple -> "Purple"
-                            MyAppTheme.LightPink -> "Pink"
-                            MyAppTheme.DarkPink -> "Pink"
+                        text = when (theme.second) {
+                            AppThemeColor.Green -> "Green"
+                            AppThemeColor.Purple -> "Purple"
+                            AppThemeColor.Pink -> "Pink"
+                            AppThemeColor.Blue -> "Blue"
                         },
                         color = MaterialTheme.colorScheme.onPrimary,
                         fontWeight = FontWeight.Bold,

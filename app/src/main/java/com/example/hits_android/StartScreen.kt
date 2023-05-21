@@ -15,13 +15,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.hits_android.model.ReorderListViewModel
+import com.example.hits_android.ui.theme.BuildTheme
 import com.example.hits_android.ui.theme.Hits_androidTheme
 
 @Composable
 fun StartScreen(navController: NavController, vm: ReorderListViewModel) {
     val theme by vm.theme.collectAsState()
 
-    Hits_androidTheme(theme) {
+    Hits_androidTheme(BuildTheme(theme)) {
         Surface {
             Box(
                 modifier = Modifier.fillMaxSize()

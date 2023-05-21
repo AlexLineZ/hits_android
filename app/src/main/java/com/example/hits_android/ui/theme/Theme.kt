@@ -138,7 +138,6 @@ private val darkPurpleColors = darkColorScheme(
 )
 
 
-
 private val lightPinkColors = lightColorScheme(
     primary = md_theme_lightPink_primary,
     onPrimary = md_theme_lightPink_onPrimary,
@@ -204,19 +203,90 @@ private val darkPinkColors = darkColorScheme(
     scrim = md_theme_darkPink_scrim,
 )
 
+
+
+
+
+private val lightBlueColors = lightColorScheme(
+    primary = md_theme_lightBlue_primary,
+    onPrimary = md_theme_lightBlue_onPrimary,
+    primaryContainer = md_theme_lightBlue_primaryContainer,
+    onPrimaryContainer = md_theme_lightBlue_onPrimaryContainer,
+    secondary = md_theme_lightBlue_secondary,
+    onSecondary = md_theme_lightBlue_onSecondary,
+    secondaryContainer = md_theme_lightBlue_secondaryContainer,
+    onSecondaryContainer = md_theme_lightBlue_onSecondaryContainer,
+    tertiary = md_theme_lightBlue_tertiary,
+    onTertiary = md_theme_lightBlue_onTertiary,
+    tertiaryContainer = md_theme_lightBlue_tertiaryContainer,
+    onTertiaryContainer = md_theme_lightBlue_onTertiaryContainer,
+    error = md_theme_lightBlue_error,
+    errorContainer = md_theme_lightBlue_errorContainer,
+    onError = md_theme_lightBlue_onError,
+    onErrorContainer = md_theme_lightBlue_onErrorContainer,
+    background = md_theme_lightBlue_background,
+    onBackground = md_theme_lightBlue_onBackground,
+    surface = md_theme_lightBlue_surface,
+    onSurface = md_theme_lightBlue_onSurface,
+    surfaceVariant = md_theme_lightBlue_surfaceVariant,
+    onSurfaceVariant = md_theme_lightBlue_onSurfaceVariant,
+    outline = md_theme_lightBlue_outline,
+    inverseOnSurface = md_theme_lightBlue_inverseOnSurface,
+    inverseSurface = md_theme_lightBlue_inverseSurface,
+    inversePrimary = md_theme_lightBlue_inversePrimary,
+    surfaceTint = md_theme_lightBlue_surfaceTint,
+    outlineVariant = md_theme_lightBlue_outlineVariant,
+    scrim = md_theme_lightBlue_scrim,
+)
+
+
+private val darkBlueColors = darkColorScheme(
+    primary = md_theme_darkBlue_primary,
+    onPrimary = md_theme_darkBlue_onPrimary,
+    primaryContainer = md_theme_darkBlue_primaryContainer,
+    onPrimaryContainer = md_theme_darkBlue_onPrimaryContainer,
+    secondary = md_theme_darkBlue_secondary,
+    onSecondary = md_theme_darkBlue_onSecondary,
+    secondaryContainer = md_theme_darkBlue_secondaryContainer,
+    onSecondaryContainer = md_theme_darkBlue_onSecondaryContainer,
+    tertiary = md_theme_darkBlue_tertiary,
+    onTertiary = md_theme_darkBlue_onTertiary,
+    tertiaryContainer = md_theme_darkBlue_tertiaryContainer,
+    onTertiaryContainer = md_theme_darkBlue_onTertiaryContainer,
+    error = md_theme_darkBlue_error,
+    errorContainer = md_theme_darkBlue_errorContainer,
+    onError = md_theme_darkBlue_onError,
+    onErrorContainer = md_theme_darkBlue_onErrorContainer,
+    background = md_theme_darkBlue_background,
+    onBackground = md_theme_darkBlue_onBackground,
+    surface = md_theme_darkBlue_surface,
+    onSurface = md_theme_darkBlue_onSurface,
+    surfaceVariant = md_theme_darkBlue_surfaceVariant,
+    onSurfaceVariant = md_theme_darkBlue_onSurfaceVariant,
+    outline = md_theme_darkBlue_outline,
+    inverseOnSurface = md_theme_darkBlue_inverseOnSurface,
+    inverseSurface = md_theme_darkBlue_inverseSurface,
+    inversePrimary = md_theme_darkBlue_inversePrimary,
+    surfaceTint = md_theme_darkBlue_surfaceTint,
+    outlineVariant = md_theme_darkBlue_outlineVariant,
+    scrim = md_theme_darkBlue_scrim,
+)
+
 @Composable
 fun Hits_androidTheme(
-    selectedTheme: MyAppTheme = if (isSystemInDarkTheme()) MyAppTheme.DarkGreen else MyAppTheme.LightGreen,
+    selectedTheme: AppTheme = if (isSystemInDarkTheme()) AppTheme.DarkGreen else AppTheme.LightGreen,
     content: @Composable() () -> Unit
 ) {
 
     val colors = when (selectedTheme) {
-        MyAppTheme.LightGreen -> lightGreenColors
-        MyAppTheme.DarkGreen -> darkGreenColors
-        MyAppTheme.LightPurple -> lightPurpleColors
-        MyAppTheme.DarkPurple -> darkPurpleColors
-        MyAppTheme.LightPink -> lightPinkColors
-        MyAppTheme.DarkPink -> darkPinkColors
+        AppTheme.LightGreen -> lightGreenColors
+        AppTheme.DarkGreen -> darkGreenColors
+        AppTheme.LightPurple -> lightPurpleColors
+        AppTheme.DarkPurple -> darkPurpleColors
+        AppTheme.LightPink -> lightPinkColors
+        AppTheme.DarkPink -> darkPinkColors
+        AppTheme.LightBlue -> lightBlueColors
+        AppTheme.DarkBlue -> darkBlueColors
     }
 
     MaterialTheme(
@@ -226,11 +296,67 @@ fun Hits_androidTheme(
 }
 
 
-enum class MyAppTheme {
+@Composable
+fun BuildTheme(theme: Pair<AppThemeBrightness, AppThemeColor>): AppTheme {
+    return when (theme.first) {
+        AppThemeBrightness.Light -> {
+            when (theme.second) {
+                AppThemeColor.Green -> AppTheme.LightGreen
+                AppThemeColor.Purple -> AppTheme.LightPurple
+                AppThemeColor.Pink -> AppTheme.LightPink
+                AppThemeColor.Blue -> AppTheme.LightBlue
+            }
+        }
+
+        AppThemeBrightness.Dark -> {
+            when (theme.second) {
+                AppThemeColor.Green -> AppTheme.DarkGreen
+                AppThemeColor.Purple -> AppTheme.DarkPurple
+                AppThemeColor.Pink -> AppTheme.DarkPink
+                AppThemeColor.Blue -> AppTheme.DarkBlue
+            }
+        }
+
+        AppThemeBrightness.System -> {
+            when (isSystemInDarkTheme()) {
+                true -> when (theme.second) {
+                    AppThemeColor.Green -> AppTheme.DarkGreen
+                    AppThemeColor.Purple -> AppTheme.DarkPurple
+                    AppThemeColor.Pink -> AppTheme.DarkPink
+                    AppThemeColor.Blue -> AppTheme.DarkBlue
+                }
+
+                false -> when (theme.second) {
+                    AppThemeColor.Green -> AppTheme.LightGreen
+                    AppThemeColor.Purple -> AppTheme.LightPurple
+                    AppThemeColor.Pink -> AppTheme.LightPink
+                    AppThemeColor.Blue -> AppTheme.LightBlue
+                }
+            }
+        }
+    }
+}
+
+enum class AppThemeColor {
+    Green,
+    Purple,
+    Pink,
+    Blue
+}
+
+enum class AppThemeBrightness {
+    Light,
+    Dark,
+    System
+}
+
+enum class AppTheme {
     LightGreen,
     DarkGreen,
     LightPurple,
     DarkPurple,
     LightPink,
-    DarkPink
+    DarkPink,
+    LightBlue,
+    DarkBlue
 }

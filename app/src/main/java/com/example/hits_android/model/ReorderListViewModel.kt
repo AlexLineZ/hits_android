@@ -20,7 +20,9 @@ import com.example.hits_android.blocks.MainBlock
 import com.example.hits_android.blocks.OutputBlock
 import com.example.hits_android.blocks.WhileBlock
 import com.example.hits_android.blocks.blockList
-import com.example.hits_android.ui.theme.MyAppTheme
+import com.example.hits_android.ui.theme.AppTheme
+import com.example.hits_android.ui.theme.AppThemeBrightness
+import com.example.hits_android.ui.theme.AppThemeColor
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,9 +30,9 @@ import org.burnoutcrew.reorderable.ItemPosition
 
 class ReorderListViewModel : ViewModel() {
 
-    var _theme = MutableStateFlow(MyAppTheme.LightGreen)
+    var _theme = MutableStateFlow(Pair(AppThemeBrightness.System, AppThemeColor.Green))
 
-    val theme: StateFlow<MyAppTheme> = _theme.asStateFlow()
+    val theme: StateFlow<Pair<AppThemeBrightness, AppThemeColor>> = _theme.asStateFlow()
 
     var codeBlocksList by mutableStateOf(
         listOf(
@@ -135,7 +137,7 @@ class ReorderListViewModel : ViewModel() {
             }
     }
 
-    fun setCurrentTheme(newTheme: MyAppTheme) {
+    fun setCurrentTheme(newTheme:  Pair<AppThemeBrightness, AppThemeColor>) {
         _theme.value = newTheme
     }
 }
