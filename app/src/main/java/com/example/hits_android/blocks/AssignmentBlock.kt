@@ -212,7 +212,7 @@ class AssignmentBlock(
             },
             modifier = Modifier.fillMaxWidth(0.43f),
             shape = RoundedCornerShape(4.dp),
-            placeholder = { Text(text = "left operand") },
+            placeholder = { Text(text = "left operand", maxLines = 1) },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Done // Изменяем действие клавиатуры на "Готово"
@@ -238,7 +238,7 @@ class AssignmentBlock(
                 textState.value = it
                 item.newValue = textState.value.text
             },
-            placeholder = { Text(text = "right operand") },
+            placeholder = { Text(text = "right operand", maxLines = 1) },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(5.dp),
             keyboardOptions = KeyboardOptions(

@@ -9,18 +9,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-class MainBlock(
+class FinishProgramBlock(
     override var previousID: Int = -1,
     override var nextID: Int = -1,
     override val key: String,
     override val title: String = "Main",
     override val isDragOverLocked: Boolean = false
 ) : Block {
-    override val blockName = "mainBlock"
+    override val blockName = "finishProgram"
 
     override fun runCodeBlock() {
         blockIndex++
@@ -40,10 +39,11 @@ class MainBlock(
         ) {
             Text(
                 text = item.title,
-                modifier = Modifier.padding(10.dp),
+                modifier = Modifier
+                    .padding(10.dp),
                 color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.Bold,
-                fontSize = 25.sp
+                fontSize = 25.sp,
             )
         }
     }

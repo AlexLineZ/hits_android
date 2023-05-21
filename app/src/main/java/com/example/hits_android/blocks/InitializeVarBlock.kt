@@ -146,7 +146,7 @@ class InitializeVarBlock(
                     text = "Var",
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 25.sp
+                    fontSize = 20.sp
                 )
                 DropdownMenu(item)
                 ItemNameField(item)
@@ -173,7 +173,7 @@ class InitializeVarBlock(
                 maxLines = 1,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontWeight = FontWeight.Bold,
-                fontSize = 25.sp,
+                fontSize = 20.sp,
                 textDecoration = TextDecoration.Underline
             )
         }
@@ -208,7 +208,7 @@ class InitializeVarBlock(
             },
             modifier = Modifier.fillMaxWidth(0.5f),
             shape = RoundedCornerShape(4.dp),
-            placeholder = { Text(text = "name") },
+            placeholder = { Text(text = "name", maxLines = 1) },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Done // Изменяем действие клавиатуры на "Готово"
@@ -234,7 +234,7 @@ class InitializeVarBlock(
                 textState.value = it
                 item.value = textState.value.text
             },
-            placeholder = { Text(text = "value") },
+            placeholder = { Text(text = "value", maxLines = 1) },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(5.dp),
             keyboardOptions = KeyboardOptions(

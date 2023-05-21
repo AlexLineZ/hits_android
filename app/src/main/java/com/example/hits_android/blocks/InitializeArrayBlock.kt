@@ -153,7 +153,7 @@ class InitializeArrayBlock(
                     text = "Arr",
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 25.sp
+                    fontSize = 20.sp
                 )
                 DropdownMenu(item)
                 ItemNameField(item)
@@ -180,7 +180,7 @@ class InitializeArrayBlock(
                 maxLines = 1,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontWeight = FontWeight.Bold,
-                fontSize = 25.sp,
+                fontSize = 20.sp,
                 textDecoration = TextDecoration.Underline
             )
         }
@@ -215,7 +215,7 @@ class InitializeArrayBlock(
             },
             modifier = Modifier.fillMaxWidth(0.5f),
             shape = RoundedCornerShape(4.dp),
-            placeholder = { Text(text = "name") },
+            placeholder = { Text(text = "name", maxLines = 1) },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Done // Изменяем действие клавиатуры на "Готово"
@@ -241,7 +241,7 @@ class InitializeArrayBlock(
                 textState.value = it
                 item.arraySize = textState.value.text
             },
-            placeholder = { Text(text = "size") },
+            placeholder = { Text(text = "size", maxLines = 1) },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(5.dp),
             keyboardOptions = KeyboardOptions(

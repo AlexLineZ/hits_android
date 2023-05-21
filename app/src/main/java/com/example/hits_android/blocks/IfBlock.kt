@@ -147,7 +147,7 @@ class IfBlock(
                 item.condition = textState.value.text
             },
             modifier = Modifier.fillMaxWidth(),
-            placeholder = { Text(text = "condition") },
+            placeholder = { Text(text = "condition", maxLines = 1) },
             shape = RoundedCornerShape(6.dp),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
@@ -162,14 +162,3 @@ class IfBlock(
         )
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun BlockPreview() {
-//    val block = IfBlock(key = "0");
-//    val codeBlocksList =
-//        listOf(
-//            block
-//        )
-//    block.BlockComposable(block, codeBlocksList)
-//}
