@@ -1,5 +1,6 @@
 package com.example.hits_android.model
 
+import android.os.Looper
 import androidx.lifecycle.ViewModel
 import com.example.hits_android.blocks.blockIndex
 import com.example.hits_android.blocks.blockList
@@ -40,12 +41,13 @@ class FlowViewModel : ViewModel() {
                         blockList[blockIndex].runCodeBlock()
                     }
 
-                    delay(1000L)
-                    setCurrentValue("\n\nПроцесс (${(Math.random() * 10000).toInt()}) завершил работу с кодом 0.")
+                    android.os.Handler(Looper.getMainLooper()).postDelayed({
+                        setCurrentValue("\nПроцесс (${(Math.random() * 10000).toInt()}) завершил работу с кодом 0.")
+                    }, 1000)
 
                     _isProgramRunning.value = false
                 } catch (e: java.lang.Exception) {
-                    setError(e.message.toString())
+                    setError("Error: " + e.message.toString())
                     _isProgramRunning.value = false
                 }
             }
