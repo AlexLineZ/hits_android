@@ -1,20 +1,17 @@
 package com.example.hits_android
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.hits_android.model.ReorderListViewModel
 import com.example.hits_android.ui.theme.Hits_androidTheme
-import com.example.hits_android.ui.theme.AppTheme
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.example.hits_android.ui.theme.ThemePreference
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,18 +19,22 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             Hits_androidTheme {
-                NavigationSystem()
+                NavigationSystem(this@MainActivity)
             }
         }
     }
 }
 
 @Composable
-fun NavigationSystem() {
+fun NavigationSystem(context: Context) {
     val navController = rememberNavController()
-    val viewModel: ReorderListViewModel = viewModel()
+    val viewModel: ReorderListViewModel = viewModel(
+        factory = ReorderListViewModelFactory(
+            sharedPreferences = ThemePreference.getInstance(context)
+        )
+    )
 
-    NavHost(navController = navController, startDestination = "start",) {
+    NavHost(navController = navController, startDestination = "start") {
         composable("start") { StartScreen(navController, viewModel) }
         composable("main") { MainScreen(navController, viewModel) }
     }

@@ -1,5 +1,8 @@
 package com.example.hits_android.model
 
+import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -7,6 +10,8 @@ import androidx.compose.runtime.ComposeCompilerApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import com.example.hits_android.blocks.AssignmentBlock
 import com.example.hits_android.blocks.BeginBlock
@@ -23,18 +28,22 @@ import com.example.hits_android.blocks.MainBlock
 import com.example.hits_android.blocks.OutputBlock
 import com.example.hits_android.blocks.WhileBlock
 import com.example.hits_android.blocks.blockList
-import com.example.hits_android.ui.theme.AppTheme
 import com.example.hits_android.ui.theme.AppThemeBrightness
 import com.example.hits_android.ui.theme.AppThemeColor
+<<<<<<< HEAD
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+=======
+import com.example.hits_android.ui.theme.ThemePreference
+>>>>>>> 58ae5f1c681a6e9f512e8f17356ad2081af18391
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.burnoutcrew.reorderable.ItemPosition
 
-class ReorderListViewModel : ViewModel() {
+class ReorderListViewModel(private val sharedPreferences: ThemePreference) : ViewModel() {
 
-    var _theme = MutableStateFlow(Pair(AppThemeBrightness.System, AppThemeColor.Green))
+    private val savedTheme = sharedPreferences.getSavedTheme()
+    private var _theme = MutableStateFlow(savedTheme)
 
     val theme: StateFlow<Pair<AppThemeBrightness, AppThemeColor>> = _theme.asStateFlow()
 
@@ -154,6 +163,10 @@ class ReorderListViewModel : ViewModel() {
     }
 
     fun setCurrentTheme(newTheme: Pair<AppThemeBrightness, AppThemeColor>) {
+        sharedPreferences.apply {
+            saveThemeBrightness(newTheme.first)
+            saveThemeColor(newTheme.second)
+        }
         _theme.value = newTheme
     }
 }
