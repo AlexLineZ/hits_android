@@ -150,7 +150,7 @@ class WhileBlock(
                 item.condition = textState.value.text
             },
             modifier = Modifier.fillMaxWidth(),
-            placeholder = { Text(text = "condition") },
+            placeholder = { Text(text = "condition", maxLines = 1) },
             shape = RoundedCornerShape(4.dp),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,

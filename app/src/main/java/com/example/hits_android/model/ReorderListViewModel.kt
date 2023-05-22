@@ -9,6 +9,7 @@ import com.example.hits_android.blocks.AssignmentBlock
 import com.example.hits_android.blocks.BeginBlock
 import com.example.hits_android.blocks.Block
 import com.example.hits_android.blocks.BreakBlock
+import com.example.hits_android.blocks.CallFunctionBlock
 import com.example.hits_android.blocks.ContinueBlock
 import com.example.hits_android.blocks.ElseBlock
 import com.example.hits_android.blocks.EndBlock
@@ -44,14 +45,15 @@ class ReorderListViewModel(private val sharedPreferences: ThemePreference) : Vie
     var blockSelectionList by mutableStateOf(
         listOf(
             InitializeVarBlock(key = "0"),
-            WhileBlock(key = "1"),
-            IfBlock(key = "2"),
-            ElseBlock(key = "3"),
-            ContinueBlock(key = "4"),
-            BreakBlock(key = "5"),
-            OutputBlock(key = "6"),
-            InitializeArrayBlock(key = "7"),
-            AssignmentBlock(key = "8")
+            InitializeArrayBlock(key = "1"),
+            OutputBlock(key = "2"),
+            AssignmentBlock(key = "3"),
+            IfBlock(key = "4"),
+            WhileBlock(key = "5"),
+            ElseBlock(key = "6"),
+            BreakBlock(key = "7"),
+            ContinueBlock(key = "8"),
+            CallFunctionBlock(key = "9")
         )
     )
 
@@ -126,6 +128,10 @@ class ReorderListViewModel(private val sharedPreferences: ThemePreference) : Vie
                                 beginKey = "${keyCount + 1}",
                                 endKey = "${keyCount + 2}"
                             )
+                        }
+
+                        "callFunctionBlock" -> {
+                            CallFunctionBlock(key = "${++keyCount}")
                         }
 
                         else -> {

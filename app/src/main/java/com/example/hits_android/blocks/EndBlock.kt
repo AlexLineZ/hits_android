@@ -51,7 +51,7 @@ class EndBlock(
         }
 
         // Возврат к предыдущей области видимости переменных
-        scopes.destoryScope()
+        scopes.destroyScope()
 
         // Выполнение следующего блока
         blockIndex++

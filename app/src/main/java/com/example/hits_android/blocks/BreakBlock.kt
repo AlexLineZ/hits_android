@@ -45,7 +45,7 @@ class BreakBlock(
                 blockIndex--
 
                 if (blockList[blockIndex].getNameOfBlock() == BeginBlock.BLOCK_NAME) {
-                    scopes.destoryScope()
+                    scopes.destroyScope()
                 } else if (blockList[blockIndex].getNameOfBlock() == EndBlock.BLOCK_NAME) {
                     scopes.addScope(scopes.getScope())
                 }

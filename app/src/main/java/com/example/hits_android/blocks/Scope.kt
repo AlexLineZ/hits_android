@@ -11,7 +11,7 @@ class Scope() {
     }
 
     // Уничтожение текущей области видимости
-    fun destoryScope() {
+    fun destroyScope() {
         scopesList.removeAt(scopesList.size - 1)
     }
 
