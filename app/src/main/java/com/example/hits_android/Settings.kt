@@ -30,7 +30,7 @@ import com.example.hits_android.ui.theme.AppThemeColor
 @Composable
 fun Settings(vm: ReorderListViewModel) {
     Column(
-        modifier = Modifier.fillMaxWidth().fillMaxHeight(0.93f),
+        modifier = Modifier.fillMaxWidth().fillMaxHeight(0.92f),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
