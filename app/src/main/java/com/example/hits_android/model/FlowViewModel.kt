@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 var _output = MutableStateFlow("")
-
+var isOutputRunning = MutableStateFlow(false)
 class FlowViewModel : ViewModel() {
     val output: StateFlow<String> = _output.asStateFlow()
 
@@ -41,9 +41,13 @@ class FlowViewModel : ViewModel() {
                         blockList[blockIndex].runCodeBlock()
                     }
 
-                    android.os.Handler(Looper.getMainLooper()).postDelayed({
-                        setCurrentValue("\nПроцесс (${(Math.random() * 10000).toInt()}) завершил работу с кодом 0.")
-                    }, 1000)
+                    if (!isOutputRunning.value){
+                        isOutputRunning.value = true
+                        android.os.Handler(Looper.getMainLooper()).postDelayed({
+                            setCurrentValue("\nПроцесс (${(Math.random() * 10000).toInt()}) завершил работу с кодом 0.")
+                            isOutputRunning.value = false
+                        }, 1000)
+                    }
 
                     _isProgramRunning.value = false
                 } catch (e: java.lang.Exception) {
