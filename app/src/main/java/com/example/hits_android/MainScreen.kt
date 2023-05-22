@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -69,11 +68,10 @@ import com.example.hits_android.blocks.WhileBlock
 import com.example.hits_android.blocks.blockList
 import com.example.hits_android.model.FlowViewModel
 import com.example.hits_android.model.ReorderListViewModel
-import com.example.hits_android.ui.theme.Hits_androidTheme
-import com.example.hits_android.ui.theme.AppTheme
 import com.example.hits_android.ui.theme.AppThemeBrightness
 import com.example.hits_android.ui.theme.AppThemeColor
-import com.example.hits_android.ui.theme.BuildTheme
+import com.example.hits_android.ui.theme.Hits_androidTheme
+import com.example.hits_android.ui.theme.buildTheme
 import org.burnoutcrew.reorderable.ReorderableItem
 import org.burnoutcrew.reorderable.detectReorderAfterLongPress
 import org.burnoutcrew.reorderable.rememberReorderableLazyListState
@@ -85,7 +83,7 @@ fun MainScreen(
     vm: ReorderListViewModel
 ) {
     val theme by vm.theme.collectAsState()
-    Hits_androidTheme(BuildTheme(theme)) {
+    Hits_androidTheme(buildTheme(theme)) {
         BottomNav(vm = vm)
     }
 }
@@ -137,21 +135,26 @@ private fun VerticalReorderList(
                                     when (item.blockName) {
                                         "ElseBlock" -> {
                                             item as ElseBlock
-                                            vm.codeBlocksList = vm.codeBlocksList.toMutableList().apply {
-                                                removeIf { it.key == item.key || it.key == item.beginKey || it.key == item.endKey }
-                                            }
+                                            vm.codeBlocksList =
+                                                vm.codeBlocksList.toMutableList().apply {
+                                                    removeIf { it.key == item.key || it.key == item.beginKey || it.key == item.endKey }
+                                                }
                                         }
+
                                         "IfBlock" -> {
                                             item as IfBlock
-                                            vm.codeBlocksList = vm.codeBlocksList.toMutableList().apply {
-                                                removeIf { it.key == item.key || it.key == item.beginKey || it.key == item.endKey }
-                                            }
+                                            vm.codeBlocksList =
+                                                vm.codeBlocksList.toMutableList().apply {
+                                                    removeIf { it.key == item.key || it.key == item.beginKey || it.key == item.endKey }
+                                                }
                                         }
+
                                         "WhileBlock" -> {
                                             item as WhileBlock
-                                            vm.codeBlocksList = vm.codeBlocksList.toMutableList().apply {
-                                                removeIf { it.key == item.key || it.key == item.beginKey || it.key == item.endKey }
-                                            }
+                                            vm.codeBlocksList =
+                                                vm.codeBlocksList.toMutableList().apply {
+                                                    removeIf { it.key == item.key || it.key == item.beginKey || it.key == item.endKey }
+                                                }
                                         }
                                     }
 
@@ -596,8 +599,8 @@ fun Settings(vm: ReorderListViewModel) {
                         },
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 30.sp
-
+                        fontSize = 30.sp,
+                        maxLines = 1
                     )
                 }
                 Box(
@@ -614,7 +617,9 @@ fun Settings(vm: ReorderListViewModel) {
                                         AppThemeColor.Green -> AppThemeColor.Purple
                                         AppThemeColor.Purple -> AppThemeColor.Pink
                                         AppThemeColor.Pink -> AppThemeColor.Blue
-                                        AppThemeColor.Blue -> AppThemeColor.Green
+                                        AppThemeColor.Blue -> AppThemeColor.Red
+                                        AppThemeColor.Red -> AppThemeColor.Yellow
+                                        AppThemeColor.Yellow -> AppThemeColor.Green
                                     }
                                 )
                             )
@@ -627,11 +632,13 @@ fun Settings(vm: ReorderListViewModel) {
                             AppThemeColor.Purple -> "Purple"
                             AppThemeColor.Pink -> "Pink"
                             AppThemeColor.Blue -> "Blue"
+                            AppThemeColor.Red -> "Red"
+                            AppThemeColor.Yellow -> "Yellow"
                         },
                         color = MaterialTheme.colorScheme.onPrimary,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 30.sp
-
+                        fontSize = 30.sp,
+                        maxLines = 1
                     )
                 }
             }

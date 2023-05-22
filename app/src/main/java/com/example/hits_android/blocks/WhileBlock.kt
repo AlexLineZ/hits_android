@@ -1,7 +1,7 @@
 package com.example.hits_android.blocks
 
-import android.graphics.Paint.Align
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -120,23 +120,17 @@ class WhileBlock(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 25.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(5.dp)
             ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth(0.3f)
-                        .height(70.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = item.title,
-                        textAlign = TextAlign.Center,
-                        maxLines = 1,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 30.sp
-                    )
-                }
+                Text(
+                    text = item.title,
+                    textAlign = TextAlign.Center,
+                    maxLines = 1,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 30.sp
+                )
                 ItemConditionField(item)
             }
         }

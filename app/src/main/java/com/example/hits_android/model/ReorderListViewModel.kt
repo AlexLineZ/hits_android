@@ -1,6 +1,9 @@
 package com.example.hits_android.model
 
 import android.util.Log
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ComposeCompilerApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -23,6 +26,7 @@ import com.example.hits_android.blocks.blockList
 import com.example.hits_android.ui.theme.AppTheme
 import com.example.hits_android.ui.theme.AppThemeBrightness
 import com.example.hits_android.ui.theme.AppThemeColor
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

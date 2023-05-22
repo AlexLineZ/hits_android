@@ -4,7 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -12,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.hits_android.model.ReorderListViewModel
 import com.example.hits_android.ui.theme.Hits_androidTheme
 import com.example.hits_android.ui.theme.AppTheme
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
