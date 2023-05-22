@@ -1,5 +1,6 @@
 package com.example.hits_android
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.hits_android.model.ReorderListViewModel
 import com.example.hits_android.ui.theme.Hits_androidTheme
 import com.example.hits_android.ui.theme.AppTheme
+import com.example.hits_android.ui.theme.ThemePreference
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,16 +21,16 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             Hits_androidTheme {
-                NavigationSystem()
+                NavigationSystem(this@MainActivity)
             }
         }
     }
 }
 
 @Composable
-fun NavigationSystem() {
+fun NavigationSystem(context: Context) {
     val navController = rememberNavController()
-    val viewModel: ReorderListViewModel = viewModel()
+    val viewModel: ReorderListViewModel = viewModel(factory = ReorderListViewModelFactory(sharedPreferences = ThemePreference.getInstance(context)))
 
     NavHost(navController = navController, startDestination = "start",) {
         composable("start") { StartScreen(navController, viewModel) }

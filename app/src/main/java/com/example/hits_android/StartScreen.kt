@@ -17,6 +17,7 @@ import androidx.navigation.NavController
 import com.example.hits_android.model.ReorderListViewModel
 import com.example.hits_android.ui.theme.BuildTheme
 import com.example.hits_android.ui.theme.Hits_androidTheme
+import com.example.hits_android.ui.theme.ThemePreference
 
 @Composable
 fun StartScreen(navController: NavController, vm: ReorderListViewModel) {
