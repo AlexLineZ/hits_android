@@ -31,7 +31,8 @@ fun Hits_androidTheme(
 
     MaterialTheme(
         colorScheme = colors,
-        content = content
+        content = content,
+        typography = Typography
     )
 
     val systemUiController = rememberSystemUiController()
