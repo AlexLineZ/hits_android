@@ -646,8 +646,8 @@ fun Settings(vm: ReorderListViewModel) {
         }
         item {
             Text(
-                text = "Авторы:\nАлексей Ковкин, Юрий Ситдиков, Александр Кирсанов",
-                modifier = Modifier.padding(16.dp)
+                text = "Авторы:\nАлексей Ковкин\nЮрий Ситдиков\nАлександр Кирсанов",
+                modifier = Modifier.padding(16.dp),
             )
         }
     }
