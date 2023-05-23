@@ -3,6 +3,7 @@ package com.example.hits_android
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,8 +18,8 @@ fun CodeBlocksScreen(
             .fillMaxHeight(0.93f)
             .fillMaxWidth()
     ) {
-        Column () {
-            FunctionSelection(vm = vm)
+        Column(modifier = Modifier.fillMaxSize()) {
+//            FunctionSelection(vm = vm)
             VerticalReorderList(vm = vm)
         }
     }

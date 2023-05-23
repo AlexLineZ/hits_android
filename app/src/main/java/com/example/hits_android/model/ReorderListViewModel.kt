@@ -14,6 +14,7 @@ import com.example.hits_android.blocks.ContinueBlock
 import com.example.hits_android.blocks.ElseBlock
 import com.example.hits_android.blocks.EndBlock
 import com.example.hits_android.blocks.FinishProgramBlock
+import com.example.hits_android.blocks.FunctionClass
 import com.example.hits_android.blocks.IfBlock
 import com.example.hits_android.blocks.InitializeArrayBlock
 import com.example.hits_android.blocks.InitializeVarBlock
@@ -42,6 +43,18 @@ class ReorderListViewModel(private val sharedPreferences: ThemePreference) : Vie
             FinishProgramBlock(key = "1", isDragOverLocked = true, title = "End program")
         )
     )
+
+//    var main: FunctionClass by mutableStateOf(
+//        FunctionClass(functionName = "sas1")
+//    )
+
+//    var functionsList by mutableStateOf(
+//        listOf(
+//            codeBlocksList,
+//            main
+//        )
+//    )
+
     var blockSelectionList by mutableStateOf(
         listOf(
             InitializeVarBlock(key = "0"),
@@ -155,6 +168,21 @@ class ReorderListViewModel(private val sharedPreferences: ThemePreference) : Vie
                 }
             }
     }
+
+//    fun addFunction() {
+//        val newFunctionList by mutableStateOf(
+//            listOf(
+//                MainBlock(key = "0", isDragOverLocked = true, title = "Start function"),
+//                FinishProgramBlock(key = "1", isDragOverLocked = true, title = "End function")
+//            )
+//        )
+//
+//        functionsList = functionsList
+//            .toMutableList()
+//            .apply {
+//                add(newFunctionList.size - 1, newFunctionList)
+//            }
+//    }
 
     fun setCurrentTheme(newTheme: Pair<AppThemeBrightness, AppThemeColor>) {
         sharedPreferences.apply {
