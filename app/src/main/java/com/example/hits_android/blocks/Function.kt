@@ -5,7 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 
 class FunctionClass(
-    var functionName: String = "myFun"
+    var functionName: String = "myFun",
+    var isOnScreen: Boolean = true,
+    val id: Int
 ) {
     var codeBlocksList by mutableStateOf(
         listOf(

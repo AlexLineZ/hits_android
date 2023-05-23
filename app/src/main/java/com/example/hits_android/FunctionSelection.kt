@@ -15,8 +15,8 @@ fun FunctionSelection(vm: ReorderListViewModel) {
             .fillMaxHeight(0.07f)
             .fillMaxWidth()
     ) {
-        items(vm.codeBlocksList, { item -> item.key }) { item ->
+//        items(vm.codeBlocksList, { item -> item.key }) { item ->
 
-        }
+//        }
     }
 }

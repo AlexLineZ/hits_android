@@ -47,6 +47,7 @@ import org.burnoutcrew.reorderable.reorderable
 fun VerticalReorderList(
     vm: ReorderListViewModel
 ) {
+    val id = vm.getCurrentList()
     val state = rememberReorderableLazyListState(
         onMove = vm::moveBlock,
         canDragOver = vm::isDogDragOverEnabled
@@ -56,7 +57,7 @@ fun VerticalReorderList(
         modifier = Modifier.reorderable(state).padding(start = 4.dp, end = 4.dp).fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(vm.codeBlocksList, { item -> item.key }) { item ->
+        items(vm.functionsList[id].codeBlocksList, { item -> item.key }) { item ->
             ReorderableItem(state, item.key) { dragging ->
                 val scale = animateFloatAsState(if (dragging) 1.1f else 1.0f)
                 val elevation = animateDpAsState(if (dragging) 8.dp else 0.dp)
@@ -64,7 +65,7 @@ fun VerticalReorderList(
                     confirmValueChange = {
                         if ((it == DismissValue.DismissedToEnd || it == DismissValue.DismissedToStart)) {
                             if (item.isDragOverLocked) {
-                                vm.codeBlocksList = vm.codeBlocksList.toMutableList().apply {
+                                vm.functionsList[id].codeBlocksList = vm.functionsList[id].codeBlocksList.toMutableList().apply {
                                     removeIf { it.key != "0" && it.key != "1" }
                                 }
                                 return@rememberDismissState false
@@ -74,12 +75,12 @@ fun VerticalReorderList(
                                 if (item.blockName == "ElseBlock" || item.blockName == "IfBlock" || item.blockName == "WhileBlock") {
                                     RemoveDependentBlocks(item, vm)
                                 } else {
-                                    vm.codeBlocksList = vm.codeBlocksList.toMutableList().apply {
+                                    vm.functionsList[id].codeBlocksList = vm.functionsList[id].codeBlocksList.toMutableList().apply {
                                         removeIf { it.key == item.key }
                                     }
                                 }
                             }
-                            blockList = vm.codeBlocksList.toMutableList()
+                            blockList = vm.functionsList[id].codeBlocksList.toMutableList()
                         }
                         true
                     }
@@ -158,10 +159,10 @@ fun VerticalReorderList(
                                     .detectReorderAfterLongPress(state)
                                     .scale(scale.value)
                                     .shadow(elevation.value, RoundedCornerShape(24.dp))
-                                    .padding(start = calculatePadding(vm.codeBlocksList, item.key))
+                                    .padding(start = calculatePadding(vm.functionsList[id].codeBlocksList, item.key))
                                     .clickable(
                                         onClick = {
-                                            Log.d("a", "${vm.codeBlocksList}")
+                                            Log.d("a", "${vm.functionsList[id].codeBlocksList}")
                                         }
                                     )
                             ) {
@@ -177,27 +178,28 @@ fun VerticalReorderList(
 
 
 fun RemoveDependentBlocks(item: Block, vm: ReorderListViewModel) {
+    val id = vm.getCurrentList()
     when (item.blockName) {
         "ElseBlock" -> {
             item as ElseBlock
-            vm.codeBlocksList =
-                vm.codeBlocksList.toMutableList().apply {
+            vm.functionsList[id].codeBlocksList =
+                vm.functionsList[id].codeBlocksList.toMutableList().apply {
                     removeIf { it.key == item.key || it.key == item.beginKey || it.key == item.endKey }
                 }
         }
 
         "IfBlock" -> {
             item as IfBlock
-            vm.codeBlocksList =
-                vm.codeBlocksList.toMutableList().apply {
+            vm.functionsList[id].codeBlocksList =
+                vm.functionsList[id].codeBlocksList.toMutableList().apply {
                     removeIf { it.key == item.key || it.key == item.beginKey || it.key == item.endKey }
                 }
         }
 
         "WhileBlock" -> {
             item as WhileBlock
-            vm.codeBlocksList =
-                vm.codeBlocksList.toMutableList().apply {
+            vm.functionsList[id].codeBlocksList =
+                vm.functionsList[id].codeBlocksList.toMutableList().apply {
                     removeIf { it.key == item.key || it.key == item.beginKey || it.key == item.endKey }
                 }
         }
