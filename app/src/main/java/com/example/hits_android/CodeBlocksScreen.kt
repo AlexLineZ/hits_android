@@ -19,7 +19,6 @@ fun CodeBlocksScreen(
             .fillMaxWidth()
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
-//            FunctionSelection(vm = vm)
             VerticalReorderList(vm = vm)
         }
     }
