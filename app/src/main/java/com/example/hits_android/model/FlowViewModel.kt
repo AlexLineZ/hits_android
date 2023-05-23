@@ -12,6 +12,8 @@ import kotlinx.coroutines.flow.asStateFlow
 
 var _output = MutableStateFlow("")
 var isOutputRunning = MutableStateFlow(false)
+var getStop = MutableStateFlow(false)
+
 class FlowViewModel : ViewModel() {
     val output: StateFlow<String> = _output.asStateFlow()
 
@@ -36,12 +38,13 @@ class FlowViewModel : ViewModel() {
                     variables.clear()
                     blockIndex = 0
                     _output.value = ""
+                    getStop.value = false
 
-                    while (blockIndex < blockList.size) {
+                    while (blockIndex < blockList.size && !getStop.value) {
                         blockList[blockIndex].runCodeBlock()
                     }
 
-                    if (!isOutputRunning.value){
+                    if (!isOutputRunning.value && !getStop.value){
                         isOutputRunning.value = true
                         android.os.Handler(Looper.getMainLooper()).postDelayed({
                             setCurrentValue("\nПроцесс (${(Math.random() * 10000).toInt()}) завершил работу с кодом 0.")
@@ -60,6 +63,7 @@ class FlowViewModel : ViewModel() {
     }
 
     fun stopProgram() {
+        getStop.value = true
         job?.cancel()
         _isProgramRunning.value = false
     }
