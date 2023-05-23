@@ -35,6 +35,7 @@ import com.example.hits_android.blocks.ElseBlock
 import com.example.hits_android.blocks.IfBlock
 import com.example.hits_android.blocks.WhileBlock
 import com.example.hits_android.blocks.blockList
+import com.example.hits_android.blocks.calculatePadding
 import com.example.hits_android.model.ReorderListViewModel
 import org.burnoutcrew.reorderable.ReorderableItem
 import org.burnoutcrew.reorderable.detectReorderAfterLongPress
@@ -147,7 +148,7 @@ fun VerticalReorderList(
                                     .scale(scale.value)
                                     .shadow(elevation.value, RoundedCornerShape(24.dp))
                             ) {
-                                item.BlockComposable(item, vm.codeBlocksList)
+                                item.BlockComposable(item)
                             }
                         } else {
                             Box(
@@ -157,13 +158,14 @@ fun VerticalReorderList(
                                     .detectReorderAfterLongPress(state)
                                     .scale(scale.value)
                                     .shadow(elevation.value, RoundedCornerShape(24.dp))
+                                    .padding(start = calculatePadding(vm.codeBlocksList, item.key))
                                     .clickable(
                                         onClick = {
                                             Log.d("a", "${vm.codeBlocksList}")
                                         }
                                     )
                             ) {
-                                item.BlockComposable(item, vm.codeBlocksList)
+                                item.BlockComposable(item)
                             }
                         }
                     }

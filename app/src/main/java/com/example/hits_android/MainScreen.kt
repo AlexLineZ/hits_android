@@ -26,19 +26,3 @@ fun MainScreen(
         BottomNavigation(vm = vm)
     }
 }
-
-@Composable
-fun CodeBlocksScreen(
-    vm: ReorderListViewModel
-) {
-    Box(
-        Modifier
-            .fillMaxHeight(0.93f)
-            .fillMaxWidth()
-    ) {
-        Column () {
-
-            VerticalReorderList(vm = vm)
-        }
-    }
-}

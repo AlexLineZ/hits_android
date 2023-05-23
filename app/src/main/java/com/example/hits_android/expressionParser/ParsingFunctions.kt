@@ -1,6 +1,6 @@
 package com.example.hits_android.expressionParser
 
-import com.example.hits_android.blocks.Scope
+import com.example.hits_android.scope.Scope
 import com.example.hits_android.blocks.blockIndex
 import java.util.Stack
 

@@ -131,13 +131,12 @@ class InitializeArrayBlock(
     }
 
     @Composable
-    override fun BlockComposable(item: Block, codeBlocksList: List<Block>) {
+    override fun BlockComposable(item: Block) {
         item as InitializeArrayBlock
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .height(70.dp)
-                .padding(start = calculatePadding(codeBlocksList, item.key))
                 .clip(RoundedCornerShape(24.dp))
                 .background(MaterialTheme.colorScheme.surfaceVariant)
         ) {

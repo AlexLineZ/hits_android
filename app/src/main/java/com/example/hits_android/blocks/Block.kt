@@ -15,7 +15,7 @@ interface Block {
     fun getNameOfBlock(): String
 
     @Composable
-    fun BlockComposable(item: Block, codeBlocksList: List<Block>)
+    fun BlockComposable(item: Block)
 }
 
 fun calculatePadding(codeBlocksList: List<Block>, key: String): Dp {

@@ -85,12 +85,11 @@ class ElseBlock(
     }
 
     @Composable
-    override fun BlockComposable(item: Block, codeBlocksList: List<Block>) {
+    override fun BlockComposable(item: Block) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .height(70.dp)
-                .padding(start = calculatePadding(codeBlocksList, item.key))
                 .clip(RoundedCornerShape(24.dp))
                 .background(MaterialTheme.colorScheme.surfaceVariant),
             contentAlignment = Alignment.Center

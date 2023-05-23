@@ -31,7 +31,7 @@ class FinishProgramBlock(
     }
 
     @Composable
-    override fun BlockComposable(item: Block, codeBlocksList: List<Block>) {
+    override fun BlockComposable(item: Block) {
         Box(
             modifier = Modifier
                 .fillMaxWidth(),

@@ -1,4 +1,4 @@
-package com.example.hits_android.blocks
+package com.example.hits_android.scope
 
 // Область видимости переменных
 class Scope() {

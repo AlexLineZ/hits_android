@@ -62,10 +62,9 @@ class BeginBlock(
     }
 
     @Composable
-    override fun BlockComposable(item: Block, codeBlocksList: List<Block>) {
+    override fun BlockComposable(item: Block) {
         Box(
             modifier = Modifier
-                .padding(start = calculatePadding(codeBlocksList, item.key))
                 .clip(RoundedCornerShape(10.dp))
                 .background(MaterialTheme.colorScheme.surfaceVariant)
                 .height(40.dp),
