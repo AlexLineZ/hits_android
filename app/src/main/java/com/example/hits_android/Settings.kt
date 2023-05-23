@@ -30,7 +30,7 @@ import com.example.hits_android.ui.theme.AppThemeColor
 @Composable
 fun Settings(vm: ReorderListViewModel) {
     Column(
-        modifier = Modifier.fillMaxWidth().fillMaxHeight(0.92f),
+        modifier = Modifier.fillMaxWidth().fillMaxHeight(0.93f),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -49,7 +49,7 @@ fun Settings(vm: ReorderListViewModel) {
         ) {
             Text(
                 text = "Авторы:\nАлексей Ковкин\nЮрий Ситдиков\nАлександр Кирсанов",
-                modifier = Modifier.padding(20.dp),
+                modifier = Modifier.padding(15.dp),
             )
         }
     }

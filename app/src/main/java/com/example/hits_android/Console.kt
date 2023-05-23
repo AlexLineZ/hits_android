@@ -21,7 +21,7 @@ fun Console(viewModel: FlowViewModel) {
     val output by viewModel.output.collectAsState()
 
     LazyColumn(
-        modifier = Modifier.fillMaxWidth().fillMaxHeight(0.92f)
+        modifier = Modifier.fillMaxWidth().fillMaxHeight(0.93f)
     ) {
         item {
             Box(

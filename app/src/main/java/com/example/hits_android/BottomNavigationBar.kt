@@ -160,7 +160,7 @@ fun BottomNavigationGraph(
         composable(route = BottomBarScreen.Coding.route) {
             Surface {
                 Column {
-                    Sandbox(vm)
+                    CodeBlocksScreen(vm)
                 }
             }
         }
