@@ -51,11 +51,6 @@ class FunctionsArgumentBlock(
     var varList = mutableListOf<Variable>()
     var parametersList = mutableListOf<Variable>()
 
-    // Добавление блока в список блоков
-    init {
-        blockList.add(this)
-    }
-
     // Проверка приводимости типов данных
     private fun isNotComparable(first: Variable, second: Variable):Boolean {
         return first.type != second.type &&

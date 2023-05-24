@@ -46,11 +46,6 @@ class CallFunctionBlock(
 
     override val blockName = BLOCK_NAME
 
-    // Добавление блока в список блоков
-    init {
-        blockList.add(this)
-    }
-
     var functionName = "" // Название вызываемой функции
     var arguments = ""    // Передаваемые аргументы
     lateinit var funList: List<FunctionClass>

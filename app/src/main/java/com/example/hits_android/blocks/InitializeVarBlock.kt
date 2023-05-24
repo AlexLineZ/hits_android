@@ -44,11 +44,6 @@ class InitializeVarBlock(
 
     override val blockName = BLOCK_NAME
 
-    // Добавление блока в список блоков
-    init {
-        blockList.add(this)
-    }
-
     var name: String = ""  // Название переменной
     var type: String = "Int"  // Тип переменной
     var value: String = "" // Значение переменной

@@ -33,11 +33,6 @@ class ElseBlock(
 
     override val blockName = BLOCK_NAME
 
-    // Добавление блока в список блоков
-    init {
-        blockList.add(this)
-    }
-
     // Выполнение блока else
     override fun runCodeBlock() {
         // Запоминание позиции Else блока

@@ -42,11 +42,6 @@ class AssignmentBlock(
     var variableName: String = "" // Название изменяемой переменной
     var newValue: String = ""     // Новое значение изменяемой переменной
 
-    // Добавление блока в список блоков
-    init {
-        blockList.add(this)
-    }
-
     // Проверка возможности перевода типов переменных
     private fun isNotComparableType(newVariable: Variable): Boolean {
         return variables[variableName]?.type != newVariable.type &&

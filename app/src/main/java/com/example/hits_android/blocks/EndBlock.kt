@@ -35,11 +35,6 @@ class EndBlock(
 
     override val blockName = BLOCK_NAME
 
-    // Добавление блока в список блоков
-    init {
-        blockList.add(this)
-    }
-
     // Выход из блока кода
     override fun runCodeBlock() {
         // Возврат к предыдущей области видимости переменных

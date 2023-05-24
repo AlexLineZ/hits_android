@@ -34,11 +34,6 @@ class BeginBlock(
 
     override val blockName = BLOCK_NAME
 
-    // Добавление блока в список блоков
-    init {
-        blockList.add(this)
-    }
-
     // Вход в новый блок кода
     override fun runCodeBlock() {
         // Создание новой области видимости переменных
