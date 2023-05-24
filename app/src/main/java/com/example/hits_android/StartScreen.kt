@@ -52,7 +52,7 @@ fun StartScreen(navController: NavController, vm: ReorderListViewModel) {
                         modifier = Modifier.align(Alignment.Center)
                     ) {
                         Text(
-                            text = "Lady Bug and Super-code",
+                            text = "Lady Bug and Super-Code",
                             fontWeight = FontWeight.Bold,
                             fontSize = 40.sp,
                             textAlign = TextAlign.Center,
