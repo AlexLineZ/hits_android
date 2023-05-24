@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 
 class FunctionClass(
     var functionName: String = "",
-    val id: Int,
+    var id: Int,
     mainBlockTitle: String = "Start function",
     finishBlockTitle: String = "End function"
 ) {

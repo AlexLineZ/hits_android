@@ -75,6 +75,7 @@ fun FunctionListItem(vm: ReorderListViewModel, item: FunctionClass) {
                     .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.95f))
                     .clickable {
                         vm.setCurrentScreenId(item.id)
+                        Log.d("a", "${vm.currentScreenId.value}")
                     },
                 contentAlignment = Alignment.Center
             ) {
@@ -96,6 +97,8 @@ fun FunctionListItem(vm: ReorderListViewModel, item: FunctionClass) {
                     .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.95f))
                     .clickable {
                         vm.setCurrentScreenId(item.id)
+
+                        Log.d("a", "${vm.currentScreenId.value}")
                     },
                 contentAlignment = Alignment.Center
             ) {
@@ -122,6 +125,12 @@ fun FunctionListItem(vm: ReorderListViewModel, item: FunctionClass) {
                                     vm.functionsList.toMutableList().apply {
                                         removeIf { it.id == item.id }
                                     }
+
+                                vm.functionsList.forEach{
+                                    if (it.id > item.id) {
+                                        it.id--
+                                    }
+                                }
                             }
                     )
                 }
