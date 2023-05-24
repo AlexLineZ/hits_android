@@ -42,14 +42,6 @@ class EndBlock(
 
     // Выход из блока кода
     override fun runCodeBlock() {
-
-        // Уничтожение переменных, объявленных в текущем блоке кода
-        for (name in variables.keys) {
-            if (name !in scopes.getScope()) {
-                variables.remove(name)
-            }
-        }
-
         // Возврат к предыдущей области видимости переменных
         scopes.destroyScope()
 

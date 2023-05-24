@@ -67,6 +67,7 @@ fun VerticalReorderList(
                                 vm.codeBlocksList = vm.codeBlocksList.toMutableList().apply {
                                     removeIf { it.key != "0" && it.key != "1" }
                                 }
+                                blockList = vm.codeBlocksList.toMutableList()
                                 return@rememberDismissState false
                             } else if (item.blockName == "endBlock" || item.blockName == "beginBlock") {
                                 return@rememberDismissState false

@@ -140,6 +140,7 @@ class ReorderListViewModel(private val sharedPreferences: ThemePreference) : Vie
                         }
                     }
                 )
+
                 if (item.blockName == "ElseBlock" ||
                     item.blockName == "IfBlock" ||
                     item.blockName == "WhileBlock"
@@ -155,6 +156,8 @@ class ReorderListViewModel(private val sharedPreferences: ThemePreference) : Vie
                     keyCount += 2
                 }
             }
+
+        blockList = codeBlocksList.toMutableList()
     }
 
     fun setCurrentTheme(newTheme: Pair<AppThemeBrightness, AppThemeColor>) {
