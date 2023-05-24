@@ -27,10 +27,15 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hits_android.appmodel.data.filestorage.SaveFileStorage
+import com.example.hits_android.appmodel.data.localstorage.SaveRoomStorage
+import com.example.hits_android.appmodel.data.model.SaveModel
+import com.example.hits_android.appmodel.data.repository.SaveRepository
 import com.example.hits_android.blocks.InitializeVarBlock
+import com.example.hits_android.model.FlowViewModel
 import com.example.hits_android.model.ReorderListViewModel
 import com.example.hits_android.ui.theme.AppThemeBrightness
 import com.example.hits_android.ui.theme.AppThemeColor
+import java.util.UUID
 
 @Composable
 fun Settings(vm: ReorderListViewModel, context: Context) {
@@ -127,7 +132,15 @@ fun SavesBuilderComposable(vm: ReorderListViewModel, context: Context) {
                 .clip(shape = RoundedCornerShape(24.dp))
                 .background(MaterialTheme.colorScheme.surfaceVariant)
                 .clickable {
-                    SaveFileStorage(context).saveFunctionListToJson(vm.functionsList,"cringe")
+                    val saveRepository = SaveRepository(SaveRoomStorage.getInstance(context), SaveFileStorage(context))
+
+                    val saveModel = SaveModel(
+                        functionsList = vm.functionsList,
+                        name = UUID.randomUUID().toString(),
+                        date = System.currentTimeMillis()
+                    )
+
+                    FlowViewModel().startWriteSave(saveModel, saveRepository)
                 },
             contentAlignment = Alignment.Center
         ) {

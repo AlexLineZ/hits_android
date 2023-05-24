@@ -2,6 +2,9 @@ package com.example.hits_android.model
 
 import android.os.Looper
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.hits_android.appmodel.data.model.SaveModel
+import com.example.hits_android.appmodel.data.repository.SaveRepository
 import com.example.hits_android.blocks.FunctionClass
 import com.example.hits_android.blocks.blockIndex
 import com.example.hits_android.blocks.blockList
@@ -68,5 +71,17 @@ class FlowViewModel : ViewModel() {
         getStop.value = true
         job?.cancel()
         _isProgramRunning.value = false
+    }
+
+    fun startWriteSave(saveModel: SaveModel, saveRepository: SaveRepository){
+        viewModelScope.launch {
+            saveRepository.createSave(saveModel)
+        }
+    }
+
+    fun startGetSave(saveModel: SaveModel, saveRepository: SaveRepository){
+        viewModelScope.launch {
+            saveRepository.getSave()
+        }
     }
 }
