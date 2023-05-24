@@ -31,7 +31,6 @@ class BeginBlock(
     companion object {
         val BLOCK_NAME = "beginBlock"
     }
-
     override val blockName = BLOCK_NAME
 
     // Добавление блока в список блоков

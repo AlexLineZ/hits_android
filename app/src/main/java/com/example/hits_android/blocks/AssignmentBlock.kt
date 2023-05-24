@@ -48,7 +48,7 @@ class AssignmentBlock(
     }
 
     // Проверка возможности перевода типов переменных
-    fun isNotComparableType(newVariable: Variable): Boolean {
+    private fun isNotComparableType(newVariable: Variable): Boolean {
         return variables[variableName]?.type != newVariable.type &&
                 !(variables[variableName]?.type == Type.DOUBLE && newVariable.type == Type.INT) &&
                 !(variables[variableName]?.type == Type.INT && newVariable.type == Type.DOUBLE) &&
@@ -57,7 +57,7 @@ class AssignmentBlock(
     }
 
     // Проверка возможности записать в массив новое значение элемента
-    fun isNotComparableArrType(newVariable: Variable, arrName: String): Boolean {
+    private fun isNotComparableArrType(newVariable: Variable, arrName: String): Boolean {
         return variables[arrName]?.type != newVariable.type + "Array" &&
                 !(variables[arrName]?.type == Type.DOUBLE + "Array" && newVariable.type == Type.INT) &&
                 !(variables[arrName]?.type == Type.INT + "Array" && newVariable.type == Type.DOUBLE) &&
