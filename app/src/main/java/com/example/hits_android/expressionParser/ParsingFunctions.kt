@@ -4,7 +4,7 @@ import com.example.hits_android.scope.Scope
 import com.example.hits_android.blocks.blockIndex
 import java.util.Stack
 
-val variables = mutableMapOf<String, Variable>()
+var variables = mutableMapOf<String, Variable>()
 var scopes = Scope()
 
 class ParsingFunctions(private var tokens: List<Token>) {

@@ -54,7 +54,11 @@ class FunctionNameBlock(
 
     // Выполнение блока FunctionNameBlock
     override fun runCodeBlock() {
+        blockIndex++
+    }
 
+    fun getFunName():String {
+        return functionName
     }
 
     // Возврат названия блока

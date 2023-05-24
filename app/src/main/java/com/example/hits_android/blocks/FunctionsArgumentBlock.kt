@@ -27,6 +27,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.hits_android.expressionParser.LexicalComponents
+import com.example.hits_android.expressionParser.Type
+import com.example.hits_android.expressionParser.Variable
+import com.example.hits_android.expressionParser.variables
 
 class FunctionsArgumentBlock(
     override var previousID: Int = -1,
@@ -43,22 +47,95 @@ class FunctionsArgumentBlock(
 
     override val blockName = BLOCK_NAME
 
-
-    var arguments: String = ""
+    var parameters: String = ""
+    var varList = mutableListOf<Variable>()
+    var parametersList = mutableListOf<Variable>()
 
     // Добавление блока в список блоков
     init {
         blockList.add(this)
     }
 
+    // Проверка приводимости типов данных
+    private fun isNotComparable(first: Variable, second: Variable):Boolean {
+        return first.type != second.type &&
+                !(first.type == Type.INT && second.type == Type.DOUBLE) &&
+                !(first.type == Type.DOUBLE && second.type == Type.INT) &&
+                !(first.type == Type.STRING && second.type == Type.CHAR) &&
+                !(first.type == Type.CHAR && second.type == Type.INT)
+    }
+
     // Выполнение блока FunctionNameBlock
     override fun runCodeBlock() {
+        val parList = parameters.split(",").toMutableList()
 
+        if (parameters == "") {
+            parList.removeAt(0)
+        }
+
+        if (parametersList.size == 0) {
+            // Инициализация параметров
+            for (i in parList.indices) {
+                parList[i] = parList[i].replace(" ", "")
+
+                val expression = LexicalComponents(parList[i]).getTokensFromCode()
+                val name = expression[0].text
+                val type = expression[2].text
+
+                parametersList.add(Variable(name, type, ""))
+            }
+        }
+        // Проверка соответствия кол-ва аргументов и параметров
+        if (parametersList.size != varList.size) {
+            throw Exception("Кол-во аргументов при вызове функции не совпадает с кол-вом её параметров")
+        }
+
+        // Проверка соответствия типов аргументов и параметров
+        for (j in varList.indices) {
+            if (isNotComparable(parametersList[j], varList[j])) {
+                throw Exception("Несоответствие типов аргументов и параметров")
+            }
+        }
+
+        // Принятие аргументов функцией
+        for (k in varList.indices) {
+            if (parametersList[k].type == Type.STRING && varList[k].type == Type.CHAR) {
+                variables[parametersList[k].name] = Variable(
+                    parametersList[k].name,
+                    parametersList[k].type,
+                    varList[k].value
+                )
+            }
+            else if (parametersList[k].type == Type.CHAR && varList[k].type == Type.INT) {
+                variables[parametersList[k].name] = Variable(
+                    parametersList[k].name,
+                    parametersList[k].type,
+                    varList[k].value.toString().toInt().toChar()
+                )
+            }
+            else {
+                variables[parametersList[k].name] = Variable(
+                    parametersList[k].name,
+                    parametersList[k].type,
+                    varList[k].value
+                )
+            }
+        }
+
+        blockIndex++
+
+        parametersList.clear()
+        varList.clear()
     }
 
     // Возврат названия блока
     override fun getNameOfBlock(): String {
         return blockName
+    }
+
+    // Передача аргументов функции
+    fun setArguments(args: MutableList<Variable>) {
+        varList = args
     }
 
     @Composable
@@ -92,24 +169,24 @@ class FunctionsArgumentBlock(
     @OptIn(ExperimentalComposeUiApi::class)
     @Composable
     fun ItemConditionField(item: FunctionsArgumentBlock) {
-        val textState = remember { mutableStateOf(TextFieldValue(text = item.arguments)) }
+        val textState = remember { mutableStateOf(TextFieldValue(text = item.parameters)) }
         val keyboardController = LocalSoftwareKeyboardController.current
 
         TextField(
             value = textState.value,
             onValueChange = {
                 textState.value = it
-                item.arguments = textState.value.text
+                item.parameters = textState.value.text
             },
             modifier = Modifier.fillMaxWidth(),
-            placeholder = { Text(text = "arguments", maxLines = 1) },
+            placeholder = { Text(text = "a: Int, b: StringArray", maxLines = 1) },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Done // Изменяем действие клавиатуры на "Готово"
             ),
             keyboardActions = KeyboardActions(
                 onDone = {
-                    item.arguments = textState.value.text
+                    item.parameters = textState.value.text
                     keyboardController?.hide() // Скрываем клавиатуру
                 }
             )
