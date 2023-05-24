@@ -49,11 +49,6 @@ class OutputBlock(
     // Выражение, переданное блоку в качестве параметра
     var expression: String = ""
 
-    // Добавление блока в список блоков
-    init {
-        blockList.add(this)
-    }
-
     // Вывод в консоль
     override fun runCodeBlock() {
         var outputValue = ""                                // Строка вывода

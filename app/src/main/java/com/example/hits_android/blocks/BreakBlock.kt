@@ -31,11 +31,6 @@ class BreakBlock(
 
     override val blockName = BLOCK_NAME
 
-    // Добавление блока в список блоков
-    init {
-        blockList.add(this)
-    }
-
     // Выход из цикла
     override fun runCodeBlock() {
         // Поиск начала тела цикла

@@ -51,11 +51,6 @@ class IfBlock(
     // Условие
     var condition: String = ""
 
-    // Добавление блока в список блоков
-    init {
-        blockList.add(this)
-    }
-
     // Выполнение блока If
     override fun runCodeBlock() {
         // Выполнение следующих блоков

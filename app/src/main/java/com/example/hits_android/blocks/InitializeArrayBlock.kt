@@ -45,11 +45,6 @@ class InitializeArrayBlock(
 
     override val blockName = BLOCK_NAME
 
-    // Добавление блока в список блоков
-    init {
-        blockList.add(this)
-    }
-
     var arrayName = ""      // Название массива
     var arrayType = "Int"   // Тип элементов массива
     var arraySize = ""      // Размер массива

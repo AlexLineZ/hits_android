@@ -47,14 +47,13 @@ class FunctionNameBlock(
 
     var functionName = "MyFun"
 
-    // Добавление блока в список блоков
-    init {
-        blockList.add(this)
-    }
-
     // Выполнение блока FunctionNameBlock
     override fun runCodeBlock() {
+        blockIndex++
+    }
 
+    fun getFunName():String {
+        return functionName
     }
 
     // Возврат названия блока

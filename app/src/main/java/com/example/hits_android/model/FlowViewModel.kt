@@ -2,6 +2,7 @@ package com.example.hits_android.model
 
 import android.os.Looper
 import androidx.lifecycle.ViewModel
+import com.example.hits_android.blocks.CallFunctionBlock
 import com.example.hits_android.blocks.FunctionClass
 import com.example.hits_android.blocks.blockIndex
 import com.example.hits_android.blocks.blockList
@@ -43,6 +44,10 @@ class FlowViewModel : ViewModel() {
                     getStop.value = false
 
                     while (blockIndex < blockList.size && !getStop.value) {
+                        if (blockList[blockIndex].getNameOfBlock() == CallFunctionBlock.BLOCK_NAME) {
+                            (blockList[blockIndex] as CallFunctionBlock).setFunctionList(functionList)
+                        }
+
                         blockList[blockIndex].runCodeBlock()
                     }
 

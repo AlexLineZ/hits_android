@@ -49,11 +49,6 @@ class WhileBlock(
 
     override val blockName = BLOCK_NAME
 
-    // Добавление блока в список блоков
-    init {
-        blockList.add(this)
-    }
-
     // Условие цикла
     var condition: String = ""
     var conditionText: String = ""

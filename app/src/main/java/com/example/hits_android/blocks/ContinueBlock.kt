@@ -31,11 +31,6 @@ class ContinueBlock(
     }
     override val blockName = BLOCK_NAME
 
-    // Добавление блока в список блоков
-    init {
-        blockList.add(this)
-    }
-
     // Переход к следующей итерации цикла
     override fun runCodeBlock() {
         // Поиск начала тела цикла
