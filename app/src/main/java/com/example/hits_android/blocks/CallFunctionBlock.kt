@@ -59,8 +59,6 @@ class CallFunctionBlock(
 
     // Вызов функции
     override fun runCodeBlock() {
-        println(arguments)
-
         // Запоминание места вызова функции
         val callingIndex = blockIndex
 
