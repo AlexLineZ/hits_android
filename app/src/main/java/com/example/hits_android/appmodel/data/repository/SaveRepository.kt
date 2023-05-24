@@ -13,19 +13,19 @@ class SaveRepository(
     private val fileStorage: SaveFileStorage
 ) {
 
-    suspend fun getSave(name: String) : SaveModel {
-        val save: SaveModel
-
-        withContext(Dispatchers.IO){
-            val saveInfo = database.dao.getSave(UUID.fromString(name))
-            save = SaveModel(
-                name = saveInfo.name.toString(),
-                date = saveInfo.date,
-                functionsList =
-            )
-        }
-        return save
-    }
+//    suspend fun getSave(name: String) : SaveModel {
+//        val save: SaveModel
+//
+//        withContext(Dispatchers.IO){
+//            val saveInfo = database.dao.getSave(UUID.fromString(name))
+//            save = SaveModel(
+//                name = saveInfo.name.toString(),
+//                date = saveInfo.date,
+//                functionsList =
+//            )
+//        }
+//        return save
+//    }
 
     suspend fun getAllSaves() : List<SaveInfoModel>{
         val save: List<SaveInfoModel>
