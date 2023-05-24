@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class FunctionClass(
-    name: String = "MyFun",
+    var functionName: String = "",
     val id: Int,
     mainBlockTitle: String = "Start function",
     finishBlockTitle: String = "End function"
@@ -23,8 +23,6 @@ class FunctionClass(
         )
     )
 
-    private var _functionName = MutableStateFlow(name)
-    val functionName: StateFlow<String> = _functionName.asStateFlow()
     var varList = mutableListOf<Variable>()
 
     // Выполнение функции
@@ -53,9 +51,5 @@ class FunctionClass(
 
     fun getName(): String {
         return (codeBlocksList[0] as FunctionNameBlock).getFunName()
-    }
-
-    fun setCurrentScreenId(newName: String) {
-        _functionName.value = newName
     }
 }

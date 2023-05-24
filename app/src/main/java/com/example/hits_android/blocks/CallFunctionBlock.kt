@@ -73,7 +73,7 @@ class CallFunctionBlock(
 
         // Выполнение тела функции
         for (idk in 1..funList.size - 1) {
-            println(funList[idk].functionName.value)
+            println(funList[idk].functionName)
             if (funList[idk].getName() == functionName) {
                 funList[idk].setArguments(varList)
                 funList[idk].runFunction(funList)

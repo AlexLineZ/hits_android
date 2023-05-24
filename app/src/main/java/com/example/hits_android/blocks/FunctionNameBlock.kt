@@ -45,14 +45,14 @@ class FunctionNameBlock(
 
     override val blockName = BLOCK_NAME
 
-    var functionName = "MyFun"
+    var functionName = ""
 
     // Выполнение блока FunctionNameBlock
     override fun runCodeBlock() {
         blockIndex++
     }
 
-    fun getFunName():String {
+    fun getFunName(): String {
         return functionName
     }
 

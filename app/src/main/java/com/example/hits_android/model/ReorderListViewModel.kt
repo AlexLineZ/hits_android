@@ -41,7 +41,7 @@ class ReorderListViewModel(private val sharedPreferences: ThemePreference) : Vie
 
     private var main: FunctionClass by mutableStateOf(
         FunctionClass(
-            name = "main",
+            functionName = "main",
             id = 0,
             mainBlockTitle = "Start program",
             finishBlockTitle = "End program"
@@ -177,21 +177,19 @@ class ReorderListViewModel(private val sharedPreferences: ThemePreference) : Vie
             FunctionClass(id = functionsList.size)
         )
 
-        newFunction.codeBlocksList = newFunction.codeBlocksList.toMutableList()
-            .apply {
-                add(0, FunctionNameBlock(key = "2", isDragOverLocked = true))
-            }
-
-        newFunction.codeBlocksList = newFunction.codeBlocksList.toMutableList()
-            .apply {
-                add(1, FunctionsArgumentBlock(key = "3", isDragOverLocked = true))
-            }
-
         functionsList = functionsList
             .toMutableList()
             .apply {
                 add(functionsList.size, newFunction)
             }
+
+        functionsList[functionsList.size - 1].codeBlocksList =
+            functionsList[functionsList.size - 1].codeBlocksList
+                .toMutableList()
+                .apply {
+                    add(1, FunctionNameBlock(key = "2", isDragOverLocked = true))
+                    add(2, FunctionsArgumentBlock(key = "3", isDragOverLocked = true))
+                }
     }
 
     fun setCurrentTheme(newTheme: Pair<AppThemeBrightness, AppThemeColor>) {
