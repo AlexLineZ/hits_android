@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.example.hits_android.appmodel.data.repository.SaveRepository
 import com.example.hits_android.blocks.AssignmentBlock
 import com.example.hits_android.blocks.BeginBlock
 import com.example.hits_android.blocks.Block
@@ -29,7 +30,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.burnoutcrew.reorderable.ItemPosition
 
-class ReorderListViewModel(private val sharedPreferences: ThemePreference) : ViewModel() {
+class ReorderListViewModel(private val sharedPreferences: ThemePreference, private val repository: SaveRepository) : ViewModel() {
 
     private val savedTheme = sharedPreferences.getSavedTheme()
     private var _theme = MutableStateFlow(savedTheme)
@@ -38,6 +39,7 @@ class ReorderListViewModel(private val sharedPreferences: ThemePreference) : Vie
 
     private var _currentScreenId = MutableStateFlow(0)
     val currentScreenId: StateFlow<Int> = _currentScreenId.asStateFlow()
+
 
     private var main: FunctionClass by mutableStateOf(
         FunctionClass(
