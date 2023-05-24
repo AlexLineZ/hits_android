@@ -48,6 +48,7 @@ class ParsingFunctions(private var tokens: List<Token>) {
         // Ищем ожидаемый токен начала выражения
         var nowToken = getTokenOrError(
             Name.STRING.value,
+            Name.SPACE.value,
             Name.CHAR.value,
             Name.RAND.value,
             Name.DOUBLE.value,
