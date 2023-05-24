@@ -2,6 +2,7 @@ package com.example.hits_android.model
 
 import android.os.Looper
 import androidx.lifecycle.ViewModel
+import com.example.hits_android.blocks.FunctionClass
 import com.example.hits_android.blocks.blockIndex
 import com.example.hits_android.blocks.blockList
 import com.example.hits_android.expressionParser.variables
@@ -31,7 +32,8 @@ class FlowViewModel : ViewModel() {
     private var job: Job? = null
 
     @OptIn(DelicateCoroutinesApi::class)
-    fun startProgram() {
+    fun startProgram(functionList:  List<FunctionClass>) {
+        blockList = functionList[0].codeBlocksList.toMutableList()
         if (!isProgramRunning.value) {
             job = GlobalScope.launch {
                 try {

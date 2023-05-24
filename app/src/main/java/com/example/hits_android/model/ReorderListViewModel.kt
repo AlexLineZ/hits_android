@@ -81,10 +81,6 @@ class ReorderListViewModel(private val sharedPreferences: ThemePreference) : Vie
             functionsList[currentScreenId.value].codeBlocksList.toMutableList().apply {
                 add(to.index, removeAt(from.index))
             }
-
-        blockList =
-            functionsList[currentScreenId.value].codeBlocksList.slice(1..(functionsList[currentScreenId.value].codeBlocksList.size - 2))
-                .toMutableList()
     }
 
 

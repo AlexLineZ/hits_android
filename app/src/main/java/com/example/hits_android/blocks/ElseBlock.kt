@@ -46,7 +46,7 @@ class ElseBlock(
         // Проверка наличия End блока перед Else
         blockIndex--
 
-        if (blockIndex == -1 || blockList[blockIndex].getNameOfBlock() != BLOCK_NAME) {
+        if (blockIndex == -1 || blockList[blockIndex].getNameOfBlock() != EndBlock.BLOCK_NAME) {
             throw Exception("Else не относится к условию.")
         }
 
@@ -54,14 +54,14 @@ class ElseBlock(
         var balance = 0
 
         do {
-            if (blockList[blockIndex].getNameOfBlock() == BLOCK_NAME) {
+            if (blockList[blockIndex].getNameOfBlock() == EndBlock.BLOCK_NAME) {
                 balance++
             } else if (blockList[blockIndex].getNameOfBlock() == BeginBlock.BLOCK_NAME) {
                 balance--
             }
 
             blockIndex--
-        } while (balance != 0 && blockIndex < 0)
+        } while (balance != 0 && blockIndex >= 0)
 
         if (blockIndex == -1 || blockList[blockIndex].getNameOfBlock() != IfBlock.BLOCK_NAME) {
             throw Exception("Else не относится к условию.")
@@ -72,6 +72,11 @@ class ElseBlock(
 
         // Выполнение тела блока else
         while (blockList[blockIndex].getNameOfBlock() != EndBlock.BLOCK_NAME) {
+            if (blockList[blockIndex].getNameOfBlock() == BreakBlock.BLOCK_NAME ||
+                blockList[blockIndex].getNameOfBlock() == ContinueBlock.BLOCK_NAME) {
+                blockList[blockIndex].runCodeBlock()
+                return
+            }
             blockList[blockIndex].runCodeBlock()
         }
 

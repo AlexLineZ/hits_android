@@ -184,6 +184,7 @@ fun RowScope.AddItem(
     val isProgramRunning by viewModel.isProgramRunning.collectAsState()
     val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
     val theme by vm.theme.collectAsState()
+    val functionList = vm.functionsList
 
     val background =
         if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.8f) else Color.Transparent
@@ -213,7 +214,7 @@ fun RowScope.AddItem(
                     if (isProgramRunning) {
                         viewModel.stopProgram()
                     } else {
-                        viewModel.startProgram()
+                        viewModel.startProgram(functionList)
 
                         if (currentDestination?.route != BottomBarScreen.Console.route) {
                             navController.navigate(BottomBarScreen.Console.route)

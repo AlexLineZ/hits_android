@@ -37,7 +37,6 @@ import com.example.hits_android.blocks.Block
 import com.example.hits_android.blocks.ElseBlock
 import com.example.hits_android.blocks.IfBlock
 import com.example.hits_android.blocks.WhileBlock
-import com.example.hits_android.blocks.blockList
 import com.example.hits_android.blocks.calculatePadding
 import com.example.hits_android.model.ReorderListViewModel
 import org.burnoutcrew.reorderable.ReorderableItem
@@ -85,7 +84,6 @@ fun VerticalReorderList(
                                         }
                                 }
                             }
-                            blockList = vm.functionsList[id].codeBlocksList.toMutableList()
                         }
                         true
                     }

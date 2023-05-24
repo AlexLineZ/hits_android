@@ -70,6 +70,11 @@ class IfBlock(
         if (conditionState.value == "1") {
             // Выполнение тела if
             while (blockList[blockIndex].getNameOfBlock() != EndBlock.BLOCK_NAME) {
+                if (blockList[blockIndex].getNameOfBlock() == BreakBlock.BLOCK_NAME ||
+                        blockList[blockIndex].getNameOfBlock() == ContinueBlock.BLOCK_NAME) {
+                    blockList[blockIndex].runCodeBlock()
+                    return
+                }
                 blockList[blockIndex].runCodeBlock()
             }
 

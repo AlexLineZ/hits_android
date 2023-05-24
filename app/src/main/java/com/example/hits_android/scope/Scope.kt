@@ -1,5 +1,8 @@
 package com.example.hits_android.scope
 
+import com.example.hits_android.expressionParser.scopes
+import com.example.hits_android.expressionParser.variables
+
 // Область видимости переменных
 class Scope() {
     // Список всех областей видимости
@@ -12,6 +15,13 @@ class Scope() {
 
     // Уничтожение текущей области видимости
     fun destroyScope() {
+        // Уничтожение переменных, объявленных в текущем блоке кода
+        for (name in variables.keys) {
+            if (name !in scopes.getScope()) {
+                variables.remove(name)
+            }
+        }
+
         scopesList.removeAt(scopesList.size - 1)
     }
 
