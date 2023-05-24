@@ -72,11 +72,14 @@ class ElseBlock(
 
         // Выполнение тела блока else
         while (blockList[blockIndex].getNameOfBlock() != EndBlock.BLOCK_NAME) {
+            // Выход из else при выполнении блоков Break или Continue
             if (blockList[blockIndex].getNameOfBlock() == BreakBlock.BLOCK_NAME ||
                 blockList[blockIndex].getNameOfBlock() == ContinueBlock.BLOCK_NAME) {
                 blockList[blockIndex].runCodeBlock()
                 return
             }
+
+            // Выполнение остальных блоков
             blockList[blockIndex].runCodeBlock()
         }
 
