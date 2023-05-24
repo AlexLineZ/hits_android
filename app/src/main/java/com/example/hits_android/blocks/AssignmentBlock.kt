@@ -1,8 +1,6 @@
 package com.example.hits_android.blocks
 
-import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -24,6 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hits_android.expressionParser.*
+import kotlin.math.roundToInt
 
 // Блок присвоения переменной нового значения
 class AssignmentBlock(
@@ -46,6 +45,25 @@ class AssignmentBlock(
     // Добавление блока в список блоков
     init {
         blockList.add(this)
+    }
+
+    // Проверка возможности перевода типов переменных
+    fun isNotComparableType(newVariable: Variable): Boolean {
+        return variables[variableName]?.type != newVariable.type &&
+                !(variables[variableName]?.type == Type.DOUBLE && newVariable.type == Type.INT) &&
+                !(variables[variableName]?.type == Type.INT && newVariable.type == Type.DOUBLE) &&
+                !(variables[variableName]?.type == Type.STRING && newVariable.type == Type.CHAR) &&
+                !(variables[variableName]?.type == Type.CHAR && newVariable.type == Type.INT)
+    }
+
+    // Проверка возможности записать в массив новое значение элемента
+    fun isNotComparableArrType(newVariable: Variable, arrName: String): Boolean {
+        return variables[arrName]?.type != newVariable.type + "Array" &&
+                !(variables[arrName]?.type == Type.DOUBLE + "Array" && newVariable.type == Type.INT) &&
+                !(variables[arrName]?.type == Type.INT + "Array" && newVariable.type == Type.DOUBLE) &&
+                !(variables[arrName]?.type == Type.STRING + "Array" && newVariable.type == Type.CHAR) &&
+                !(variables[arrName]?.type == Type.CHAR + "Array" && newVariable.type == Type.INT) &&
+                !(newVariable.type == Type.CHAR && variables[arrName]?.type == Type.STRING)
     }
 
     // Присваивание переменной нового значения
@@ -76,18 +94,16 @@ class AssignmentBlock(
             val newVariable = expression.parseExpression()!!
 
             // Проверка соответсвтия типов переменной и значения
-            if (variables[variableName]?.type != newVariable.type &&
-                !(variables[variableName]?.type == Type.DOUBLE && newVariable.type == Type.INT) &&
-                !(variables[variableName]?.type == Type.INT && newVariable.type == Type.DOUBLE) &&
-                !(variables[variableName]?.type == Type.STRING && newVariable.type == Type.CHAR) &&
-                !(variables[variableName]?.type == Type.CHAR && newVariable.type == Type.INT)
-            ) {
+            if (isNotComparableType(newVariable)) {
                 throw Exception("Переменной типа ${variables[variableName]?.type} присваивается значение типа ${newVariable.type}")
             }
 
+            // Присвоение переменной типа Char значения типа Int
             if (variables[variableName]?.type == Type.CHAR && newVariable.type == Type.INT) {
                 variables[variableName] = Variable(newVariable.name, Type.CHAR, newVariable.value.toString().toInt().toChar().toString())
             }
+
+            // Оставльные присвоения
             else {
                 variables[variableName] = newVariable
             }
@@ -95,71 +111,68 @@ class AssignmentBlock(
 
         // Присвоение значения элементу массива
         else {
+            // Нахождение нового значения
             val expression = ParsingFunctions(LexicalComponents(newValue + ";").getTokensFromCode())
             val newVariable = expression.parseExpression()!!
 
-            if (newVariable.type + "Array" != variables[arrName]?.type &&
-                !(newVariable.type == Type.CHAR && variables[arrName]?.type == Type.STRING)) {
+            // Проверка соответствия типов
+            if (isNotComparableArrType(newVariable, arrName)) {
                 throw Exception("Переменной типа" +
                         " ${variables[arrName]?.type?.slice(0..(variables[arrName]?.type!!.length-6))}" +
                         " присваивается значение типа ${newVariable.type}")
             }
 
-            if (variables[arrName]?.type == Type.INT + "Array") {
-                (variables[arrName]?.value as Array<Int>)[arrayIndex] =
-                    newVariable.value.toString().toInt()
-            }
+            // Присвоение нового значения
+            when (variables[arrName]?.type) {
+                // Элементу Int массива
+                Type.INT + "Array" -> (variables[arrName]?.value as Array<Int>)[arrayIndex] =
+                    newVariable.value.toString().toDouble().roundToInt()
 
-            else if (variables[arrName]?.type == Type.DOUBLE + "Array") {
-                (variables[arrName]?.value as Array<Double>)[arrayIndex] =
+                // Элементу Double массива
+                Type.DOUBLE + "Array" -> (variables[arrName]?.value as Array<Double>)[arrayIndex] =
                     newVariable.value.toString().toDouble()
-            }
 
-            else if (variables[arrName]?.type == Type.CHAR + "Array") {
-                if (newVariable.type != Type.INT) {
-                    (variables[arrName]?.value as Array<String>)[arrayIndex] =
-                        newVariable.value.toString()
+                // Элементу Char массива
+                Type.CHAR + "Array" -> {
+                    if (newVariable.type != Type.INT) {
+                        (variables[arrName]?.value as Array<String>)[arrayIndex] =
+                            newVariable.value.toString()
+                    }
+                    else {
+                        (variables[arrName]?.value as Array<String>)[arrayIndex] =
+                            newVariable.value.toString().toInt().toChar().toString()
+                    }
                 }
-                else {
-                    (variables[arrName]?.value as Array<String>)[arrayIndex] =
-                        newVariable.value.toString().toInt().toChar().toString()
+
+                // Символу из строки
+                Type.STRING -> {
+                    val str = variables[arrName]?.value as String
+                    variables[arrName] = Variable(arrName, Type.STRING,
+                        str.substring(0, arrayIndex) + newVariable.value.toString() + str.substring(arrayIndex + 1))
                 }
-            }
 
-            else if (variables[arrName]?.type == Type.STRING) {
-                val str = variables[arrName]?.value as String
-                variables[arrName] = Variable(arrName, Type.STRING,
-                    str.substring(0, arrayIndex) + newVariable.value.toString() + str.substring(arrayIndex + 1))
-            }
-
-            else if (variables[arrName]?.type == Type.STRING + "Array") {
-                (variables[arrName]?.value as Array<String>)[arrayIndex] =
+                // Элементу String массива
+                Type.STRING + "Array" -> (variables[arrName]?.value as Array<String>)[arrayIndex] =
                     newVariable.value.toString()
-            }
 
-            else if (variables[arrName]?.type == Type.BOOL + "Array"){
-                val result = newVariable.value.toString()
+                // Элементу Bool массива
+                Type.BOOL + "Array" -> {
+                    val result = newVariable.value.toString()
 
-                if (result == "0" || result == "false") {
-                    (variables[arrName]?.value as Array<String>)[arrayIndex] = "0"
-                } else {
-                    (variables[arrName]?.value as Array<String>)[arrayIndex] = "1"
+                    if (result == "0" || result == "false") {
+                        (variables[arrName]?.value as Array<String>)[arrayIndex] = "0"
+                    } else {
+                        (variables[arrName]?.value as Array<String>)[arrayIndex] = "1"
+                    }
                 }
-            }
 
-            else {
-                variables[arrName] = newVariable
+                // Копирование массивов
+                else -> variables[arrName] = newVariable
             }
         }
 
         // Выполнение следующего блока
         blockIndex++
-    }
-
-    // Тестирование блоков без UI
-    fun testBlock(oldVal: String, newVal: String) {
-        variableName = oldVal
-        newValue = newVal
     }
 
     // Возврат названия блока
