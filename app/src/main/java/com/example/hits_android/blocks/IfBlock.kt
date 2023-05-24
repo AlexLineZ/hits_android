@@ -70,11 +70,14 @@ class IfBlock(
         if (conditionState.value == "1") {
             // Выполнение тела if
             while (blockList[blockIndex].getNameOfBlock() != EndBlock.BLOCK_NAME) {
+                // Выход из условия при выполнении блоков Break или Continue
                 if (blockList[blockIndex].getNameOfBlock() == BreakBlock.BLOCK_NAME ||
                         blockList[blockIndex].getNameOfBlock() == ContinueBlock.BLOCK_NAME) {
                     blockList[blockIndex].runCodeBlock()
                     return
                 }
+
+                // Выполнение остальных блоков
                 blockList[blockIndex].runCodeBlock()
             }
 
@@ -87,16 +90,10 @@ class IfBlock(
                 skipBlock()
             }
         }
-        // Если условие неверно
+        // Пропуск тела if, если условие неверно
         else {
-            // Пропуск тела if
             skipBlock()
         }
-    }
-
-    // Тестирование блока без UI
-    fun testBlock(cond: String) {
-        condition = cond
     }
 
     // Возвращение названия блока

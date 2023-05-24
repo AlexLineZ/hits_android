@@ -56,51 +56,46 @@ class OutputBlock(
 
     // Вывод в консоль
     override fun runCodeBlock() {
-        var resultString = ""
+        var outputValue = ""                                // Строка вывода
+        val argList = expression.split(",").toMutableList() // Переданные аргументы
 
-        val argList = expression.split(",").toMutableList()
-
+        // Проверка наличия выражения
         if (expression == "") {
             throw Exception("В блоке Print нет выражения для вывода")
         }
 
+        // Вывод каждого значения
         for (i in argList.indices) {
             argList[i] += ";"
 
+            // Нахождение текущего значения
             val currentExpression = ParsingFunctions(LexicalComponents(argList[i]).getTokensFromCode())
             var currentValue = currentExpression.parseExpression()!!
 
+            // Вывод массивов
             if (currentValue!!.type.length >= 5 &&
                 currentValue!!.type.slice((currentValue!!.type.length - 5)..(currentValue!!.type.length - 1)) == "Array") {
                 var arr = ""
 
+                // Разделение элементов массивов запятыми
                 for (i in (currentValue.value as Array<*>).indices) {
                     arr += (currentValue.value as Array<*>)[i].toString() + ", "
                 }
 
+                // Помещение элементов массивов в фигурные скобки
                 arr = arr.slice(0..arr.length - 3)
                 currentValue = Variable("currentValue", Type.STRING, "{" + arr + "}")
             }
 
-            resultString += currentValue.value.toString() + " "
+            // Добавление текущего значения к строке вывода
+            outputValue += currentValue.value.toString() + " "
         }
 
-        val result = Variable("result", Type.STRING, resultString)
-
-        when (result) {
-            null -> println("ඞ Empty")
-            else -> {
-                FlowViewModel().setCurrentValue("ඞ ${result.value}\n")
-            }
-        }
+        // Вывод результата
+        FlowViewModel().setCurrentValue("ඞ ${outputValue}\n")
 
         // Выполнение следующего блока
         blockIndex++
-    }
-
-    // Тестирование блока без UI
-    fun testBlock(exp: String) {
-        expression = exp
     }
 
     // Возврат названия блока

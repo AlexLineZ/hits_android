@@ -29,7 +29,6 @@ class ContinueBlock(
     companion object {
         val BLOCK_NAME = "continueBlock"
     }
-
     override val blockName = BLOCK_NAME
 
     // Добавление блока в список блоков

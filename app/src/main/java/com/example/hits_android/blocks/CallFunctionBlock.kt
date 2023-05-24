@@ -57,16 +57,20 @@ class CallFunctionBlock(
     var functionName = "" // Название вызываемой функции
     var arguments = ""    // Передаваемые аргументы
 
+    // Проверка нахождения определения функции
+    private fun functionIsNotFound(): Boolean {
+        return blockList[blockIndex].getNameOfBlock() != FunctionBlock.BLOCK_NAME ||
+                (blockList[blockIndex].getNameOfBlock() == FunctionBlock.BLOCK_NAME &&
+                        (blockList[blockIndex] as FunctionBlock).getFunctionName() != functionName)
+    }
+
     // Вызов функции
     override fun runCodeBlock() {
         // Запоминание места вызова функции
         val callingIndex = blockIndex
 
         // Поиск определения функции
-        while (blockList[blockIndex].getNameOfBlock() != FunctionBlock.BLOCK_NAME ||
-            (blockList[blockIndex].getNameOfBlock() == FunctionBlock.BLOCK_NAME &&
-                    (blockList[blockIndex] as FunctionBlock).getFunctionName() != functionName)
-        ) {
+        while (functionIsNotFound()) {
             try {
                 blockIndex--
 
@@ -83,13 +87,14 @@ class CallFunctionBlock(
         // Переход к области видимости функции
         scopes.addScope((blockList[blockIndex] as FunctionBlock).getScope())
 
-        // Передача аргументов
+        // Чтение переданных аргументов
         val argList = arguments.split(",").toMutableList()
 
         if (arguments == "") {
             argList.removeAt(0)
         }
 
+        // Проверка кол-ва переданных аргументов
         if (argList.size != (blockList[blockIndex] as FunctionBlock).getParameters().size) {
             throw Exception(
                 "Кол-во аргументов при вызове функции ${functionName} не совпадает с кол-вом" +
@@ -97,13 +102,14 @@ class CallFunctionBlock(
             )
         }
 
+        // Передача аргументов
         for (i in argList.indices) {
-            //argList[i] = argList[i].replace(" ", "")
             argList[i] += ";"
 
             val expression = ParsingFunctions(LexicalComponents(argList[i]).getTokensFromCode())
             val args = expression.parseExpression()!!
 
+            // Проверка типов аргументов
             if (variables[(blockList[blockIndex] as FunctionBlock).getParameters()[i]]?.type != args.type) {
                 throw Exception("При вызове функции ${functionName} переданы аргументы неподходящих типов.")
             }
@@ -119,17 +125,11 @@ class CallFunctionBlock(
             blockList[blockIndex].runCodeBlock()
         }
 
-        // Удаление переменных, которые были созданы внутри тела if
+        // Удаление переменных, которые были созданы внутри функции
         blockList[blockIndex].runCodeBlock()
 
         // Возврат на место вызова функции
         blockIndex = callingIndex + 1
-    }
-
-    // Тестирование без UI
-    fun testBlock(funName: String, args: String) {
-        functionName = funName
-        arguments = args
     }
 
     // Возврат названия блока
