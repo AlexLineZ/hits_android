@@ -23,7 +23,10 @@ class FunctionClass(
     private var _functionName = MutableStateFlow(name)
     val functionName: StateFlow<String> = _functionName.asStateFlow()
 
+    val idk = 0
+
     fun setCurrentScreenId(newName: String) {
         _functionName.value = newName
+        val idkkk = idk
     }
 }

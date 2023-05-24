@@ -2,6 +2,26 @@ package com.example.hits_android.expressionParser
 
 // Переменная
 class Variable(var name: String, var type: String, var value: Any) {
+    // Проверка возможности привести тип к Double
+    private fun isCastingToDouble(otherVariable: Variable): Boolean {
+        return (type == Type.DOUBLE && otherVariable.type == Type.DOUBLE) ||
+                (type == Type.INT && otherVariable.type == Type.DOUBLE) ||
+                (type == Type.DOUBLE && otherVariable.type == Type.INT)
+    }
+
+    // Проверка возможности привести тип к String
+    private fun isCastingToString(otherVariable: Variable): Boolean {
+        return type == Type.STRING && (otherVariable.type == Type.STRING || otherVariable.type == Type.CHAR)
+    }
+
+    // Проверка на число
+    private fun isNumber(otherVariable: Variable): Boolean {
+        return (type == Type.DOUBLE && otherVariable.type == Type.DOUBLE) ||
+                (type == Type.DOUBLE && otherVariable.type == Type.INT) ||
+                (type == Type.INT && otherVariable.type == Type.DOUBLE) ||
+                (type == Type.INT && otherVariable.type == Type.INT)
+    }
+
     // Сложение переменных
     operator fun plus(otherVariable: Variable): Variable {
         // Сложение двух Int переменных
@@ -13,10 +33,7 @@ class Variable(var name: String, var type: String, var value: Any) {
         }
 
         // Сложение двух Double переменных или Int и Double
-        else if ((type == Type.DOUBLE && otherVariable.type == Type.DOUBLE) ||
-            (type == Type.INT && otherVariable.type == Type.DOUBLE) ||
-            (type == Type.DOUBLE && otherVariable.type == Type.INT)
-        ) {
+        else if (isCastingToDouble(otherVariable)) {
             return Variable(
                 "newVariable", Type.DOUBLE,
                 (value.toString().toDouble() + otherVariable.value.toString().toDouble()).toString()
@@ -24,7 +41,7 @@ class Variable(var name: String, var type: String, var value: Any) {
         }
 
         // Сложение строк
-        else if (type == Type.STRING && (otherVariable.type == Type.STRING || otherVariable.type == Type.CHAR)) {
+        else if (isCastingToString(otherVariable)) {
             return Variable(
                 "newVariable",
                 Type.STRING,
@@ -116,11 +133,7 @@ class Variable(var name: String, var type: String, var value: Any) {
     // Сравнение переменных
     operator fun compareTo(otherVariable: Variable): Int {
         // Сравнение чисел
-        if ((type == Type.DOUBLE && otherVariable.type == Type.DOUBLE) ||
-            (type == Type.DOUBLE && otherVariable.type == Type.INT) ||
-            (type == Type.INT && otherVariable.type == Type.DOUBLE) ||
-            (type == Type.INT && otherVariable.type == Type.INT)
-        ) {
+        if (isNumber(otherVariable)) {
             if (value.toString().toDouble() > otherVariable.value.toString().toDouble()) {
                 return 1
             } else if (value.toString().toDouble() == otherVariable.value.toString().toDouble()) {
@@ -196,10 +209,7 @@ class Variable(var name: String, var type: String, var value: Any) {
         }
 
         // Умножение Double и Double или Double и Int
-        else if ((type == Type.DOUBLE && otherVariable.type == Type.DOUBLE) ||
-            (type == Type.INT && otherVariable.type == Type.DOUBLE) ||
-            (type == Type.DOUBLE && otherVariable.type == Type.INT)
-        ) {
+        else if (isCastingToDouble(otherVariable)) {
             return Variable(
                 "newVariable", Type.DOUBLE,
                 (value.toString().toDouble() * otherVariable.value.toString().toDouble()).toString()
@@ -220,10 +230,7 @@ class Variable(var name: String, var type: String, var value: Any) {
         }
 
         // Деление Double и Double или Double и Int
-        else if ((type == Type.DOUBLE && otherVariable.type == Type.DOUBLE) ||
-            (type == Type.INT && otherVariable.type == Type.DOUBLE) ||
-            (type == Type.DOUBLE && otherVariable.type == Type.INT)
-        ) {
+        else if (isCastingToDouble(otherVariable)) {
             return Variable(
                 "newVariable", Type.DOUBLE,
                 (value.toString().toDouble() / otherVariable.value.toString().toDouble()).toString()
@@ -250,37 +257,33 @@ class Variable(var name: String, var type: String, var value: Any) {
     operator override fun equals(otherVariable: Any?): Boolean {
 
         // Сравнение переменных типа Int
-        if ((type == Type.INT && (otherVariable as Variable).type == Type.INT) ||
-            (type == Type.INT && (otherVariable as Variable).type == Type.DOUBLE) ||
-            (type == Type.DOUBLE && (otherVariable as Variable).type == Type.INT) ||
-            (type == Type.DOUBLE && (otherVariable as Variable).type == Type.DOUBLE)
-        ) {
-            return value.toString().toDouble() == (otherVariable as Variable).value.toString()
+        if (isNumber(otherVariable as Variable)) {
+            return value.toString().toDouble() == otherVariable.value.toString()
                 .toDouble()
         }
 
         // Сравнение строк и булевых переменных
-        if (type == Type.STRING && (otherVariable as Variable).type == Type.STRING ||
-            type == Type.BOOL && (otherVariable as Variable).type == Type.BOOL
+        if (type == Type.STRING && otherVariable.type == Type.STRING ||
+            type == Type.BOOL && otherVariable.type == Type.BOOL
         ) {
-            return value.toString() == (otherVariable as Variable).value.toString()
+            return value.toString() == otherVariable.value.toString()
         }
 
         // Сравнение Char и Char
-        else if (type == Type.CHAR && (otherVariable as Variable).type == Type.CHAR) {
+        else if (type == Type.CHAR && otherVariable.type == Type.CHAR) {
             return value.toString()[0].code == otherVariable.value.toString()[0].code
         }
 
         // Сравнение Char и Int
-        else if (type == Type.CHAR && (otherVariable as Variable).type == Type.INT) {
+        else if (type == Type.CHAR && otherVariable.type == Type.INT) {
             return value.toString()[0].code == otherVariable.value.toString().toInt()
         }
 
         // Сравнение Int и Char
-        else if (type == Type.INT && (otherVariable as Variable).type == Type.CHAR) {
+        else if (type == Type.INT && otherVariable.type == Type.CHAR) {
             return value.toString().toInt() == otherVariable.value.toString()[0].code
         }
 
-        throw Exception("Сравнение переменных типов ${type} и ${(otherVariable as Variable).type}")
+        throw Exception("Сравнение переменных типов ${type} и ${otherVariable.type}")
     }
 }
