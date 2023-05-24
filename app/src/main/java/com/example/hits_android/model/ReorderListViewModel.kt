@@ -1,6 +1,5 @@
 package com.example.hits_android.model
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,12 +12,12 @@ import com.example.hits_android.blocks.CallFunctionBlock
 import com.example.hits_android.blocks.ContinueBlock
 import com.example.hits_android.blocks.ElseBlock
 import com.example.hits_android.blocks.EndBlock
-import com.example.hits_android.blocks.FinishProgramBlock
 import com.example.hits_android.blocks.FunctionClass
+import com.example.hits_android.blocks.FunctionNameBlock
+import com.example.hits_android.blocks.FunctionsArgumentBlock
 import com.example.hits_android.blocks.IfBlock
 import com.example.hits_android.blocks.InitializeArrayBlock
 import com.example.hits_android.blocks.InitializeVarBlock
-import com.example.hits_android.blocks.MainBlock
 import com.example.hits_android.blocks.OutputBlock
 import com.example.hits_android.blocks.WhileBlock
 import com.example.hits_android.blocks.blockList
@@ -40,8 +39,13 @@ class ReorderListViewModel(private val sharedPreferences: ThemePreference) : Vie
     private var _currentScreenId = MutableStateFlow(0)
     val currentScreenId: StateFlow<Int> = _currentScreenId.asStateFlow()
 
-    var main: FunctionClass by mutableStateOf(
-        FunctionClass(name = "main", id = 0)
+    private var main: FunctionClass by mutableStateOf(
+        FunctionClass(
+            name = "main",
+            id = 0,
+            mainBlockTitle = "Start program",
+            finishBlockTitle = "End program"
+        )
     )
 
     var functionsList by mutableStateOf(
@@ -65,135 +69,131 @@ class ReorderListViewModel(private val sharedPreferences: ThemePreference) : Vie
         )
     )
 
-    var keyCount = 1
+    var keyCount = 3
 
     init {
         blockList.clear()
     }
 
     fun moveBlock(from: ItemPosition, to: ItemPosition) {
-        functionsList.forEach {
-            when (it.isOnScreen.value) {
-                true -> {
-                    Log.d("a", "${it.codeBlocksList}")
-                    it.codeBlocksList = it.codeBlocksList.toMutableList().apply {
-                        add(to.index, removeAt(from.index))
-                    }
-
-                    blockList =
-                        it.codeBlocksList.slice(1..(it.codeBlocksList.size - 2)).toMutableList()
-                }
-
-                false -> {}
+        functionsList[currentScreenId.value].codeBlocksList =
+            functionsList[currentScreenId.value].codeBlocksList.toMutableList().apply {
+                add(to.index, removeAt(from.index))
             }
-        }
+
+        blockList =
+            functionsList[currentScreenId.value].codeBlocksList.slice(1..(functionsList[currentScreenId.value].codeBlocksList.size - 2))
+                .toMutableList()
     }
 
-    fun isDogDragOverEnabled(draggedOver: ItemPosition, dragging: ItemPosition): Boolean {
-        functionsList.forEach {
-            when (it.isOnScreen.value) {
-                true -> {
-                    return it.codeBlocksList.getOrNull(draggedOver.index)?.isDragOverLocked != true
-                }
 
-                false -> {}
-            }
-        }
-        return functionsList[0].codeBlocksList.getOrNull(draggedOver.index)?.isDragOverLocked != true
+    fun isDogDragOverEnabled(draggedOver: ItemPosition, dragging: ItemPosition): Boolean {
+        return functionsList[currentScreenId.value].codeBlocksList.getOrNull(draggedOver.index)?.isDragOverLocked != true
     }
 
 
     fun addBlock(item: Block) {
-        functionsList[currentScreenId.value].codeBlocksList = functionsList[currentScreenId.value].codeBlocksList
-            .toMutableList()
-            .apply {
-                add(
-                    functionsList[currentScreenId.value].codeBlocksList.size - 1,
-                    when (item.blockName) {
-                        "assignmentBlock" -> {
-                            AssignmentBlock(key = "${++keyCount}")
-                        }
+        functionsList[currentScreenId.value].codeBlocksList =
+            functionsList[currentScreenId.value].codeBlocksList
+                .toMutableList()
+                .apply {
+                    add(
+                        functionsList[currentScreenId.value].codeBlocksList.size - 1,
+                        when (item.blockName) {
+                            "assignmentBlock" -> {
+                                AssignmentBlock(key = "${++keyCount}")
+                            }
 
-                        "breakBlock" -> {
-                            BreakBlock(key = "${++keyCount}")
-                        }
+                            "breakBlock" -> {
+                                BreakBlock(key = "${++keyCount}")
+                            }
 
-                        "continueBlock" -> {
-                            ContinueBlock(key = "${++keyCount}")
-                        }
+                            "continueBlock" -> {
+                                ContinueBlock(key = "${++keyCount}")
+                            }
 
-                        "ElseBlock" -> {
-                            ElseBlock(
-                                key = "${++keyCount}",
-                                beginKey = "${keyCount + 1}",
-                                endKey = "${keyCount + 2}"
-                            )
-                        }
+                            "ElseBlock" -> {
+                                ElseBlock(
+                                    key = "${++keyCount}",
+                                    beginKey = "${keyCount + 1}",
+                                    endKey = "${keyCount + 2}"
+                                )
+                            }
 
-                        "IfBlock" -> {
-                            IfBlock(
-                                key = "${++keyCount}",
-                                beginKey = "${keyCount + 1}",
-                                endKey = "${keyCount + 2}"
-                            )
-                        }
+                            "IfBlock" -> {
+                                IfBlock(
+                                    key = "${++keyCount}",
+                                    beginKey = "${keyCount + 1}",
+                                    endKey = "${keyCount + 2}"
+                                )
+                            }
 
-                        "initArrayBlock" -> {
-                            InitializeArrayBlock(key = "${++keyCount}")
-                        }
+                            "initArrayBlock" -> {
+                                InitializeArrayBlock(key = "${++keyCount}")
+                            }
 
-                        "initVarBlock" -> {
-                            InitializeVarBlock(key = "${++keyCount}")
-                        }
+                            "initVarBlock" -> {
+                                InitializeVarBlock(key = "${++keyCount}")
+                            }
 
-                        "outputBlock" -> {
-                            OutputBlock(key = "${++keyCount}")
-                        }
+                            "outputBlock" -> {
+                                OutputBlock(key = "${++keyCount}")
+                            }
 
-                        "WhileBlock" -> {
-                            WhileBlock(
-                                key = "${++keyCount}",
-                                beginKey = "${keyCount + 1}",
-                                endKey = "${keyCount + 2}"
-                            )
-                        }
+                            "WhileBlock" -> {
+                                WhileBlock(
+                                    key = "${++keyCount}",
+                                    beginKey = "${keyCount + 1}",
+                                    endKey = "${keyCount + 2}"
+                                )
+                            }
 
-                        "callFunctionBlock" -> {
-                            CallFunctionBlock(key = "${++keyCount}")
-                        }
+                            "callFunctionBlock" -> {
+                                CallFunctionBlock(key = "${++keyCount}")
+                            }
 
-                        else -> {
-                            AssignmentBlock(key = "${++keyCount}")
+                            else -> {
+                                AssignmentBlock(key = "${++keyCount}")
+                            }
                         }
+                    )
+                    if (item.blockName == "ElseBlock" ||
+                        item.blockName == "IfBlock" ||
+                        item.blockName == "WhileBlock"
+                    ) {
+                        add(
+                            functionsList[currentScreenId.value].codeBlocksList.size,
+                            EndBlock(key = "${keyCount + 2}")
+                        )
+                        add(
+                            functionsList[currentScreenId.value].codeBlocksList.size,
+                            BeginBlock(key = "${keyCount + 1}")
+                        )
+                        keyCount += 2
                     }
-                )
-                if (item.blockName == "ElseBlock" ||
-                    item.blockName == "IfBlock" ||
-                    item.blockName == "WhileBlock"
-                ) {
-                    add(
-                        functionsList[currentScreenId.value].codeBlocksList.size,
-                        EndBlock(key = "${keyCount + 2}")
-                    )
-                    add(
-                        functionsList[currentScreenId.value].codeBlocksList.size,
-                        BeginBlock(key = "${keyCount + 1}")
-                    )
-                    keyCount += 2
                 }
-            }
     }
 
 
     fun addFunction() {
-        val newFunctionList: FunctionClass by mutableStateOf(
+        val newFunction: FunctionClass by mutableStateOf(
             FunctionClass(id = functionsList.size)
         )
+
+        newFunction.codeBlocksList = newFunction.codeBlocksList.toMutableList()
+            .apply {
+                add(0, FunctionNameBlock(key = "2", isDragOverLocked = true))
+            }
+
+        newFunction.codeBlocksList = newFunction.codeBlocksList.toMutableList()
+            .apply {
+                add(1, FunctionsArgumentBlock(key = "3", isDragOverLocked = true))
+            }
 
         functionsList = functionsList
             .toMutableList()
             .apply {
-                add(functionsList.size, newFunctionList)
+                add(functionsList.size, newFunction)
             }
     }
 

@@ -67,13 +67,13 @@ fun VerticalReorderList(
                 val dismissState = rememberDismissState(
                     confirmValueChange = {
                         if ((it == DismissValue.DismissedToEnd || it == DismissValue.DismissedToStart)) {
-                            if (item.isDragOverLocked) {
+                            if (item.isDragOverLocked && item.blockName != "FunctionNameBlock"  && item.blockName != "FunctionsArgumentBlock") {
                                 vm.functionsList[id].codeBlocksList =
                                     vm.functionsList[id].codeBlocksList.toMutableList().apply {
-                                        removeIf { it.key != "0" && it.key != "1" }
+                                        removeIf { it.key != "0" && it.key != "1" && it.blockName != "FunctionNameBlock"  && it.blockName != "FunctionsArgumentBlock" }
                                     }
                                 return@rememberDismissState false
-                            } else if (item.blockName == "endBlock" || item.blockName == "beginBlock") {
+                            } else if (item.blockName == "endBlock" || item.blockName == "beginBlock" || item.blockName == "FunctionNameBlock" || item.blockName == "FunctionsArgumentBlock") {
                                 return@rememberDismissState false
                             } else {
                                 if (item.blockName == "ElseBlock" || item.blockName == "IfBlock" || item.blockName == "WhileBlock") {
