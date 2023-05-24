@@ -1,5 +1,6 @@
 package com.example.hits_android
 
+import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -88,7 +89,8 @@ sealed class BottomBarScreen(
 
 @Composable
 fun BottomNavigation(
-    vm: ReorderListViewModel
+    vm: ReorderListViewModel,
+    context: Context
 ) {
     val navController = rememberNavController()
 
@@ -103,7 +105,8 @@ fun BottomNavigation(
         Modifier.padding(it)
         BottomNavigationGraph(
             navController = navController,
-            vm = vm
+            vm = vm,
+            context
         )
     }
 }
@@ -149,7 +152,8 @@ fun NavigationBottomBar(
 @Composable
 fun BottomNavigationGraph(
     navController: NavHostController,
-    vm: ReorderListViewModel
+    vm: ReorderListViewModel,
+    context: Context
 ) {
 
     val viewModel: FlowViewModel = viewModel()
@@ -168,7 +172,7 @@ fun BottomNavigationGraph(
             Console(viewModel)
         }
         composable(route = BottomBarScreen.Settings.route) {
-            Settings(vm)
+            Settings(vm, context)
         }
     }
 }

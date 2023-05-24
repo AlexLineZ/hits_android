@@ -37,7 +37,7 @@ fun NavigationSystem(context: Context) {
             sharedPreferences = ThemePreference.getInstance(context),
             repository = SaveRepository(
                 database = SaveRoomStorage.getInstance(context),
-                fileStorage = SaveFileStorage()
+                fileStorage = SaveFileStorage(context)
             )
         )
 
@@ -47,6 +47,6 @@ fun NavigationSystem(context: Context) {
 
     NavHost(navController = navController, startDestination = "start") {
         composable("start") { StartScreen(navController, viewModel) }
-        composable("main") { MainScreen(navController, viewModel) }
+        composable("main") { MainScreen(navController, viewModel, context) }
     }
 }

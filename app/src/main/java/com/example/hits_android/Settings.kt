@@ -1,5 +1,6 @@
 package com.example.hits_android
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,18 +20,20 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.hits_android.appmodel.data.filestorage.SaveFileStorage
 import com.example.hits_android.blocks.InitializeVarBlock
 import com.example.hits_android.model.ReorderListViewModel
 import com.example.hits_android.ui.theme.AppThemeBrightness
 import com.example.hits_android.ui.theme.AppThemeColor
 
 @Composable
-fun Settings(vm: ReorderListViewModel) {
+fun Settings(vm: ReorderListViewModel, context: Context) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -46,7 +49,7 @@ fun Settings(vm: ReorderListViewModel) {
         )
 
         ThemeBuilderComposable(vm)
-        SavesBuilderComposable(vm)
+        SavesBuilderComposable(vm, context)
 
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -103,7 +106,7 @@ fun DropdownMenu(item: InitializeVarBlock) {
 
 
 @Composable
-fun SavesBuilderComposable(vm: ReorderListViewModel) {
+fun SavesBuilderComposable(vm: ReorderListViewModel, context: Context) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         modifier = Modifier
@@ -124,7 +127,7 @@ fun SavesBuilderComposable(vm: ReorderListViewModel) {
                 .clip(shape = RoundedCornerShape(24.dp))
                 .background(MaterialTheme.colorScheme.surfaceVariant)
                 .clickable {
-
+                    SaveFileStorage(context).saveFunctionListToJson(vm.functionsList,"cringe")
                 },
             contentAlignment = Alignment.Center
         ) {
