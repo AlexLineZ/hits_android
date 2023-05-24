@@ -1,6 +1,5 @@
 package com.example.hits_android
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -32,7 +31,7 @@ fun FunctionSelection(vm: ReorderListViewModel) {
         modifier = Modifier
             .fillMaxHeight(0.08f)
             .fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(20.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalAlignment = Alignment.Bottom
     ) {
         items(vm.functionsList) { item ->
@@ -48,8 +47,6 @@ fun FunctionSelection(vm: ReorderListViewModel) {
                         vm.addFunction()
 
                         vm.setCurrentScreenId(vm.functionsList.size - 1)
-
-                        Log.d("a", "${vm.functionsList}")
                     },
                 contentAlignment = Alignment.Center
             ) {
@@ -72,10 +69,9 @@ fun FunctionListItem(vm: ReorderListViewModel, item: FunctionClass) {
                 modifier = Modifier
                     .fillMaxHeight(0.8f)
                     .clip(shape = RoundedCornerShape(24.dp))
-                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.95f))
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.9f))
                     .clickable {
                         vm.setCurrentScreenId(item.id)
-                        Log.d("a", "${vm.currentScreenId.value}")
                     },
                 contentAlignment = Alignment.Center
             ) {
@@ -94,11 +90,9 @@ fun FunctionListItem(vm: ReorderListViewModel, item: FunctionClass) {
                 modifier = Modifier
                     .fillMaxHeight(0.8f)
                     .clip(shape = RoundedCornerShape(24.dp))
-                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.95f))
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.9f))
                     .clickable {
                         vm.setCurrentScreenId(item.id)
-
-                        Log.d("a", "${vm.currentScreenId.value}")
                     },
                 contentAlignment = Alignment.Center
             ) {
@@ -126,7 +120,7 @@ fun FunctionListItem(vm: ReorderListViewModel, item: FunctionClass) {
                                         removeIf { it.id == item.id }
                                     }
 
-                                vm.functionsList.forEach{
+                                vm.functionsList.forEach {
                                     if (it.id > item.id) {
                                         it.id--
                                     }

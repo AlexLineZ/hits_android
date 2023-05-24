@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.sp
 class FunctionNameBlock(
     override var previousID: Int = -1,
     override var nextID: Int = -1,
-    override val key: String,
+    override var key: String,
     override val title: String = "Fun name",
     override val isDragOverLocked: Boolean = false,
 ) : Block {

@@ -23,7 +23,7 @@ import com.example.hits_android.expressionParser.variables
 class BeginBlock(
     override var previousID: Int = -1,
     override var nextID: Int = -1,
-    override val key: String,
+    override var key: String,
     override val title: String = "Begin",
     override val isDragOverLocked: Boolean = false
 ) : Block {

@@ -21,7 +21,7 @@ import com.example.hits_android.expressionParser.scopes
 class ContinueBlock(
     override var previousID: Int = -1,
     override var nextID: Int = -1,
-    override val key: String,
+    override var key: String,
     override val title: String = "Continue",
     override val isDragOverLocked: Boolean = false
 ) : Block {

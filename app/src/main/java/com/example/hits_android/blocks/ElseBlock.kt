@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.sp
 class ElseBlock(
     override var previousID: Int = -1,
     override var nextID: Int = -1,
-    override val key: String,
+    override var key: String,
     override val title: String = "Else",
     override val isDragOverLocked: Boolean = false,
     val beginKey: String = "",

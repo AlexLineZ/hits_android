@@ -28,7 +28,7 @@ import kotlin.math.roundToInt
 class AssignmentBlock(
     override var previousID: Int = -1,
     override var nextID: Int = -1,
-    override val key: String,
+    override var key: String,
     override val title: String = "Assign",
     override val isDragOverLocked: Boolean = false
 ) : Block {

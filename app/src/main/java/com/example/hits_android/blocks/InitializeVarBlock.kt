@@ -33,7 +33,7 @@ import com.example.hits_android.expressionParser.*
 class InitializeVarBlock(
     override var previousID: Int = -1,
     override var nextID: Int = -1,
-    override val key: String,
+    override var key: String,
     override val title: String = "InitVar",
     override val isDragOverLocked: Boolean = false
 ) : Block {

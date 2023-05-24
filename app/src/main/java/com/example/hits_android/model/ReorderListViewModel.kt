@@ -62,15 +62,15 @@ class ReorderListViewModel(private val sharedPreferences: ThemePreference) : Vie
             OutputBlock(key = "2"),
             AssignmentBlock(key = "3"),
             IfBlock(key = "4"),
-            WhileBlock(key = "5"),
-            ElseBlock(key = "6"),
-            BreakBlock(key = "7"),
-            ContinueBlock(key = "8"),
-            CallFunctionBlock(key = "9")
+            ElseBlock(key = "5"),
+            WhileBlock(key = "6"),
+            CallFunctionBlock(key = "7"),
+            BreakBlock(key = "8"),
+            ContinueBlock(key = "9")
         )
     )
 
-    var keyCount = 3
+    var keyCount = 10
 
     init {
         blockList.clear()
@@ -187,8 +187,8 @@ class ReorderListViewModel(private val sharedPreferences: ThemePreference) : Vie
             functionsList[functionsList.size - 1].codeBlocksList
                 .toMutableList()
                 .apply {
-                    add(1, FunctionNameBlock(key = "2", isDragOverLocked = true))
-                    add(2, FunctionsArgumentBlock(key = "3", isDragOverLocked = true))
+                    add(0, FunctionNameBlock(key = "${++keyCount}", isDragOverLocked = true))
+                    add(1, FunctionsArgumentBlock(key = "${++keyCount}", isDragOverLocked = true))
                 }
     }
 
