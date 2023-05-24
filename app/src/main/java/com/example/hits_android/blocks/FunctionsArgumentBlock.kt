@@ -36,7 +36,7 @@ class FunctionsArgumentBlock(
     override var previousID: Int = -1,
     override var nextID: Int = -1,
     override val key: String,
-    override val title: String = "Arguments",
+    override val title: String = "Args",
     override val isDragOverLocked: Boolean = false,
 ) : Block {
 
@@ -154,7 +154,7 @@ class FunctionsArgumentBlock(
                     text = item.title,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 15.sp
+                    fontSize = 20.sp
                 )
                 ItemConditionField(item)
             }

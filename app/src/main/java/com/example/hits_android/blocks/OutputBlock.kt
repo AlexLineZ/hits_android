@@ -1,6 +1,7 @@
 package com.example.hits_android.blocks
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -64,12 +65,14 @@ class OutputBlock(
             argList[i] += ";"
 
             // Нахождение текущего значения
-            val currentExpression = ParsingFunctions(LexicalComponents(argList[i]).getTokensFromCode())
+            val currentExpression =
+                ParsingFunctions(LexicalComponents(argList[i]).getTokensFromCode())
             var currentValue = currentExpression.parseExpression()!!
 
             // Вывод массивов
             if (currentValue!!.type.length >= 5 &&
-                currentValue!!.type.slice((currentValue!!.type.length - 5)..(currentValue!!.type.length - 1)) == "Array") {
+                currentValue!!.type.slice((currentValue!!.type.length - 5)..(currentValue!!.type.length - 1)) == "Array"
+            ) {
                 var arr = ""
 
                 // Разделение элементов массивов запятыми
@@ -112,22 +115,17 @@ class OutputBlock(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 25.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth(0.25f),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = item.title,
-                        textAlign = TextAlign.Center,
-                        maxLines = 1,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 30.sp
-                    )
-                }
+                Text(
+                    text = item.title,
+                    textAlign = TextAlign.Center,
+                    maxLines = 1,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 30.sp
+                )
                 ItemConditionField(item)
             }
         }
