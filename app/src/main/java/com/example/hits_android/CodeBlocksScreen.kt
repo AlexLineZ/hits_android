@@ -15,10 +15,11 @@ fun CodeBlocksScreen(
 ) {
     Box(
         Modifier
-            .fillMaxHeight(0.93f)
+            .fillMaxHeight(0.92f)
             .fillMaxWidth()
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
+            FunctionSelection(vm = vm)
             VerticalReorderList(vm = vm)
         }
     }
