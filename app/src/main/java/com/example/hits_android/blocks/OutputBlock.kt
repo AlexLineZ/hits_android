@@ -28,10 +28,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.hits_android.expressionParser.LexicalComponents
-import com.example.hits_android.expressionParser.ParsingFunctions
-import com.example.hits_android.expressionParser.Type
-import com.example.hits_android.expressionParser.Variable
+import com.example.hits_android.expressionParser.*
 import com.example.hits_android.model.FlowViewModel
 
 // Блок вывода
@@ -59,20 +56,36 @@ class OutputBlock(
 
     // Вывод в консоль
     override fun runCodeBlock() {
-        val exp = ParsingFunctions(LexicalComponents(expression + ";").getTokensFromCode())
-        var result = exp.parseExpression()
+        var resultString = ""
 
-        if (result!!.type.length >= 5 &&
-            result!!.type.slice((result!!.type.length - 5)..(result!!.type.length - 1)) == "Array") {
-            var arr = ""
+        val argList = expression.split(",").toMutableList()
 
-            for (i in (result.value as Array<*>).indices) {
-                arr += (result.value as Array<*>)[i].toString() + ", "
+        if (expression == "") {
+            throw Exception("В блоке Print нет выражения для вывода")
+        }
+
+        for (i in argList.indices) {
+            argList[i] += ";"
+
+            val currentExpression = ParsingFunctions(LexicalComponents(argList[i]).getTokensFromCode())
+            var currentValue = currentExpression.parseExpression()!!
+
+            if (currentValue!!.type.length >= 5 &&
+                currentValue!!.type.slice((currentValue!!.type.length - 5)..(currentValue!!.type.length - 1)) == "Array") {
+                var arr = ""
+
+                for (i in (currentValue.value as Array<*>).indices) {
+                    arr += (currentValue.value as Array<*>)[i].toString() + ", "
+                }
+
+                arr = arr.slice(0..arr.length - 3)
+                currentValue = Variable("currentValue", Type.STRING, "{" + arr + "}")
             }
 
-            arr = arr.slice(0..arr.length - 3)
-            result = Variable("result", Type.STRING, arr)
+            resultString += currentValue.value.toString() + " "
         }
+
+        val result = Variable("result", Type.STRING, resultString)
 
         when (result) {
             null -> println("ඞ Empty")
