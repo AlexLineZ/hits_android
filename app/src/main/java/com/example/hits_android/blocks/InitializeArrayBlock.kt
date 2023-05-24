@@ -56,6 +56,7 @@ class InitializeArrayBlock(
 
     // Создание массива
     override fun runCodeBlock() {
+        // Проверка названия массива
         if (!(Regex("^(?!true|false|\\d)\\w+").matches(arrayName))) {
             throw Exception("Некорректное название массива")
         }
@@ -116,13 +117,6 @@ class InitializeArrayBlock(
 
         // Выполнение следующих блоков
         blockIndex++
-    }
-
-    // Тестирование без UI
-    fun testBlock(name: String, type: String, size: String) {
-        arrayName = name
-        arrayType = type
-        arraySize = size
     }
 
     // Возврат названия блока

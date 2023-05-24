@@ -67,20 +67,9 @@ class FunctionBlock(
         skipBlock()
     }
 
-    // Тестирование без UI
-    fun testBlock(name: String, p: String) {
-        funName = name
-        parameters = p
-    }
-
     // Возврат названия блока
     override fun getNameOfBlock(): String {
         return blockName
-    }
-
-    @Composable
-    override fun BlockComposable(item: Block) {
-
     }
 
     // Возврат названия функции
@@ -96,5 +85,10 @@ class FunctionBlock(
     // Возврат списка параметров
     fun getParameters(): MutableList<String> {
         return parNamesList
+    }
+
+    @Composable
+    override fun BlockComposable(item: Block) {
+
     }
 }

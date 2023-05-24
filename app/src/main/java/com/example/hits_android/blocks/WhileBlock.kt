@@ -95,8 +95,8 @@ class WhileBlock(
         condition = conditionText
     }
 
-    // Тестирование блока без UI
-    fun testBlock(cond: String) {
+    // Изменение условия
+    fun changeCondition(cond: String) {
         condition = cond
     }
 
