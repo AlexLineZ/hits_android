@@ -56,12 +56,12 @@ fun StartScreen(navController: NavController, vm: ReorderListViewModel) {
                             fontWeight = FontWeight.Bold,
                             fontSize = 40.sp,
                             textAlign = TextAlign.Center,
-                            color = MaterialTheme.colorScheme.secondary
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         Icon(
                             painter = painterResource(R.drawable.bug_icon),
                             contentDescription = "bugIcon",
-                            tint = MaterialTheme.colorScheme.secondary,
+                            tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
                             modifier = Modifier.size(300.dp)
                         )
                     }
@@ -77,7 +77,7 @@ fun StartScreen(navController: NavController, vm: ReorderListViewModel) {
                             .fillMaxWidth()
                             .height(35.dp)
                             .clip(shape = RoundedCornerShape(24.dp))
-                            .background(color = MaterialTheme.colorScheme.secondary)
+                            .background(color = MaterialTheme.colorScheme.onSurface)
                             .clickable {
                                 navController.navigate("main")
                             }
@@ -85,7 +85,7 @@ fun StartScreen(navController: NavController, vm: ReorderListViewModel) {
                         Text(
                             text = "Start blocking",
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSecondary,
+                            color = MaterialTheme.colorScheme.surface,
                             modifier = Modifier
                                 .align(Alignment.Center)
                         )
