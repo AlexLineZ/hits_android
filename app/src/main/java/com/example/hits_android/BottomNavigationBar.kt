@@ -74,8 +74,8 @@ sealed class BottomBarScreen(
     object Settings : BottomBarScreen(
         route = "settings",
         title = "Settings",
-        icon = R.drawable.ic_bottom_profile,
-        icon_focused = R.drawable.ic_bottom_profile_focused
+        icon = R.drawable.ic_bottom_settings,
+        icon_focused = R.drawable.ic_bottom_settings_focused
     )
 
     object Start : BottomBarScreen(
