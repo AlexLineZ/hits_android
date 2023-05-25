@@ -2,10 +2,7 @@ package com.example.hits_android.model
 
 import android.os.Looper
 import androidx.lifecycle.ViewModel
-import com.example.hits_android.blocks.CallFunctionBlock
-import com.example.hits_android.blocks.FunctionClass
-import com.example.hits_android.blocks.blockIndex
-import com.example.hits_android.blocks.blockList
+import com.example.hits_android.blocks.*
 import com.example.hits_android.expressionParser.variables
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,6 +24,16 @@ class FlowViewModel : ViewModel() {
         _output.value = error
     }
 
+    // Проверка наличия блоков begin end после текущего
+    private fun hasBody(): Boolean {
+        return blockList[blockIndex].getNameOfBlock() in listOf<String>(
+            CallFunctionBlock.BLOCK_NAME,
+            ElseBlock.BLOCK_NAME,
+            IfBlock.BLOCK_NAME,
+            WhileBlock.BLOCK_NAME
+        )
+    }
+
     private val _isProgramRunning = MutableStateFlow(false)
     val isProgramRunning: StateFlow<Boolean> = _isProgramRunning.asStateFlow()
 
@@ -44,8 +51,8 @@ class FlowViewModel : ViewModel() {
                     getStop.value = false
 
                     while (blockIndex < blockList.size && !getStop.value) {
-                        if (blockList[blockIndex].getNameOfBlock() == CallFunctionBlock.BLOCK_NAME) {
-                            (blockList[blockIndex] as CallFunctionBlock).setFunctionList(functionList)
+                        if (hasBody()) {
+                            (blockList[blockIndex] as HasBodyBlock).setFunctionList(functionList)
                         }
 
                         blockList[blockIndex].runCodeBlock()

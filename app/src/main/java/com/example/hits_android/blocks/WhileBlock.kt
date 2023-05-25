@@ -41,13 +41,14 @@ class WhileBlock(
     override val isDragOverLocked: Boolean = false,
     val beginKey: String = "",
     val endKey: String = ""
-) : Block {
+) : Block, HasBodyBlock {
     // Название блока
     companion object {
         val BLOCK_NAME = "WhileBlock"
     }
 
     override val blockName = BLOCK_NAME
+    lateinit var funList: List<FunctionClass>
 
     // Условие цикла
     var condition: String = ""
@@ -70,6 +71,17 @@ class WhileBlock(
         while (conditionState.value == "1") {
             // Выполнение тела while
             while (blockList[blockIndex].getNameOfBlock() != EndBlock.BLOCK_NAME) {
+                // Выход из цикла при выполнении Return блока
+                if (blockList[blockIndex].getNameOfBlock() == ReturnBlock.BLOCK_NAME) {
+                    blockList[blockIndex].runCodeBlock()
+                    return
+                }
+
+                // Выполнение остальных блоков
+                if (blockList[blockIndex].getNameOfBlock() == CallFunctionBlock.BLOCK_NAME) {
+                    (blockList[blockIndex] as CallFunctionBlock).setFunctionList(funList)
+                }
+
                 blockList[blockIndex].runCodeBlock()
             }
 
@@ -98,6 +110,11 @@ class WhileBlock(
     // Возврат названия блока
     override fun getNameOfBlock(): String {
         return blockName
+    }
+
+    // Передача списка доступных функций
+    override fun setFunctionList(functionList:  List<FunctionClass>) {
+        funList = functionList
     }
 
     @Composable
