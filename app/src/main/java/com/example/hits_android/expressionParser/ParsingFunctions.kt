@@ -133,119 +133,6 @@ class ParsingFunctions(private var tokens: List<Token>) {
                     throw Exception("Переменная ${nowToken.text} не была задана")
                 }
 
-                // Если следующий токен - квадратная скобка, то закинуть элемент массива
-                else if (findToken(Name.L_SQUARE_BRACKET.value) != null) {
-                    val index = parseExpression()!!
-
-                    if (index.type != Type.INT) {
-                        throw Exception("Некорректный индекс элемента массива")
-                    }
-
-                    try {
-                        // Элемент Int массива
-                        if (variables[nowToken.text]?.type == Type.INT + "Array") {
-                            resultStack.push(
-                                Variable(
-                                    "", Type.INT,
-                                    (variables[nowToken.text]?.value as Array<Int>)[index.value.toString()
-                                        .toInt()]
-                                )
-                            )
-
-                            // Символ строки
-                        } else if (variables[nowToken.text]?.type == Type.STRING) {
-                            resultStack.push(
-                                Variable(
-                                    "",
-                                    Type.CHAR,
-                                    (variables[nowToken.text]?.value as String)[index.value.toString().toInt()]
-                                )
-                            )
-
-                            // Элемент Double массива
-                        } else if (variables[nowToken.text]?.type == Type.DOUBLE + "Array") {
-                            resultStack.push(
-                                Variable(
-                                    "", Type.DOUBLE,
-                                    (variables[nowToken.text]?.value as Array<Double>)[index.value.toString()
-                                        .toInt()]
-                                )
-                            )
-
-                            // Элемент String массива
-                        } else if (variables[nowToken.text]?.type == Type.STRING + "Array") {
-                            resultStack.push(
-                                Variable(
-                                    "", Type.STRING,
-                                    (variables[nowToken.text]?.value as Array<String>)[index.value.toString()
-                                        .toInt()]
-                                )
-                            )
-                        }
-
-                        // Элемент Bool массива
-                        else if (variables[nowToken.text]?.type == Type.BOOL + "Array"){
-                            resultStack.push(
-                                Variable(
-                                    "", Type.BOOL,
-                                    (variables[nowToken.text]?.value as Array<String>)[index.value.toString()
-                                        .toInt()]
-                                )
-                            )
-                        }
-
-                        // Элемент Char массива
-                        else if (variables[nowToken.text]?.type == Type.CHAR + "Array"){
-                            resultStack.push(
-                                Variable(
-                                    "", Type.CHAR,
-                                    (variables[nowToken.text]?.value as Array<String>)[index.value.toString()
-                                        .toInt()]
-                                )
-                            )
-                        }
-
-                        else {
-                            throw Exception("${nowToken.text} не является массивом.")
-                        }
-                    }
-                    // Выход за пределы массива
-                    catch (e: java.lang.Exception) {
-                        if (e.message == "${nowToken.text} не является массивом.") {
-                            throw Exception(e.message)
-                        }
-                        throw Exception("Произошел выход за пределы массива")
-                    }
-
-                    // Нахождение символа в массиве строк
-                    if (findToken(Name.L_SQUARE_BRACKET.value) != null) {
-                        val currentVar = resultStack.pop()
-
-                        if (currentVar.type != Type.STRING) {
-                            throw Exception("${nowToken.text} не является многомерным массивом.")
-                        }
-
-                        val secondIndex = parseExpression()!!
-
-                        if (secondIndex.type != Type.INT) {
-                            throw Exception("Некорректный индекс элемента массива")
-                        }
-
-                        try {
-                            resultStack.push(
-                                Variable(
-                                    "",
-                                    Type.CHAR,
-                                    (currentVar.value as String)[secondIndex.value.toString().toInt()]
-                                )
-                            )
-                        }
-                        catch (e: Exception) {
-                            throw Exception("Выход за пределы массива")
-                        }
-                    }
-                }
-
                 // Если следующий токен - структура
                 else if (variables[nowToken.text]?.type == Type.STRUCT) {
                     resultStack.push(variables[nowToken.text])
@@ -270,6 +157,123 @@ class ParsingFunctions(private var tokens: List<Token>) {
                 else {
                     resultStack.push(variables[nowToken.text])
                 }
+
+                // Если следующий токен - квадратная скобка, то закинуть элемент массива
+                if (findToken(Name.L_SQUARE_BRACKET.value) != null) {
+                    val currentVar = resultStack.pop()
+
+                    val index = parseExpression()!!
+
+                    if (index.type != Type.INT) {
+                        throw Exception("Некорректный индекс элемента массива")
+                    }
+
+                    try {
+                        // Элемент Int массива
+                        if (currentVar?.type == Type.INT + "Array") {
+                            resultStack.push(
+                                Variable(
+                                    "", Type.INT,
+                                    (currentVar.value as Array<Int>)[index.value.toString()
+                                        .toInt()]
+                                )
+                            )
+
+                            // Символ строки
+                        } else if (currentVar?.type == Type.STRING) {
+                            resultStack.push(
+                                Variable(
+                                    "",
+                                    Type.CHAR,
+                                    (currentVar.value as String)[index.value.toString().toInt()]
+                                )
+                            )
+
+                            // Элемент Double массива
+                        } else if (currentVar.type == Type.DOUBLE + "Array") {
+                            resultStack.push(
+                                Variable(
+                                    "", Type.DOUBLE,
+                                    (currentVar.value as Array<Double>)[index.value.toString()
+                                        .toInt()]
+                                )
+                            )
+
+                            // Элемент String массива
+                        } else if (currentVar.type == Type.STRING + "Array") {
+                            resultStack.push(
+                                Variable(
+                                    "", Type.STRING,
+                                    (currentVar.value as Array<String>)[index.value.toString()
+                                        .toInt()]
+                                )
+                            )
+                        }
+
+                        // Элемент Bool массива
+                        else if (currentVar.type == Type.BOOL + "Array"){
+                            resultStack.push(
+                                Variable(
+                                    "", Type.BOOL,
+                                    (currentVar.value as Array<String>)[index.value.toString()
+                                        .toInt()]
+                                )
+                            )
+                        }
+
+                        // Элемент Char массива
+                        else if (currentVar.type == Type.CHAR + "Array"){
+                            resultStack.push(
+                                Variable(
+                                    "", Type.CHAR,
+                                    (currentVar.value as Array<String>)[index.value.toString()
+                                        .toInt()]
+                                )
+                            )
+                        }
+
+                        else {
+                            throw Exception("${nowToken.text} не является массивом.")
+                        }
+                    }
+                    // Выход за пределы массива
+                    catch (e: java.lang.Exception) {
+                        if (e.message == "${nowToken.text} не является массивом.") {
+                            throw Exception(e.message)
+                        }
+                        throw Exception("Произошел выход за пределы массива")
+                    }
+
+                    // Нахождение символа в массиве строк
+                    if (findToken(Name.L_SQUARE_BRACKET.value) != null) {
+                        val secondCurrentVar = resultStack.pop()
+
+                        if (secondCurrentVar.type != Type.STRING) {
+                            throw Exception("${nowToken.text} не является многомерным массивом.")
+                        }
+
+                        val secondIndex = parseExpression()!!
+
+                        if (secondIndex.type != Type.INT) {
+                            throw Exception("Некорректный индекс элемента массива")
+                        }
+
+                        try {
+                            resultStack.push(
+                                Variable(
+                                    "",
+                                    Type.CHAR,
+                                    (secondCurrentVar.value as String)[secondIndex.value.toString().toInt()]
+                                )
+                            )
+                        }
+                        catch (e: Exception) {
+                            throw Exception("Выход за пределы массива")
+                        }
+                    }
+                }
+
+
             }
 
             // Если текущий токен - это оператор или оператор сравнения

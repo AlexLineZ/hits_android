@@ -44,9 +44,9 @@ class InitializeVarBlock(
 
     override val blockName = BLOCK_NAME
 
-    var name: String = ""  // Название переменной
+    var name: String = ""     // Название переменной
     var type: String = "Int"  // Тип переменной
-    var value: String = "" // Значение переменной
+    var value: String = ""    // Значение переменной
 
     // Проверка соответствия типов
     private fun isNotComparableType(newVariable: Variable): Boolean {
