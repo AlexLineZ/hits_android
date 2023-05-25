@@ -1,5 +1,6 @@
 package com.example.hits_android.appmodel.data.repository
 
+import android.content.Context
 import com.example.hits_android.appmodel.data.filestorage.SaveFileStorage
 import com.example.hits_android.appmodel.data.localstorage.SaveInfoEntity
 import com.example.hits_android.appmodel.data.localstorage.SaveRoomStorage
@@ -7,11 +8,13 @@ import com.example.hits_android.appmodel.data.model.SaveInfoModel
 import com.example.hits_android.appmodel.data.model.SaveModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.util.*
 
 class SaveRepository(
     private val database: SaveRoomStorage,
-    private val fileStorage: SaveFileStorage
+    private val fileStorage: SaveFileStorage,
+    private val context: Context
 ) {
 
     suspend fun getSave(name: String) : SaveModel {
@@ -29,16 +32,16 @@ class SaveRepository(
     }
 
     suspend fun getAllSaves() : List<SaveInfoModel>{
-        val save: List<SaveInfoModel>
+        val saveList: List<SaveInfoModel>
 
         withContext(Dispatchers.IO){
-            save = database.dao.getAllSaves().map { SaveInfoModel(
+            saveList = database.dao.getAllSaves().map { SaveInfoModel(
                 name = it.name.toString(),
                 date = it.date
             ) }
         }
 
-        return save
+        return saveList
     }
 
     suspend fun createSave(save: SaveModel) {
@@ -52,14 +55,14 @@ class SaveRepository(
         }
     }
 
-//    suspend fun deleteSave(name: String) {
-//        withContext(Dispatchers.IO) {
-//            val saveInfoEntity = database.dao.getSave(UUID.fromString(name))
-//            database.dao.deleteSave(saveInfoEntity)
-//            val file = File(context.filesDir, "$name.json")
-//            file.delete()
-//        }
-//    }
+    suspend fun deleteSave(name: String) {
+        withContext(Dispatchers.IO) {
+            val saveInfoEntity = database.dao.getSave(UUID.fromString(name))
+            database.dao.deleteSave(saveInfoEntity)
+            val file = File(context.filesDir, "$name.json")
+            file.delete()
+        }
+    }
 
     suspend fun updateSave(save: SaveModel) {
         withContext(Dispatchers.IO) {

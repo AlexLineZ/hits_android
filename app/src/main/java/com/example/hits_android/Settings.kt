@@ -36,6 +36,7 @@ import com.example.hits_android.model.ReorderListViewModel
 import com.example.hits_android.model.SavesViewModel
 import com.example.hits_android.ui.theme.AppThemeBrightness
 import com.example.hits_android.ui.theme.AppThemeColor
+import org.koin.androidx.compose.koinViewModel
 import java.util.UUID
 
 @Composable
@@ -55,7 +56,7 @@ fun Settings(vm: ReorderListViewModel, context: Context) {
         )
 
         ThemeBuilderComposable(vm)
-        SavesBuilderComposable(vm, context)
+        SavesBuilderComposable(vm)
 
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -70,41 +71,42 @@ fun Settings(vm: ReorderListViewModel, context: Context) {
 }
 
 
-var type = "Hui"
 @Composable
-fun DropdownMenu(item: InitializeVarBlock) {
-    val types = listOf("1", "2", "3", "4", "5")
+fun DropdownMenu(svm: SavesViewModel, vm: ReorderListViewModel) {
+    val saves = svm.state.collectAsState().value
+    val loadedSave = svm.loadedSave.collectAsState().value
+    vm.functionsList = if(loadedSave.name == "---") vm.functionsList else loadedSave.functionsList
     val selectedType = remember { mutableStateOf<String?>(null) }
     val expanded = remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
             .fillMaxWidth(0.3f)
             .fillMaxHeight()
-            .clickable(onClick = { expanded.value = true }),
+            .clickable(onClick = {
+                svm.startGetAllSaves()
+                expanded.value = true
+            }),
         contentAlignment = Alignment.Center
     ) {
         Text(
-            textAlign = TextAlign.Center,
-            text = selectedType.value ?: type,
-            maxLines = 1,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            text = "Load",
+            fontSize = 25.sp,
             fontWeight = FontWeight.Bold,
-            fontSize = 20.sp,
-            textDecoration = TextDecoration.Underline
+            color = MaterialTheme.colorScheme.onSurface
         )
     }
     androidx.compose.material3.DropdownMenu(
         expanded = expanded.value,
         onDismissRequest = { expanded.value = false }
     ) {
-        types.forEach { type ->
+        saves.forEach { name ->
             DropdownMenuItem(
                 onClick = {
-                    selectedType.value = type
-                    item.type = type
+                    selectedType.value = name.name
+                    svm.startGetSave(name.name)
                     expanded.value = false
                 },
-                text = { Text(text = type) }
+                text = { Text(text = name.name) }
             )
         }
     }
@@ -112,7 +114,8 @@ fun DropdownMenu(item: InitializeVarBlock) {
 
 
 @Composable
-fun SavesBuilderComposable(vm: ReorderListViewModel, context: Context) {
+fun SavesBuilderComposable(vm: ReorderListViewModel) {
+    val svm: SavesViewModel = koinViewModel()
     Row(
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         modifier = Modifier
@@ -133,15 +136,14 @@ fun SavesBuilderComposable(vm: ReorderListViewModel, context: Context) {
                 .clip(shape = RoundedCornerShape(24.dp))
                 .background(MaterialTheme.colorScheme.surfaceVariant)
                 .clickable {
-                    val saveRepository = SaveRepository(SaveRoomStorage.getInstance(context), SaveFileStorage(context))
-
                     val saveModel = SaveModel(
                         functionsList = vm.functionsList,
-                        name = UUID.randomUUID().toString(),
+                        name = UUID
+                            .randomUUID()
+                            .toString(),
                         date = System.currentTimeMillis()
                     )
-
-                    SavesViewModel().startWriteSave(saveModel, saveRepository)
+                    svm.startWriteSave(saveModel)
                 },
             contentAlignment = Alignment.Center
         ) {
@@ -158,19 +160,10 @@ fun SavesBuilderComposable(vm: ReorderListViewModel, context: Context) {
                 .height(70.dp)
                 .fillMaxWidth()
                 .clip(shape = RoundedCornerShape(24.dp))
-                .background(MaterialTheme.colorScheme.primary)
-                .clickable {
-
-                },
+                .background(MaterialTheme.colorScheme.primary),
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = "Load",
-                color = MaterialTheme.colorScheme.onPrimary,
-                fontWeight = FontWeight.Bold,
-                fontSize = 30.sp,
-                maxLines = 1
-            )
+            DropdownMenu(svm, vm)
         }
     }
 }

@@ -37,7 +37,8 @@ fun NavigationSystem(context: Context) {
             sharedPreferences = ThemePreference.getInstance(context),
             repository = SaveRepository(
                 database = SaveRoomStorage.getInstance(context),
-                fileStorage = SaveFileStorage(context)
+                fileStorage = SaveFileStorage(context),
+                context = context
             )
         )
 
