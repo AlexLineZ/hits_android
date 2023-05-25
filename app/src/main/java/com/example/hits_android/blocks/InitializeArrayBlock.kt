@@ -32,8 +32,6 @@ import com.example.hits_android.expressionParser.variables
 
 // Блок создания массива
 class InitializeArrayBlock(
-    override var previousID: Int = -1,
-    override var nextID: Int = -1,
     override var key: String,
     override val title: String = "InitArray",
     override val isDragOverLocked: Boolean = false

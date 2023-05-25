@@ -18,8 +18,6 @@ import com.example.hits_android.expressionParser.scopes
 
 // Блок выхода из цикла
 class BreakBlock(
-    override var previousID: Int = -1,
-    override var nextID: Int = -1,
     override var key: String,
     override val title: String = "Break",
     override val isDragOverLocked: Boolean = false

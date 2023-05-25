@@ -33,8 +33,6 @@ import com.example.hits_android.expressionParser.ParsingFunctions
 
 // Блок условия
 class IfBlock(
-    override var previousID: Int = -1,
-    override var nextID: Int = -1,
     override var key: String,
     override val title: String = "If",
     override val isDragOverLocked: Boolean = false,

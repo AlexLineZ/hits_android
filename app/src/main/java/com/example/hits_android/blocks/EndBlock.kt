@@ -22,8 +22,6 @@ import com.example.hits_android.expressionParser.variables
 
 // Блок конца блока кода
 class EndBlock(
-    override var previousID: Int = -1,
-    override var nextID: Int = -1,
     override var key: String,
     override val title: String = "End",
     override val isDragOverLocked: Boolean = false

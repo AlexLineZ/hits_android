@@ -33,8 +33,6 @@ import com.example.hits_android.expressionParser.Variable
 import com.example.hits_android.expressionParser.variables
 
 class FunctionsArgumentBlock(
-    override var previousID: Int = -1,
-    override var nextID: Int = -1,
     override var key: String,
     override val title: String = "Args",
     override val isDragOverLocked: Boolean = false,

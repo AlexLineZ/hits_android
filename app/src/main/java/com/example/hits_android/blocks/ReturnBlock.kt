@@ -4,8 +4,6 @@ import androidx.compose.runtime.Composable
 
 // Блок выхода из функции
 class ReturnBlock(
-    override var previousID: Int = -1,
-    override var nextID: Int = -1,
     override var key: String,
     override val title: String = "Return",
     override val isDragOverLocked: Boolean = false

@@ -26,8 +26,6 @@ import kotlin.math.roundToInt
 
 // Блок присвоения переменной нового значения
 class AssignmentBlock(
-    override var previousID: Int = -1,
-    override var nextID: Int = -1,
     override var key: String,
     override val title: String = "Assign",
     override val isDragOverLocked: Boolean = false
