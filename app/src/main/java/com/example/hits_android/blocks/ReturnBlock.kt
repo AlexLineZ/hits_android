@@ -25,8 +25,7 @@ class ReturnBlock(
     override fun getNameOfBlock(): String {
         return blockName
     }
-
-
+    
     @Composable
     override fun BlockComposable(item: Block) {
 

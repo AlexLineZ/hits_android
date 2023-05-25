@@ -80,10 +80,10 @@ class ParsingFunctions(private var tokens: List<Token>) {
                 }
             }
 
-//            // Если текущий токен - это случайное число
-//            else if (nowToken.type.name == Name.RAND) {
-//                resultStack.push((-1000..1000).random())
-//            }
+            // Если текущий токен - это случайное число
+            else if (nowToken.type.name == Name.RAND) {
+                resultStack.push(Variable("", Type.DOUBLE, (-100000..100000).random().toDouble()/100))
+            }
 
             // Если текущий токен - это число типа Int
             else if (nowToken.type.name == Name.NUMBER) {
