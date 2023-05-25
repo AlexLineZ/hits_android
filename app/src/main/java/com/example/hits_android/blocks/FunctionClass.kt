@@ -8,7 +8,6 @@ import com.example.hits_android.expressionParser.variables
 import com.example.hits_android.model.getStop
 
 class FunctionClass(
-    var functionName: String = "",
     var id: Int,
     mainBlockTitle: String = "Start function",
     finishBlockTitle: String = "End function"

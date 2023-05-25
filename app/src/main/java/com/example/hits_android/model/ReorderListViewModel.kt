@@ -46,7 +46,6 @@ class ReorderListViewModel(
 
     private var main: FunctionClass by mutableStateOf(
         FunctionClass(
-            functionName = "main",
             id = 0,
             mainBlockTitle = "Start program",
             finishBlockTitle = "End program"

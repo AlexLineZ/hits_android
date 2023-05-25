@@ -16,22 +16,18 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.hits_android.appmodel.data.filestorage.SaveFileStorage
-import com.example.hits_android.appmodel.data.localstorage.SaveRoomStorage
 import com.example.hits_android.appmodel.data.model.SaveModel
-import com.example.hits_android.appmodel.data.repository.SaveRepository
-import com.example.hits_android.blocks.InitializeVarBlock
-import com.example.hits_android.model.FlowViewModel
 import com.example.hits_android.model.ReorderListViewModel
 import com.example.hits_android.model.SavesViewModel
 import com.example.hits_android.ui.theme.AppThemeBrightness
@@ -75,7 +71,7 @@ fun Settings(vm: ReorderListViewModel, context: Context) {
 fun DropdownMenu(svm: SavesViewModel, vm: ReorderListViewModel) {
     val saves = svm.state.collectAsState().value
     val loadedSave = svm.loadedSave.collectAsState().value
-    vm.functionsList = if(loadedSave.name == "---") vm.functionsList else loadedSave.functionsList
+    vm.functionsList = if (loadedSave.name == "---") vm.functionsList else loadedSave.functionsList
     val selectedType = remember { mutableStateOf<String?>(null) }
     val expanded = remember { mutableStateOf(false) }
     Box(

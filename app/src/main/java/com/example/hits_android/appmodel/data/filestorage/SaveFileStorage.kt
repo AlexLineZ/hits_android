@@ -33,7 +33,7 @@ class SaveFileStorage(private val context: Context) {
             val bufferedReader = BufferedReader(inputStreamReader)
             val jsonString = bufferedReader.use { it.readText() }
 
-            val gson = GsonBuilder().create()
+            val gson = Gson()
             val functionList: A = gson.fromJson(jsonString, A::class.java)
 
             fileInputStream.close()
