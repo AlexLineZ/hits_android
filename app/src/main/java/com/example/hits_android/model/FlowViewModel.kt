@@ -72,16 +72,4 @@ class FlowViewModel : ViewModel() {
         job?.cancel()
         _isProgramRunning.value = false
     }
-
-    fun startWriteSave(saveModel: SaveModel, saveRepository: SaveRepository){
-        viewModelScope.launch {
-            saveRepository.createSave(saveModel)
-        }
-    }
-
-    fun startGetSave(saveModel: SaveModel, saveRepository: SaveRepository){
-        viewModelScope.launch {
-            saveRepository.getSave()
-        }
-    }
 }

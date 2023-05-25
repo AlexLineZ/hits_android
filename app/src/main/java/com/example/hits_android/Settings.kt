@@ -33,6 +33,7 @@ import com.example.hits_android.appmodel.data.repository.SaveRepository
 import com.example.hits_android.blocks.InitializeVarBlock
 import com.example.hits_android.model.FlowViewModel
 import com.example.hits_android.model.ReorderListViewModel
+import com.example.hits_android.model.SavesViewModel
 import com.example.hits_android.ui.theme.AppThemeBrightness
 import com.example.hits_android.ui.theme.AppThemeColor
 import java.util.UUID
@@ -140,7 +141,7 @@ fun SavesBuilderComposable(vm: ReorderListViewModel, context: Context) {
                         date = System.currentTimeMillis()
                     )
 
-                    FlowViewModel().startWriteSave(saveModel, saveRepository)
+                    SavesViewModel().startWriteSave(saveModel, saveRepository)
                 },
             contentAlignment = Alignment.Center
         ) {
