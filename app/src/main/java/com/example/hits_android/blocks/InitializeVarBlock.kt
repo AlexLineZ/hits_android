@@ -47,6 +47,7 @@ class InitializeVarBlock(
     var name: String = ""  // Название переменной
     var type: String = "Int"  // Тип переменной
     var value: String = "" // Значение переменной
+    var fieldName: String = ""
 
     // Проверка соответствия типов
     private fun isNotComparableType(newVariable: Variable): Boolean {
@@ -54,19 +55,28 @@ class InitializeVarBlock(
                 !(type == Type.DOUBLE && newVariable.type == Type.INT) &&
                 !(type == Type.INT && newVariable.type == Type.DOUBLE) &&
                 !(type == Type.STRING && newVariable.type == Type.CHAR) &&
-                !(type == Type.CHAR && newVariable.type == Type.INT)
+                !(type == Type.CHAR && newVariable.type == Type.INT) &&
+                !(type == Type.STRUCT)
     }
 
     // Создание новой переменной
     override fun runCodeBlock() {
         // Проверка названия  переменной
-        if (!(Regex("^(?!true|false|\\d)\\w+").matches(name))) {
+        if (!(Regex("^(?!true|false|\\d)[\\w\\.]+").matches(name))) {
             throw Exception("Некорректное название переменной")
         }
 
         // Пересоздание переменной
         if (variables[name] != null) {
             throw Exception("Происходит пересоздание переменной");
+        }
+
+        // Проверка корректности создания структуры
+        if (type == Type.STRUCT && name.count{ch -> ch == '.'} != 1) {
+            throw Exception("Некорректное создание структуры")
+        }
+        else if (type != Type.STRUCT && name.contains('.')) {
+            throw Exception("Некорректное название переменной")
         }
 
         // Вычисление значения переменной
@@ -99,7 +109,15 @@ class InitializeVarBlock(
         }
 
         // Сохранение переменной
-        if (type == Type.CHAR && newVariable.type == Type.INT) {
+        if (type == Type.STRUCT) {
+            val structName = name.split('.')[0]
+            val fieldName = name.split('.')[1]
+
+            variables[structName] = Variable(structName, Type.STRUCT, mutableMapOf<String, Variable>())
+            (variables[structName]!!.value as MutableMap<String, Variable>)[fieldName] =
+                Variable(fieldName, newVariable.type, newVariable.value)
+        }
+        else if (type == Type.CHAR && newVariable.type == Type.INT) {
             variables[name] = Variable(newVariable.name, Type.CHAR, newVariable.value.toString().toInt().toChar().toString())
         }
         else {
@@ -148,7 +166,7 @@ class InitializeVarBlock(
 
     @Composable
     fun DropdownMenu(item: InitializeVarBlock) {
-        val types = listOf("Int", "Double", "Bool", "String", "Char")
+        val types = listOf("Int", "Double", "Bool", "String", "Char", "Struct")
         val selectedType = remember { mutableStateOf<String?>(null) }
         val expanded = remember { mutableStateOf(false) }
         Box(
