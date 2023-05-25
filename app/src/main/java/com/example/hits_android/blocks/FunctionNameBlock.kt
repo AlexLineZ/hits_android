@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 class FunctionNameBlock(
-    override val key: String,
+    override var key: String,
     override val title: String = "Fun name",
     override val isDragOverLocked: Boolean = false,
 ) : Block {
@@ -43,16 +43,15 @@ class FunctionNameBlock(
 
     override val blockName = BLOCK_NAME
 
-    var functionName = "MyFun"
-
-    // Добавление блока в список блоков
-    init {
-        blockList.add(this)
-    }
+    var functionName = ""
 
     // Выполнение блока FunctionNameBlock
     override fun runCodeBlock() {
+        blockIndex++
+    }
 
+    fun getFunName(): String {
+        return functionName
     }
 
     // Возврат названия блока

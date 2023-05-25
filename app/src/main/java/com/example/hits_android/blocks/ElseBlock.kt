@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -18,22 +17,25 @@ import androidx.compose.ui.unit.sp
 
 // Блок else
 class ElseBlock(
-    override val key: String,
+    override var key: String,
     override val title: String = "Else",
     override val isDragOverLocked: Boolean = false,
     val beginKey: String = "",
     val endKey: String = ""
-) : Block {
+) : Block, HasBodyBlock {
     // Название блока
     companion object {
         val BLOCK_NAME = "ElseBlock"
     }
 
     override val blockName = BLOCK_NAME
+    lateinit var funList: List<FunctionClass>
 
-    // Добавление блока в список блоков
-    init {
-        blockList.add(this)
+    // Проверка прерывания выполнения блока Else
+    private fun isBreaking():Boolean {
+        return blockList[blockIndex].getNameOfBlock() == BreakBlock.BLOCK_NAME ||
+                blockList[blockIndex].getNameOfBlock() == ContinueBlock.BLOCK_NAME ||
+                blockList[blockIndex].getNameOfBlock() == ReturnBlock.BLOCK_NAME
     }
 
     // Выполнение блока else
@@ -70,11 +72,17 @@ class ElseBlock(
 
         // Выполнение тела блока else
         while (blockList[blockIndex].getNameOfBlock() != EndBlock.BLOCK_NAME) {
-            if (blockList[blockIndex].getNameOfBlock() == BreakBlock.BLOCK_NAME ||
-                blockList[blockIndex].getNameOfBlock() == ContinueBlock.BLOCK_NAME) {
+            // Выход из else при выполнении блоков Break, Continue или Return
+            if (isBreaking()) {
                 blockList[blockIndex].runCodeBlock()
                 return
             }
+
+            // Выполнение остальных блоков
+            if (blockList[blockIndex].getNameOfBlock() == CallFunctionBlock.BLOCK_NAME) {
+                (blockList[blockIndex] as CallFunctionBlock).setFunctionList(funList)
+            }
+
             blockList[blockIndex].runCodeBlock()
         }
 
@@ -85,6 +93,11 @@ class ElseBlock(
     // Возврат названия блока
     override fun getNameOfBlock(): String {
         return blockName
+    }
+
+    // Передача списка доступных функций
+    override fun setFunctionList(functionList:  List<FunctionClass>) {
+        funList = functionList
     }
 
     @Composable

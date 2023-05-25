@@ -6,7 +6,7 @@ import androidx.compose.ui.unit.dp
 
 interface Block {
     val blockName: String
-    val key: String
+    var key: String
     val title: String
     val isDragOverLocked: Boolean
     fun runCodeBlock()

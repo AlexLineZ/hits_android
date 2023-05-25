@@ -22,7 +22,7 @@ import com.example.hits_android.expressionParser.variables
 
 // Блок конца блока кода
 class EndBlock(
-    override val key: String,
+    override var key: String,
     override val title: String = "End",
     override val isDragOverLocked: Boolean = false
 ) : Block {
@@ -32,11 +32,6 @@ class EndBlock(
     }
 
     override val blockName = BLOCK_NAME
-
-    // Добавление блока в список блоков
-    init {
-        blockList.add(this)
-    }
 
     // Выход из блока кода
     override fun runCodeBlock() {

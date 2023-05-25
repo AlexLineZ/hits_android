@@ -19,7 +19,7 @@ import com.example.hits_android.expressionParser.scopes
 
 // Блок перехода к следующей итерации цикла
 class ContinueBlock(
-    override val key: String,
+    override var key: String,
     override val title: String = "Continue",
     override val isDragOverLocked: Boolean = false
 ) : Block {
@@ -27,13 +27,7 @@ class ContinueBlock(
     companion object {
         val BLOCK_NAME = "continueBlock"
     }
-
     override val blockName = BLOCK_NAME
-
-    // Добавление блока в список блоков
-    init {
-        blockList.add(this)
-    }
 
     // Переход к следующей итерации цикла
     override fun runCodeBlock() {

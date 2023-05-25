@@ -33,26 +33,29 @@ import com.example.hits_android.expressionParser.ParsingFunctions
 
 // Блок условия
 class IfBlock(
-    override val key: String,
+    override var key: String,
     override val title: String = "If",
     override val isDragOverLocked: Boolean = false,
     val beginKey: String = "",
     val endKey: String = ""
-) : Block {
+) : Block, HasBodyBlock {
     // Название блока
     companion object {
         val BLOCK_NAME = "IfBlock"
     }
 
     override val blockName = BLOCK_NAME
+    lateinit var funList: List<FunctionClass>
+
+    // Проверка прерывания выполнения блока If
+    private fun isBreaking():Boolean {
+        return blockList[blockIndex].getNameOfBlock() == BreakBlock.BLOCK_NAME ||
+                blockList[blockIndex].getNameOfBlock() == ContinueBlock.BLOCK_NAME ||
+                blockList[blockIndex].getNameOfBlock() == ReturnBlock.BLOCK_NAME
+    }
 
     // Условие
     var condition: String = ""
-
-    // Добавление блока в список блоков
-    init {
-        blockList.add(this)
-    }
 
     // Выполнение блока If
     override fun runCodeBlock() {
@@ -68,11 +71,17 @@ class IfBlock(
         if (conditionState.value == "1") {
             // Выполнение тела if
             while (blockList[blockIndex].getNameOfBlock() != EndBlock.BLOCK_NAME) {
-                if (blockList[blockIndex].getNameOfBlock() == BreakBlock.BLOCK_NAME ||
-                        blockList[blockIndex].getNameOfBlock() == ContinueBlock.BLOCK_NAME) {
+                // Выход из условия при выполнении блоков Break, Сontinue или Return
+                if (isBreaking()) {
                     blockList[blockIndex].runCodeBlock()
                     return
                 }
+
+                if (blockList[blockIndex].getNameOfBlock() == CallFunctionBlock.BLOCK_NAME) {
+                    (blockList[blockIndex] as CallFunctionBlock).setFunctionList(funList)
+                }
+
+                // Выполнение остальных блоков
                 blockList[blockIndex].runCodeBlock()
             }
 
@@ -85,21 +94,20 @@ class IfBlock(
                 skipBlock()
             }
         }
-        // Если условие неверно
+        // Пропуск тела if, если условие неверно
         else {
-            // Пропуск тела if
             skipBlock()
         }
-    }
-
-    // Тестирование блока без UI
-    fun testBlock(cond: String) {
-        condition = cond
     }
 
     // Возвращение названия блока
     override fun getNameOfBlock(): String {
         return blockName
+    }
+
+    // Передача списка доступных функций
+    override fun setFunctionList(functionList:  List<FunctionClass>) {
+        funList = functionList
     }
 
     @Composable

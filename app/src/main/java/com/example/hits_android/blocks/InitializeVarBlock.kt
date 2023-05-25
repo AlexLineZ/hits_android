@@ -1,6 +1,5 @@
 package com.example.hits_android.blocks
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -32,7 +31,7 @@ import com.example.hits_android.expressionParser.*
 
 // Блок создания новой переменной типа Int
 class InitializeVarBlock(
-    override val key: String,
+    override var key: String,
     override val title: String = "InitVar",
     override val isDragOverLocked: Boolean = false
 ) : Block {
@@ -43,17 +42,22 @@ class InitializeVarBlock(
 
     override val blockName = BLOCK_NAME
 
-    // Добавление блока в список блоков
-    init {
-        blockList.add(this)
-    }
-
     var name: String = ""  // Название переменной
     var type: String = "Int"  // Тип переменной
     var value: String = "" // Значение переменной
 
+    // Проверка соответствия типов
+    private fun isNotComparableType(newVariable: Variable): Boolean {
+        return type != newVariable.type &&
+                !(type == Type.DOUBLE && newVariable.type == Type.INT) &&
+                !(type == Type.INT && newVariable.type == Type.DOUBLE) &&
+                !(type == Type.STRING && newVariable.type == Type.CHAR) &&
+                !(type == Type.CHAR && newVariable.type == Type.INT)
+    }
+
     // Создание новой переменной
     override fun runCodeBlock() {
+        // Проверка названия  переменной
         if (!(Regex("^(?!true|false|\\d)\\w+").matches(name))) {
             throw Exception("Некорректное название переменной")
         }
@@ -68,12 +72,7 @@ class InitializeVarBlock(
         val newVariable = expression.parseExpression()!!
 
         // Проверка соответсвтия типов переменной и значения
-        if (type != newVariable.type &&
-            !(type == Type.DOUBLE && newVariable.type == Type.INT) &&
-            !(type == Type.INT && newVariable.type == Type.DOUBLE) &&
-            !(type == Type.STRING && newVariable.type == Type.CHAR) &&
-            !(type == Type.CHAR && newVariable.type == Type.INT)
-        ) {
+        if (isNotComparableType(newVariable)) {
             throw Exception("Переменной типа ${type} присваивается значение типа ${newVariable.type}")
         }
 
@@ -107,13 +106,6 @@ class InitializeVarBlock(
 
         // Выполнение следующего блока
         blockIndex++
-    }
-
-    // Тестирование блоков без UI
-    fun testBlock(n: String, t: String, v: String) {
-        name = n
-        type = t
-        value = v
     }
 
     // Возврат названия блока

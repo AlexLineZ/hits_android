@@ -29,17 +29,14 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.hits_android.expressionParser.LexicalComponents
-import com.example.hits_android.expressionParser.ParsingFunctions
-import com.example.hits_android.expressionParser.scopes
-import com.example.hits_android.expressionParser.variables
+import com.example.hits_android.expressionParser.*
 
 // Блок вызова функции
 class CallFunctionBlock(
-    override val key: String,
+    override var key: String,
     override val title: String = "CallFun",
     override val isDragOverLocked: Boolean = false
-) : Block {
+) : Block, HasBodyBlock {
     // Название блока
     companion object {
         val BLOCK_NAME = "callFunctionBlock"
@@ -47,94 +44,54 @@ class CallFunctionBlock(
 
     override val blockName = BLOCK_NAME
 
-    // Добавление блока в список блоков
-    init {
-        blockList.add(this)
-    }
-
     var functionName = "" // Название вызываемой функции
     var arguments = ""    // Передаваемые аргументы
+    lateinit var funList: List<FunctionClass>
 
     // Вызов функции
     override fun runCodeBlock() {
-        println(arguments)
-
-        // Запоминание места вызова функции
-        val callingIndex = blockIndex
-
-        // Поиск определения функции
-        while (blockList[blockIndex].getNameOfBlock() != FunctionBlock.BLOCK_NAME ||
-            (blockList[blockIndex].getNameOfBlock() == FunctionBlock.BLOCK_NAME &&
-                    (blockList[blockIndex] as FunctionBlock).getFunctionName() != functionName)
-        ) {
-            try {
-                blockIndex--
-
-                if (blockList[blockIndex].getNameOfBlock() == BeginBlock.BLOCK_NAME) {
-                    scopes.destroyScope()
-                } else if (blockList[blockIndex].getNameOfBlock() == EndBlock.BLOCK_NAME) {
-                    scopes.addScope(scopes.getScope())
-                }
-            } catch (e: ArrayIndexOutOfBoundsException) {
-                throw Exception("Функция ${functionName} не была найдена при вызове.")
-            }
-        }
-
-        // Переход к области видимости функции
-        scopes.addScope((blockList[blockIndex] as FunctionBlock).getScope())
-
-        // Передача аргументов
+        // Чтение переданных аргументов
         val argList = arguments.split(",").toMutableList()
+        val varList = mutableListOf<Variable>()
 
         if (arguments == "") {
             argList.removeAt(0)
         }
 
-        if (argList.size != (blockList[blockIndex] as FunctionBlock).getParameters().size) {
-            throw Exception(
-                "Кол-во аргументов при вызове функции ${functionName} не совпадает с кол-вом" +
-                        " её параметров."
-            )
-        }
-
+        // Передача аргументов
         for (i in argList.indices) {
-            //argList[i] = argList[i].replace(" ", "")
             argList[i] += ";"
-
             val expression = ParsingFunctions(LexicalComponents(argList[i]).getTokensFromCode())
-            val args = expression.parseExpression()!!
-
-            if (variables[(blockList[blockIndex] as FunctionBlock).getParameters()[i]]?.type != args.type) {
-                throw Exception("При вызове функции ${functionName} переданы аргументы неподходящих типов.")
-            }
-
-            variables[(blockList[blockIndex] as FunctionBlock).getParameters()[i]]?.value =
-                args.value
+            varList.add(expression.parseExpression()!!)
         }
+
+        val savedList = blockList
+        val savedIndex = blockIndex
+        val savedVariables = variables
 
         // Выполнение тела функции
-        blockIndex += 1
-
-        while (blockList[blockIndex].getNameOfBlock() != EndBlock.BLOCK_NAME) {
-            blockList[blockIndex].runCodeBlock()
+        for (j in 1..funList.size - 1) {
+            if (funList[j].getName() == functionName) {
+                funList[j].setArguments(varList)
+                funList[j].runFunction(funList)
+            }
         }
 
-        // Удаление переменных, которые были созданы внутри тела if
-        blockList[blockIndex].runCodeBlock()
+        blockList = savedList
+        blockIndex = savedIndex
+        variables = savedVariables
 
-        // Возврат на место вызова функции
-        blockIndex = callingIndex + 1
-    }
-
-    // Тестирование без UI
-    fun testBlock(funName: String, args: String) {
-        functionName = funName
-        arguments = args
+        blockIndex++
     }
 
     // Возврат названия блока
     override fun getNameOfBlock(): String {
         return blockName
+    }
+
+    // Передача списка функций
+    override fun setFunctionList(functionList:  List<FunctionClass>) {
+        funList = functionList
     }
 
     @Composable
@@ -199,14 +156,14 @@ class CallFunctionBlock(
     @OptIn(ExperimentalComposeUiApi::class)
     @Composable
     fun ItemFunArgsField(item: CallFunctionBlock) {
-        val textState = remember { mutableStateOf(TextFieldValue(text = item.functionName)) }
+        val textState = remember { mutableStateOf(TextFieldValue(text = item.arguments)) }
         val keyboardController = LocalSoftwareKeyboardController.current
 
         TextField(
             value = textState.value,
             onValueChange = {
                 textState.value = it
-                item.functionName = textState.value.text
+                item.arguments = textState.value.text
             },
             modifier = Modifier.fillMaxWidth(),
             placeholder = { Text(text = "arg1,  arg2,  arg3", maxLines = 1) },
@@ -217,7 +174,7 @@ class CallFunctionBlock(
             ),
             keyboardActions = KeyboardActions(
                 onDone = {
-                    item.functionName = textState.value.text
+                    item.arguments = textState.value.text
                     keyboardController?.hide() // Скрываем клавиатуру
                 }
             )

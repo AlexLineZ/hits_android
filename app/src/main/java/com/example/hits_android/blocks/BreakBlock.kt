@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -19,7 +18,7 @@ import com.example.hits_android.expressionParser.scopes
 
 // Блок выхода из цикла
 class BreakBlock(
-    override val key: String,
+    override var key: String,
     override val title: String = "Break",
     override val isDragOverLocked: Boolean = false
 ) : Block {
@@ -29,11 +28,6 @@ class BreakBlock(
     }
 
     override val blockName = BLOCK_NAME
-
-    // Добавление блока в список блоков
-    init {
-        blockList.add(this)
-    }
 
     // Выход из цикла
     override fun runCodeBlock() {
@@ -53,7 +47,7 @@ class BreakBlock(
         }
 
         // Выход из цикла
-        (blockList[blockIndex] as WhileBlock).testBlock("0;")
+        (blockList[blockIndex] as WhileBlock).changeCondition("0;")
         blockList[++blockIndex].runCodeBlock()
         blockIndex--
         skipBlock()

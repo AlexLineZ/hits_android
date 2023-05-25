@@ -1,6 +1,7 @@
 package com.example.hits_android.blocks
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,15 +29,12 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.hits_android.expressionParser.LexicalComponents
-import com.example.hits_android.expressionParser.ParsingFunctions
-import com.example.hits_android.expressionParser.Type
-import com.example.hits_android.expressionParser.Variable
+import com.example.hits_android.expressionParser.*
 import com.example.hits_android.model.FlowViewModel
 
 // Блок вывода
 class OutputBlock(
-    override val key: String,
+    override var key: String,
     override val title: String = "Print",
     override val isDragOverLocked: Boolean = false
 ) : Block {
@@ -50,42 +48,50 @@ class OutputBlock(
     // Выражение, переданное блоку в качестве параметра
     var expression: String = ""
 
-    // Добавление блока в список блоков
-    init {
-        blockList.add(this)
-    }
-
     // Вывод в консоль
     override fun runCodeBlock() {
-        val exp = ParsingFunctions(LexicalComponents(expression + ";").getTokensFromCode())
-        var result = exp.parseExpression()
+        var outputValue = ""                                // Строка вывода
+        val argList = expression.split(",").toMutableList() // Переданные аргументы
 
-        if (result!!.type.length >= 5 &&
-            result!!.type.slice((result!!.type.length - 5)..(result!!.type.length - 1)) == "Array") {
-            var arr = ""
-
-            for (i in (result.value as Array<*>).indices) {
-                arr += (result.value as Array<*>)[i].toString() + ", "
-            }
-
-            arr = arr.slice(0..arr.length - 3)
-            result = Variable("result", Type.STRING, arr)
+        // Проверка наличия выражения
+        if (expression == "") {
+            throw Exception("В блоке Print нет выражения для вывода")
         }
 
-        when (result) {
-            null -> println("ඞ Empty")
-            else -> {
-                FlowViewModel().setCurrentValue("ඞ ${result.value}\n")
+        // Вывод каждого значения
+        for (i in argList.indices) {
+            argList[i] += ";"
+
+            // Нахождение текущего значения
+            val currentExpression =
+                ParsingFunctions(LexicalComponents(argList[i]).getTokensFromCode())
+            var currentValue = currentExpression.parseExpression()!!
+
+            // Вывод массивов
+            if (currentValue!!.type.length >= 5 &&
+                currentValue!!.type.slice((currentValue!!.type.length - 5)..(currentValue!!.type.length - 1)) == "Array"
+            ) {
+                var arr = ""
+
+                // Разделение элементов массивов запятыми
+                for (i in (currentValue.value as Array<*>).indices) {
+                    arr += (currentValue.value as Array<*>)[i].toString() + ", "
+                }
+
+                // Помещение элементов массивов в фигурные скобки
+                arr = arr.slice(0..arr.length - 3)
+                currentValue = Variable("currentValue", Type.STRING, "{" + arr + "}")
             }
+
+            // Добавление текущего значения к строке вывода
+            outputValue += currentValue.value.toString() + " "
         }
+
+        // Вывод результата
+        FlowViewModel().setCurrentValue("ඞ ${outputValue}\n")
 
         // Выполнение следующего блока
         blockIndex++
-    }
-
-    // Тестирование блока без UI
-    fun testBlock(exp: String) {
-        expression = exp
     }
 
     // Возврат названия блока
@@ -107,22 +113,17 @@ class OutputBlock(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 25.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth(0.25f),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = item.title,
-                        textAlign = TextAlign.Center,
-                        maxLines = 1,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 30.sp
-                    )
-                }
+                Text(
+                    text = item.title,
+                    textAlign = TextAlign.Center,
+                    maxLines = 1,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 30.sp
+                )
                 ItemConditionField(item)
             }
         }

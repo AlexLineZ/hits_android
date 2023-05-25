@@ -30,7 +30,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.burnoutcrew.reorderable.ItemPosition
 
-class ReorderListViewModel(private val sharedPreferences: ThemePreference, private val repository: SaveRepository) : ViewModel() {
+class ReorderListViewModel(
+    private val sharedPreferences: ThemePreference,
+    private val repository: SaveRepository
+) : ViewModel() {
 
     private val savedTheme = sharedPreferences.getSavedTheme()
     private var _theme = MutableStateFlow(savedTheme)
@@ -43,7 +46,7 @@ class ReorderListViewModel(private val sharedPreferences: ThemePreference, priva
 
     private var main: FunctionClass by mutableStateOf(
         FunctionClass(
-            name = "main",
+            functionName = "main",
             id = 0,
             mainBlockTitle = "Start program",
             finishBlockTitle = "End program"
@@ -64,15 +67,15 @@ class ReorderListViewModel(private val sharedPreferences: ThemePreference, priva
             OutputBlock(key = "2"),
             AssignmentBlock(key = "3"),
             IfBlock(key = "4"),
-            WhileBlock(key = "5"),
-            ElseBlock(key = "6"),
-            BreakBlock(key = "7"),
-            ContinueBlock(key = "8"),
-            CallFunctionBlock(key = "9")
+            ElseBlock(key = "5"),
+            WhileBlock(key = "6"),
+            CallFunctionBlock(key = "7"),
+            BreakBlock(key = "8"),
+            ContinueBlock(key = "9")
         )
     )
 
-    var keyCount = 3
+    var keyCount = 10
 
     init {
         blockList.clear()
@@ -179,21 +182,19 @@ class ReorderListViewModel(private val sharedPreferences: ThemePreference, priva
             FunctionClass(id = functionsList.size)
         )
 
-        newFunction.codeBlocksList = newFunction.codeBlocksList.toMutableList()
-            .apply {
-                add(0, FunctionNameBlock(key = "2", isDragOverLocked = true))
-            }
-
-        newFunction.codeBlocksList = newFunction.codeBlocksList.toMutableList()
-            .apply {
-                add(1, FunctionsArgumentBlock(key = "3", isDragOverLocked = true))
-            }
-
         functionsList = functionsList
             .toMutableList()
             .apply {
                 add(functionsList.size, newFunction)
             }
+
+        functionsList[functionsList.size - 1].codeBlocksList =
+            functionsList[functionsList.size - 1].codeBlocksList
+                .toMutableList()
+                .apply {
+                    add(0, FunctionNameBlock(key = "${++keyCount}", isDragOverLocked = true))
+                    add(1, FunctionsArgumentBlock(key = "${++keyCount}", isDragOverLocked = true))
+                }
     }
 
     fun setCurrentTheme(newTheme: Pair<AppThemeBrightness, AppThemeColor>) {

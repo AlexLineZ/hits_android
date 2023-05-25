@@ -2,12 +2,7 @@ package com.example.hits_android.model
 
 import android.os.Looper
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.hits_android.appmodel.data.model.SaveModel
-import com.example.hits_android.appmodel.data.repository.SaveRepository
-import com.example.hits_android.blocks.FunctionClass
-import com.example.hits_android.blocks.blockIndex
-import com.example.hits_android.blocks.blockList
+import com.example.hits_android.blocks.*
 import com.example.hits_android.expressionParser.variables
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,13 +24,23 @@ class FlowViewModel : ViewModel() {
         _output.value = error
     }
 
+    // Проверка наличия блоков begin end после текущего
+    private fun hasBody(): Boolean {
+        return blockList[blockIndex].getNameOfBlock() in listOf<String>(
+            CallFunctionBlock.BLOCK_NAME,
+            ElseBlock.BLOCK_NAME,
+            IfBlock.BLOCK_NAME,
+            WhileBlock.BLOCK_NAME
+        )
+    }
+
     private val _isProgramRunning = MutableStateFlow(false)
     val isProgramRunning: StateFlow<Boolean> = _isProgramRunning.asStateFlow()
 
     private var job: Job? = null
 
     @OptIn(DelicateCoroutinesApi::class)
-    fun startProgram(functionList:  List<FunctionClass>) {
+    fun startProgram(functionList: List<FunctionClass>) {
         blockList = functionList[0].codeBlocksList.toMutableList()
         if (!isProgramRunning.value) {
             job = GlobalScope.launch {
@@ -46,10 +51,14 @@ class FlowViewModel : ViewModel() {
                     getStop.value = false
 
                     while (blockIndex < blockList.size && !getStop.value) {
+                        if (hasBody()) {
+                            (blockList[blockIndex] as HasBodyBlock).setFunctionList(functionList)
+                        }
+
                         blockList[blockIndex].runCodeBlock()
                     }
 
-                    if (!isOutputRunning.value && !getStop.value){
+                    if (!isOutputRunning.value && !getStop.value) {
                         isOutputRunning.value = true
                         android.os.Handler(Looper.getMainLooper()).postDelayed({
                             setCurrentValue("\nПроцесс (${(Math.random() * 10000).toInt()}) завершил работу с кодом 0.")

@@ -32,7 +32,7 @@ import com.example.hits_android.expressionParser.variables
 
 // Блок создания массива
 class InitializeArrayBlock(
-    override val key: String,
+    override var key: String,
     override val title: String = "InitArray",
     override val isDragOverLocked: Boolean = false
 ) : Block {
@@ -43,17 +43,13 @@ class InitializeArrayBlock(
 
     override val blockName = BLOCK_NAME
 
-    // Добавление блока в список блоков
-    init {
-        blockList.add(this)
-    }
-
     var arrayName = ""      // Название массива
     var arrayType = "Int"   // Тип элементов массива
     var arraySize = ""      // Размер массива
 
     // Создание массива
     override fun runCodeBlock() {
+        // Проверка названия массива
         if (!(Regex("^(?!true|false|\\d)\\w+").matches(arrayName))) {
             throw Exception("Некорректное название массива")
         }
@@ -114,13 +110,6 @@ class InitializeArrayBlock(
 
         // Выполнение следующих блоков
         blockIndex++
-    }
-
-    // Тестирование без UI
-    fun testBlock(name: String, type: String, size: String) {
-        arrayName = name
-        arrayType = type
-        arraySize = size
     }
 
     // Возврат названия блока

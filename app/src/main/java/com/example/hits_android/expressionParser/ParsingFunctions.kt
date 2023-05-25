@@ -4,7 +4,7 @@ import com.example.hits_android.scope.Scope
 import com.example.hits_android.blocks.blockIndex
 import java.util.Stack
 
-val variables = mutableMapOf<String, Variable>()
+var variables = mutableMapOf<String, Variable>()
 var scopes = Scope()
 
 class ParsingFunctions(private var tokens: List<Token>) {
@@ -48,6 +48,7 @@ class ParsingFunctions(private var tokens: List<Token>) {
         // Ищем ожидаемый токен начала выражения
         var nowToken = getTokenOrError(
             Name.STRING.value,
+            Name.SPACE.value,
             Name.CHAR.value,
             Name.RAND.value,
             Name.DOUBLE.value,
@@ -79,10 +80,10 @@ class ParsingFunctions(private var tokens: List<Token>) {
                 }
             }
 
-//            // Если текущий токен - это случайное число
-//            else if (nowToken.type.name == Name.RAND) {
-//                resultStack.push((-1000..1000).random())
-//            }
+            // Если текущий токен - это случайное число
+            else if (nowToken.type.name == Name.RAND) {
+                resultStack.push(Variable("", Type.DOUBLE, (-100000..100000).random().toDouble()/100))
+            }
 
             // Если текущий токен - это число типа Int
             else if (nowToken.type.name == Name.NUMBER) {
@@ -224,9 +225,9 @@ class ParsingFunctions(private var tokens: List<Token>) {
                             throw Exception("${nowToken.text} не является многомерным массивом.")
                         }
 
-                        val index = parseExpression()!!
+                        val secondIndex = parseExpression()!!
 
-                        if (index.type != Type.INT) {
+                        if (secondIndex.type != Type.INT) {
                             throw Exception("Некорректный индекс элемента массива")
                         }
 
@@ -235,7 +236,7 @@ class ParsingFunctions(private var tokens: List<Token>) {
                                 Variable(
                                     "",
                                     Type.CHAR,
-                                    (currentVar.value as String)[index.value.toString().toInt()]
+                                    (currentVar.value as String)[secondIndex.value.toString().toInt()]
                                 )
                             )
                         }

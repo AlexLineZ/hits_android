@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 class MainBlock(
-    override val key: String,
+    override var key: String,
     override val title: String = "Main",
     override val isDragOverLocked: Boolean = false
 ) : Block {

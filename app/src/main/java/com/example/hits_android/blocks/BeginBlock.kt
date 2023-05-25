@@ -21,7 +21,7 @@ import com.example.hits_android.expressionParser.variables
 
 // Блок начала блока кода
 class BeginBlock(
-    override val key: String,
+    override var key: String,
     override val title: String = "Begin",
     override val isDragOverLocked: Boolean = false
 ) : Block {
@@ -32,15 +32,10 @@ class BeginBlock(
 
     override val blockName = BLOCK_NAME
 
-    // Добавление блока в список блоков
-    init {
-        blockList.add(this)
-    }
-
     // Вход в новый блок кода
     override fun runCodeBlock() {
         // Создание новой области видимости переменных
-        var currentScope = mutableListOf<String>()
+        val currentScope = mutableListOf<String>()
 
         // Добавление всех переменных в текущую область видимости
         for (varName in variables.keys) {

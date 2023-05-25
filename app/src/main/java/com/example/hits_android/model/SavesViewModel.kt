@@ -16,19 +16,19 @@ class SavesViewModel(
     val state = MutableStateFlow(listOf<SaveInfoModel>())
     val loadedSave = MutableStateFlow<SaveModel>(SaveModel(listOf(), "---", 0))
 
-    fun startWriteSave(saveModel: SaveModel){
+    fun startWriteSave(saveModel: SaveModel) {
         viewModelScope.launch {
             saveRepository.createSave(saveModel)
         }
     }
 
-    fun startGetSave(name: String){
+    fun startGetSave(name: String) {
         viewModelScope.launch() {
             loadedSave.value = saveRepository.getSave(name)
         }
     }
 
-    fun startGetAllSaves(){
+    fun startGetAllSaves() {
         viewModelScope.launch(Dispatchers.Main) {
             state.value = saveRepository.getAllSaves()
         }
