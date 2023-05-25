@@ -28,9 +28,8 @@ val tokensList = mutableMapOf<String, TokenType>(
     "||" to TokenType(Name.OR, Identifiers.BOOLEAN, Regex("^\\|\\|"), 2),
     "!=" to TokenType(Name.NOT_EQUALS, Identifiers.BOOLEAN, Regex("^!="), 4),
     "==" to TokenType(Name.EQUALS, Identifiers.BOOLEAN, Regex("^=="), 4),
-
+    "-" to TokenType(Name.MINUS, Identifiers.OPERATORS, Regex("^-"), 5),
     "+" to TokenType(Name.PLUS, Identifiers.OPERATORS, Regex("^\\+"), 5),
-    "-" to TokenType(Name.MINUS, Identifiers.OPERATORS, Regex("^-(?!\\d)"), 5),
     "*" to TokenType(Name.MULTIPLY, Identifiers.OPERATORS, Regex("^\\*"), 6),
     "/" to TokenType(Name.DIVIDE, Identifiers.OPERATORS, Regex("^/"), 6),
     "%" to TokenType(Name.MOD, Identifiers.OPERATORS, Regex("^%"), 6),
@@ -49,7 +48,6 @@ val tokensList = mutableMapOf<String, TokenType>(
     ),
     "variable" to TokenType(Name.VARIABLE, Identifiers.VARIABLE, Regex("^(?!true|false)\\w+")),
     "bool" to TokenType(Name.BOOL, Identifiers.LITERAL, Regex("^(true)|(false)|0|1")),
-
     ";" to TokenType(Name.SEMICOLON, Identifiers.PUNCTUATION, Regex("^;")),
     ":" to TokenType(Name.COLON, Identifiers.PUNCTUATION, Regex("^:")),
     "," to TokenType(Name.COMMA, Identifiers.PUNCTUATION, Regex("^,")),

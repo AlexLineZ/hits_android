@@ -225,9 +225,9 @@ class ParsingFunctions(private var tokens: List<Token>) {
                             throw Exception("${nowToken.text} не является многомерным массивом.")
                         }
 
-                        val index = parseExpression()!!
+                        val secondIndex = parseExpression()!!
 
-                        if (index.type != Type.INT) {
+                        if (secondIndex.type != Type.INT) {
                             throw Exception("Некорректный индекс элемента массива")
                         }
 
@@ -236,7 +236,7 @@ class ParsingFunctions(private var tokens: List<Token>) {
                                 Variable(
                                     "",
                                     Type.CHAR,
-                                    (currentVar.value as String)[index.value.toString().toInt()]
+                                    (currentVar.value as String)[secondIndex.value.toString().toInt()]
                                 )
                             )
                         }

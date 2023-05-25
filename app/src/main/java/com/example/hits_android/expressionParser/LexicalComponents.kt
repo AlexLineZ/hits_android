@@ -17,6 +17,12 @@ class LexicalComponents(private val expression: String) {
 
         for (type in tokensList.values) {
             val str = Regex(type.regex.pattern).find(expression.substring(index))
+
+            if ((allTokens.size == 0 || allTokens[allTokens.size - 1].type.identifier == Identifiers.OPERATORS) &&
+                type.name == Name.MINUS) {
+                continue
+            }
+
             if (str != null) {
                 return if (str.value == Name.SPACE.value) {
                     index += str.value.length

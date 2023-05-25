@@ -38,7 +38,7 @@ class CallFunctionBlock(
     override var key: String,
     override val title: String = "CallFun",
     override val isDragOverLocked: Boolean = false
-) : Block {
+) : Block, HasBodyBlock {
     // Название блока
     companion object {
         val BLOCK_NAME = "callFunctionBlock"
@@ -72,11 +72,10 @@ class CallFunctionBlock(
         val savedVariables = variables
 
         // Выполнение тела функции
-        for (idk in 1..funList.size - 1) {
-            println(funList[idk].functionName)
-            if (funList[idk].getName() == functionName) {
-                funList[idk].setArguments(varList)
-                funList[idk].runFunction(funList)
+        for (j in 1..funList.size - 1) {
+            if (funList[j].getName() == functionName) {
+                funList[j].setArguments(varList)
+                funList[j].runFunction(funList)
             }
         }
 
@@ -93,7 +92,7 @@ class CallFunctionBlock(
     }
 
     // Передача списка функций
-    fun setFunctionList(functionList:  List<FunctionClass>) {
+    override fun setFunctionList(functionList:  List<FunctionClass>) {
         funList = functionList
     }
 

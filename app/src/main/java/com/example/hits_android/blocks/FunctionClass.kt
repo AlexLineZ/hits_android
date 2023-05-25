@@ -6,9 +6,6 @@ import androidx.compose.runtime.setValue
 import com.example.hits_android.expressionParser.Variable
 import com.example.hits_android.expressionParser.variables
 import com.example.hits_android.model.getStop
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 
 class FunctionClass(
     var functionName: String = "",
@@ -23,7 +20,17 @@ class FunctionClass(
         )
     )
 
-    var varList = mutableListOf<Variable>()
+    // Проверка наличия блоков begin end после текущего
+    private fun hasBody(): Boolean {
+        return blockList[blockIndex].getNameOfBlock() in listOf<String>(
+            CallFunctionBlock.BLOCK_NAME,
+            ElseBlock.BLOCK_NAME,
+            IfBlock.BLOCK_NAME,
+            WhileBlock.BLOCK_NAME
+        )
+    }
+
+    var argsList = mutableListOf<Variable>()
 
     // Выполнение функции
     fun runFunction(functionList:  List<FunctionClass>) {
@@ -32,21 +39,21 @@ class FunctionClass(
         variables.clear()
 
         while (blockIndex < blockList.size && !getStop.value) {
-            if (blockList[blockIndex].getNameOfBlock() == CallFunctionBlock.BLOCK_NAME) {
-                (blockList[blockIndex] as CallFunctionBlock).setFunctionList(functionList)
+            if (hasBody()) {
+                (blockList[blockIndex] as HasBodyBlock).setFunctionList(functionList)
             }
             else if (blockList[blockIndex].getNameOfBlock() == FunctionsArgumentBlock.BLOCK_NAME) {
-                (blockList[blockIndex] as FunctionsArgumentBlock).setArguments(varList)
+                (blockList[blockIndex] as FunctionsArgumentBlock).setArguments(argsList)
             }
             blockList[blockIndex].runCodeBlock()
         }
 
-        varList.clear()
+        argsList.clear()
     }
 
     // Передача аргументов
     fun setArguments(args: MutableList<Variable>) {
-        varList = args
+        argsList = args
     }
 
     fun getName(): String {
