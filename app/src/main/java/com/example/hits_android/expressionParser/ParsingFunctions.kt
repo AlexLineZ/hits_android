@@ -129,7 +129,7 @@ class ParsingFunctions(private var tokens: List<Token>) {
             // Если текущий токен является переменной
             else if (nowToken.type.name == Name.VARIABLE) {
                 // Если переменной нет, то выдать ошибку
-                if (variables[nowToken.text] == null) {
+                if (variables[nowToken.text] == null && !(variables[nowToken.text.split('.')[0]]?.type == Type.STRUCT)) {
                     throw Exception("Переменная ${nowToken.text} не была задана")
                 }
 
@@ -244,6 +244,21 @@ class ParsingFunctions(private var tokens: List<Token>) {
                             throw Exception("Выход за пределы массива")
                         }
                     }
+                }
+
+                // Если следующий токен - поле структуры
+                else if (variables[nowToken.text.split('.')[0]]?.type == Type.STRUCT) {
+                    if (nowToken.text.split('.').count() != 2) {
+                        throw Exception("Некорректное обращение к полю структуры")
+                    }
+
+                    val structName = nowToken.text.split('.')[0]
+                    val fieldName = nowToken.text.split('.')[1]
+
+                    if ((variables[structName]?.value as MutableMap<String, Variable>)[fieldName] == null) {
+                        throw Exception("Обращение к несуществующему полю в структуре")
+                    }
+                    resultStack.push((variables[structName]?.value as MutableMap<String, Variable>)[fieldName])
                 }
 
                 // В иных случаях закинуть значение переменной
