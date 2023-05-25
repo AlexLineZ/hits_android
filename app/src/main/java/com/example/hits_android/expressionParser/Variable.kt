@@ -11,7 +11,8 @@ class Variable(var name: String, var type: String, var value: Any) {
 
     // Проверка возможности привести тип к String
     private fun isCastingToString(otherVariable: Variable): Boolean {
-        return type == Type.STRING && (otherVariable.type == Type.STRING || otherVariable.type == Type.CHAR)
+        return (type == Type.CHAR || type == Type.STRING) &&
+                (otherVariable.type == Type.STRING || otherVariable.type == Type.CHAR)
     }
 
     // Проверка на число

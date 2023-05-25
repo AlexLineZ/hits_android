@@ -43,12 +43,12 @@ class AssignmentBlock(
     var newValue: String = ""     // Новое значение изменяемой переменной
 
     // Проверка возможности перевода типов переменных
-    private fun isNotComparableType(newVariable: Variable): Boolean {
-        return variables[variableName]?.type != newVariable.type &&
-                !(variables[variableName]?.type == Type.DOUBLE && newVariable.type == Type.INT) &&
-                !(variables[variableName]?.type == Type.INT && newVariable.type == Type.DOUBLE) &&
-                !(variables[variableName]?.type == Type.STRING && newVariable.type == Type.CHAR) &&
-                !(variables[variableName]?.type == Type.CHAR && newVariable.type == Type.INT)
+    private fun isNotComparableType(oldVariabel: Variable?, newVariable: Variable): Boolean {
+        return oldVariabel?.type != newVariable.type &&
+                !(oldVariabel?.type == Type.DOUBLE && newVariable.type == Type.INT) &&
+                !(oldVariabel?.type == Type.INT && newVariable.type == Type.DOUBLE) &&
+                !(oldVariabel?.type == Type.STRING && newVariable.type == Type.CHAR) &&
+                !(oldVariabel?.type == Type.CHAR && newVariable.type == Type.INT)
     }
 
     // Проверка возможности записать в массив новое значение элемента
@@ -67,7 +67,7 @@ class AssignmentBlock(
         val newVariable = expression.parseExpression()!!
 
         // Проверка соответсвтия типов переменной и значения
-        if (isNotComparableType(newVariable)) {
+        if (isNotComparableType(variables[variableName], newVariable)) {
             throw Exception("Переменной типа ${variables[variableName]?.type} присваивается значение типа ${newVariable.type}")
         }
 
@@ -113,9 +113,9 @@ class AssignmentBlock(
         else {
             val currentField = (variables[structName]?.value as MutableMap<String, Variable>)[fieldName]
             // Проверка соответсвтия типов переменной и значения
-//            if (isNotComparableType(newVariable)) {
-//                throw Exception("Переменной типа ${variables[variableName]?.type} присваивается значение типа ${newVariable.type}")
-//            }
+            if (isNotComparableType(currentField, newVariable)) {
+                throw Exception("Переменной типа ${currentField?.type} присваивается значение типа ${newVariable.type}")
+            }
 
             // Присвоение переменной типа Char значения типа Int
             if (currentField?.type == Type.CHAR && newVariable.type == Type.INT) {
