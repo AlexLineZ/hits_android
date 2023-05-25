@@ -34,8 +34,6 @@ import com.example.hits_android.expressionParser.ParsingFunctions
 
 // Блок цикла while
 class WhileBlock(
-    override var previousID: Int = -1,
-    override var nextID: Int = -1,
     override val key: String,
     override val title: String = "While",
     override val isDragOverLocked: Boolean = false,

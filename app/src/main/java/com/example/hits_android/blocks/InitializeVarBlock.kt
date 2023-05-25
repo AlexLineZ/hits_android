@@ -32,8 +32,6 @@ import com.example.hits_android.expressionParser.*
 
 // Блок создания новой переменной типа Int
 class InitializeVarBlock(
-    override var previousID: Int = -1,
-    override var nextID: Int = -1,
     override val key: String,
     override val title: String = "InitVar",
     override val isDragOverLocked: Boolean = false

@@ -7,8 +7,6 @@ import com.example.hits_android.expressionParser.variables
 
 // Блок определения функции
 class FunctionBlock(
-    override var previousID: Int = -1,
-    override var nextID: Int = -1,
     override val key: String,
     override val title: String = "Function",
     override val isDragOverLocked: Boolean = true

@@ -6,8 +6,6 @@ import androidx.compose.ui.unit.dp
 
 interface Block {
     val blockName: String
-    var previousID: Int
-    var nextID: Int
     val key: String
     val title: String
     val isDragOverLocked: Boolean

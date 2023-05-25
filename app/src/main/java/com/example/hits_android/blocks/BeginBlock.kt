@@ -21,8 +21,6 @@ import com.example.hits_android.expressionParser.variables
 
 // Блок начала блока кода
 class BeginBlock(
-    override var previousID: Int = -1,
-    override var nextID: Int = -1,
     override val key: String,
     override val title: String = "Begin",
     override val isDragOverLocked: Boolean = false

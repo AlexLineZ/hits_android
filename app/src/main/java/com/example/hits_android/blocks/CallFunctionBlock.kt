@@ -36,8 +36,6 @@ import com.example.hits_android.expressionParser.variables
 
 // Блок вызова функции
 class CallFunctionBlock(
-    override var previousID: Int = -1,
-    override var nextID: Int = -1,
     override val key: String,
     override val title: String = "CallFun",
     override val isDragOverLocked: Boolean = false

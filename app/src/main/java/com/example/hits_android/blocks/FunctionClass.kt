@@ -22,8 +22,9 @@ class FunctionClass(
 
     private var _functionName = MutableStateFlow(name)
     val functionName: StateFlow<String> = _functionName.asStateFlow()
-
+    var funNameJSON: String = name
     fun setCurrentScreenId(newName: String) {
         _functionName.value = newName
+        funNameJSON = newName
     }
 }
