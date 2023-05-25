@@ -246,6 +246,11 @@ class ParsingFunctions(private var tokens: List<Token>) {
                     }
                 }
 
+                // Если следующий токен - структура
+                else if (variables[nowToken.text]?.type == Type.STRUCT) {
+                    resultStack.push(variables[nowToken.text])
+                }
+
                 // Если следующий токен - поле структуры
                 else if (variables[nowToken.text.split('.')[0]]?.type == Type.STRUCT) {
                     if (nowToken.text.split('.').count() != 2) {
@@ -371,5 +376,4 @@ class ParsingFunctions(private var tokens: List<Token>) {
             return tokens[index++]
         }
     }
-
 }

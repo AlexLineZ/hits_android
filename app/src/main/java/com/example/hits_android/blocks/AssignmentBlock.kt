@@ -88,7 +88,11 @@ class AssignmentBlock(
         val newVariable = expression.parseExpression()!!
 
         if (name.split('.').count() != 2) {
-            throw Exception("Некорректное обращение к полю структуры.")
+            throw Exception("Некорректное обращение к полю структуры")
+        }
+
+        if (newVariable.type == Type.STRUCT) {
+            throw Exception("Присвоение полю структуры другой структуры")
         }
 
         val structName = name.split('.')[0]
