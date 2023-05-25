@@ -63,16 +63,5 @@ class SaveRepository(
             file.delete()
         }
     }
-
-    suspend fun updateSave(save: SaveModel) {
-        withContext(Dispatchers.IO) {
-            val saveInfoEntity = SaveInfoEntity(
-                name = UUID.fromString(save.name),
-                date = save.date
-            )
-            database.dao.updateSave(saveInfoEntity)
-            fileStorage.saveFunctionListToJson(save.functionsList, save.name)
-        }
-    }
 }
 

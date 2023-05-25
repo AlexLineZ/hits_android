@@ -1,6 +1,7 @@
 package com.example.hits_android
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -28,6 +29,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hits_android.appmodel.data.model.SaveModel
+import com.example.hits_android.blocks.Block
+import com.example.hits_android.blocks.FunctionClass
 import com.example.hits_android.model.ReorderListViewModel
 import com.example.hits_android.model.SavesViewModel
 import com.example.hits_android.ui.theme.AppThemeBrightness
@@ -70,9 +73,15 @@ fun Settings(vm: ReorderListViewModel, context: Context) {
 @Composable
 fun DropdownMenu(svm: SavesViewModel, vm: ReorderListViewModel) {
     val saves = svm.state.collectAsState().value
-    val loadedSave = svm.loadedSave.collectAsState().value
-    vm.functionsList = if (loadedSave.name == "---") vm.functionsList else loadedSave.functionsList
-    val selectedType = remember { mutableStateOf<String?>(null) }
+    var loadedSave = svm.loadedSave.collectAsState().value
+    if (loadedSave.name != "---") {
+        vm.parseToFunctionList(loadedSave.functionsList)
+
+        Log.d("a", "${loadedSave.functionsList}")
+        loadedSave.name = "---"
+    }
+
+
     val expanded = remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
@@ -98,7 +107,6 @@ fun DropdownMenu(svm: SavesViewModel, vm: ReorderListViewModel) {
         saves.forEach { name ->
             DropdownMenuItem(
                 onClick = {
-                    selectedType.value = name.name
                     svm.startGetSave(name.name)
                     expanded.value = false
                 },
@@ -107,7 +115,6 @@ fun DropdownMenu(svm: SavesViewModel, vm: ReorderListViewModel) {
         }
     }
 }
-
 
 @Composable
 fun SavesBuilderComposable(vm: ReorderListViewModel) {
@@ -132,8 +139,9 @@ fun SavesBuilderComposable(vm: ReorderListViewModel) {
                 .clip(shape = RoundedCornerShape(24.dp))
                 .background(MaterialTheme.colorScheme.surfaceVariant)
                 .clickable {
+                    val customList = createFunctionListToJSON(vm.functionsList)
                     val saveModel = SaveModel(
-                        functionsList = vm.functionsList,
+                        functionsList = customList,
                         name = UUID
                             .randomUUID()
                             .toString(),
@@ -162,6 +170,19 @@ fun SavesBuilderComposable(vm: ReorderListViewModel) {
             DropdownMenu(svm, vm)
         }
     }
+}
+
+fun createFunctionListToJSON(functionList: List<FunctionClass>): List<List<Block>> {
+    var customMutableList: MutableList<List<Block>> = mutableListOf()
+
+    functionList.forEach {
+        customMutableList = customMutableList.apply {
+            add(it.codeBlocksList)
+        }
+    }
+
+    val customList: List<List<Block>> = customMutableList
+    return customList
 }
 
 

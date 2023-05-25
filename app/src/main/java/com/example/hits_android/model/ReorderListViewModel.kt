@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.example.hits_android.appmodel.data.filestorage.BlockImpl
 import com.example.hits_android.appmodel.data.repository.SaveRepository
 import com.example.hits_android.blocks.AssignmentBlock
 import com.example.hits_android.blocks.BeginBlock
@@ -25,6 +26,7 @@ import com.example.hits_android.blocks.blockList
 import com.example.hits_android.ui.theme.AppThemeBrightness
 import com.example.hits_android.ui.theme.AppThemeColor
 import com.example.hits_android.ui.theme.ThemePreference
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -208,6 +210,20 @@ class ReorderListViewModel(
     fun setCurrentScreenId(newId: Int) {
         _currentScreenId.value = newId
     }
+
+    fun parseToFunctionList(savedList: List<List<Block>>) {
+
+        var newFunctionList: MutableList<FunctionClass> = mutableListOf()
+
+        var id = 0
+        savedList.forEach {
+            val newFunction = FunctionClass(id = id)
+            newFunction.codeBlocksList = it
+            newFunctionList = newFunctionList.apply {
+                add(id, newFunction)
+            }
+            id++
+        }
+        functionsList = newFunctionList
+    }
 }
-
-
