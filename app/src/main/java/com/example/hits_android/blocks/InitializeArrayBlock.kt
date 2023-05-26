@@ -108,6 +108,15 @@ class InitializeArrayBlock(
             )
         }
 
+        // Создание массива с элементами типа Struct
+        else if (arrayType == Type.STRUCT) {
+            variables[arrayName] = Variable(
+                arrayName,
+                Type.STRUCT + "Array",
+                Array(size.value.toString().toInt()) {mutableMapOf<String, Variable>()}
+            )
+        }
+
         // Выполнение следующих блоков
         blockIndex++
     }
@@ -150,7 +159,7 @@ class InitializeArrayBlock(
 
     @Composable
     fun DropdownMenu(item: InitializeArrayBlock) {
-        val types = listOf("Int", "Double", "Bool", "String", "Char")
+        val types = listOf("Int", "Double", "Bool", "String", "Char", "Struct")
         val selectedType = remember { mutableStateOf<String?>(null) }
         val expanded = remember { mutableStateOf(false) }
         Box(
