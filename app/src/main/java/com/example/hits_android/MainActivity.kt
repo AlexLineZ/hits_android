@@ -59,7 +59,6 @@ class MainActivity : ComponentActivity() {
             )
         )
 
-
         if (isCreated) {
             MainScreen(viewModel, context)
         } else {

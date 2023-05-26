@@ -59,6 +59,9 @@ class FlowViewModel : ViewModel() {
 
     @OptIn(DelicateCoroutinesApi::class)
     fun startProgram(functionList: List<FunctionClass>) {
+        // Проверка последовательности блоков Begin и End
+        checkBeginEnd(functionList)
+
         blockList = functionList[0].codeBlocksList.toMutableList()
         if (!isProgramRunning.value) {
             job = GlobalScope.launch {
@@ -68,9 +71,6 @@ class FlowViewModel : ViewModel() {
                     _output.value = ""
                     getStop.value = false
                     newInput.value = ""
-
-                    // Проверка последовательности блоков Begin и End
-                    checkBeginEnd(functionList)
 
                     while (blockIndex < blockList.size && !getStop.value) {
                         if (hasBody()) {
