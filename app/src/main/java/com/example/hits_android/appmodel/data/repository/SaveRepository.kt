@@ -26,7 +26,8 @@ class SaveRepository(
             save = SaveModel(
                 name = saveInfo.name.toString(),
                 date = saveInfo.date,
-                functionsList = fileStorage.loadFunctionListFromJson(saveInfo.name.toString())
+                functionsList = fileStorage.loadFunctionListFromJson(saveInfo.name.toString()),
+                realName = saveInfo.realName
             )
         }
         return save
@@ -38,7 +39,8 @@ class SaveRepository(
         withContext(Dispatchers.IO){
             saveList = database.dao.getAllSaves().map { SaveInfoModel(
                 name = it.name.toString(),
-                date = it.date
+                date = it.date,
+                realName = it.realName
             ) }
         }
 
@@ -49,7 +51,8 @@ class SaveRepository(
         withContext(Dispatchers.IO) {
             val saveInfoEntity = SaveInfoEntity(
                 name = UUID.fromString(save.name),
-                date = save.date
+                date = save.date,
+                realName = save.realName
             )
             database.dao.createSave(saveInfoEntity)
             fileStorage.saveFunctionListToJson(save.functionsList, save.name)

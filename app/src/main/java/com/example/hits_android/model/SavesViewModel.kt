@@ -14,7 +14,7 @@ class SavesViewModel(
 ) : ViewModel() {
 
     val state = MutableStateFlow(listOf<SaveInfoModel>())
-    val loadedSave = MutableStateFlow<SaveModel>(SaveModel(listOf(), "---", 0))
+    val loadedSave = MutableStateFlow<SaveModel>(SaveModel(listOf(), "---", 0, "---"))
 
     fun startWriteSave(saveModel: SaveModel) {
         viewModelScope.launch {
@@ -34,4 +34,9 @@ class SavesViewModel(
         }
     }
 
+    fun startDeleteSave(name: String) {
+        viewModelScope.launch(Dispatchers.Main) {
+            saveRepository.deleteSave(name)
+        }
+    }
 }

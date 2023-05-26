@@ -8,5 +8,6 @@ import java.util.UUID
 data class SaveInfoEntity (
     @PrimaryKey
     val name: UUID = UUID.randomUUID(),
-    val date: Long
+    val date: Long,
+    val realName: String
 )
