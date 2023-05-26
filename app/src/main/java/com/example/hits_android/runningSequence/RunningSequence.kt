@@ -18,7 +18,7 @@ fun checkBeginEnd(functionList:  List<FunctionClass>) {
                         blockList[blockInd].getNameOfBlock() == ElseBlock.BLOCK_NAME ||
                         blockList[blockInd].getNameOfBlock() == WhileBlock.BLOCK_NAME) &&
                 (blockInd == blockList.size ||
-                        blockList[blockInd].getNameOfBlock() != BeginBlock.BLOCK_NAME)){
+                        blockList[blockInd + 1].getNameOfBlock() != BeginBlock.BLOCK_NAME)){
                 throw Exception("У блока ${blockList[blockInd].getNameOfBlock()} нет тела")
             }
 
