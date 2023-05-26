@@ -61,23 +61,23 @@ fun toBlockImpl(block: Block): BlockImpl {
             newBlock.arguments = block.arguments
         }
 
-        "ElseBlock" -> {
+        "elseBlock" -> {
             block as ElseBlock
             newBlock.beginKey = block.beginKey
             newBlock.endKey = block.endKey
         }
 
-        "FunctionNameBlock" -> {
+        "functionNameBlock" -> {
             block as FunctionNameBlock
             newBlock.functionName = block.functionName
         }
 
-        "FunctionsArgumentBlock" -> {
+        "functionsArgumentBlock" -> {
             block as FunctionsArgumentBlock
             newBlock.parameters = block.parameters
         }
 
-        "IfBlock" -> {
+        "ifBlock" -> {
             block as IfBlock
             newBlock.beginKey = block.beginKey
             newBlock.endKey = block.endKey
@@ -103,7 +103,7 @@ fun toBlockImpl(block: Block): BlockImpl {
             newBlock.expression = block.expression
         }
 
-        "WhileBlock" -> {
+        "whileBlock" -> {
             block as WhileBlock
             newBlock.beginKey = block.beginKey
             newBlock.endKey = block.endKey

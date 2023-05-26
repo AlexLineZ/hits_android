@@ -38,7 +38,7 @@ class FunctionNameBlock(
 
     // Название блока
     companion object {
-        const val BLOCK_NAME = "FunctionNameBlock"
+        const val BLOCK_NAME = "functionNameBlock"
     }
 
     override val blockName = BLOCK_NAME

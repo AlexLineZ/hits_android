@@ -97,7 +97,7 @@ class ReorderListViewModel(
                                 ContinueBlock(key = "${++keyCount}")
                             }
 
-                            "ElseBlock" -> {
+                            "elseBlock" -> {
                                 ElseBlock(
                                     key = "${++keyCount}",
                                     beginKey = "${keyCount + 1}",
@@ -105,7 +105,7 @@ class ReorderListViewModel(
                                 )
                             }
 
-                            "IfBlock" -> {
+                            "ifBlock" -> {
                                 IfBlock(
                                     key = "${++keyCount}",
                                     beginKey = "${keyCount + 1}",
@@ -129,7 +129,7 @@ class ReorderListViewModel(
                                 OutputBlock(key = "${++keyCount}")
                             }
 
-                            "WhileBlock" -> {
+                            "whileBlock" -> {
                                 WhileBlock(
                                     key = "${++keyCount}",
                                     beginKey = "${keyCount + 1}",
@@ -150,9 +150,9 @@ class ReorderListViewModel(
                             }
                         }
                     )
-                    if (item.blockName == "ElseBlock" ||
-                        item.blockName == "IfBlock" ||
-                        item.blockName == "WhileBlock"
+                    if (item.blockName == "elseBlock" ||
+                        item.blockName == "ifBlock" ||
+                        item.blockName == "whileBlock"
                     ) {
                         add(
                             functionsList[currentScreenId.value].codeBlocksList.size,
@@ -281,7 +281,7 @@ class ReorderListViewModel(
                 )
             }
 
-            "ElseBlock" -> {
+            "elseBlock" -> {
                 return ElseBlock(
                     key = block.key,
                     title = block.title,
@@ -307,7 +307,7 @@ class ReorderListViewModel(
                 )
             }
 
-            "FunctionNameBlock" -> {
+            "functionNameBlock" -> {
                 val newBlock = FunctionNameBlock(
                     key = block.key,
                     title = block.title,
@@ -318,7 +318,7 @@ class ReorderListViewModel(
                 return newBlock
             }
 
-            "FunctionsArgumentBlock" -> {
+            "functionsArgumentBlock" -> {
                 val newBlock = FunctionsArgumentBlock(
                     key = block.key,
                     title = block.title,
@@ -329,7 +329,7 @@ class ReorderListViewModel(
                 return newBlock
             }
 
-            "IfBlock" -> {
+            "ifBlock" -> {
                 val newBlock = IfBlock(
                     key = block.key,
                     title = block.title,
@@ -395,7 +395,7 @@ class ReorderListViewModel(
                 )
             }
 
-            "WhileBlock" -> {
+            "whileBlock" -> {
                 val newBlock = WhileBlock(
                     key = block.key,
                     title = block.title,

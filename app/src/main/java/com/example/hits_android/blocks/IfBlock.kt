@@ -41,7 +41,7 @@ class IfBlock(
 ) : Block, HasBodyBlock {
     // Название блока
     companion object {
-        const val BLOCK_NAME = "IfBlock"
+        const val BLOCK_NAME = "ifBlock"
     }
 
     override val blockName = BLOCK_NAME

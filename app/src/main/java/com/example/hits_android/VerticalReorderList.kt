@@ -67,29 +67,29 @@ fun VerticalReorderList(
                             || it == DismissValue.DismissedToStart
                         ) {
                             if (item.isDragOverLocked
-                                && item.blockName != "FunctionNameBlock"
-                                && item.blockName != "FunctionsArgumentBlock"
+                                && item.blockName != "functionNameBlock"
+                                && item.blockName != "functionsArgumentBlock"
                             ) {
                                 vm.functionsList[id].codeBlocksList =
                                     vm.functionsList[id].codeBlocksList.toMutableList().apply {
                                         removeIf {
                                             it.key != "0"
                                                     && it.key != "1"
-                                                    && it.blockName != "FunctionNameBlock"
-                                                    && it.blockName != "FunctionsArgumentBlock"
+                                                    && it.blockName != "functionNameBlock"
+                                                    && it.blockName != "functionsArgumentBlock"
                                         }
                                     }
                                 return@rememberDismissState false
                             } else if (item.blockName == "endBlock"
                                 || item.blockName == "beginBlock"
-                                || item.blockName == "FunctionNameBlock"
-                                || item.blockName == "FunctionsArgumentBlock"
+                                || item.blockName == "functionNameBlock"
+                                || item.blockName == "functionsArgumentBlock"
                             ) {
                                 return@rememberDismissState false
                             } else {
-                                if (item.blockName == "ElseBlock"
-                                    || item.blockName == "IfBlock"
-                                    || item.blockName == "WhileBlock"
+                                if (item.blockName == "elseBlock"
+                                    || item.blockName == "ifBlock"
+                                    || item.blockName == "whileBlock"
                                 ) {
                                     RemoveDependentBlocks(item, vm, id)
                                 } else {
@@ -205,7 +205,7 @@ fun VerticalReorderList(
 
 fun RemoveDependentBlocks(item: Block, vm: ReorderListViewModel, id: Int) {
     when (item.blockName) {
-        "ElseBlock" -> {
+        "elseBlock" -> {
             item as ElseBlock
             vm.functionsList[id].codeBlocksList =
                 vm.functionsList[id].codeBlocksList.toMutableList().apply {
@@ -217,7 +217,7 @@ fun RemoveDependentBlocks(item: Block, vm: ReorderListViewModel, id: Int) {
                 }
         }
 
-        "IfBlock" -> {
+        "ifBlock" -> {
             item as IfBlock
             vm.functionsList[id].codeBlocksList =
                 vm.functionsList[id].codeBlocksList.toMutableList().apply {
@@ -229,7 +229,7 @@ fun RemoveDependentBlocks(item: Block, vm: ReorderListViewModel, id: Int) {
                 }
         }
 
-        "WhileBlock" -> {
+        "whileBlock" -> {
             item as WhileBlock
             vm.functionsList[id].codeBlocksList =
                 vm.functionsList[id].codeBlocksList.toMutableList().apply {
