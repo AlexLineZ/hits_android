@@ -58,7 +58,7 @@ class ReorderListViewModel(
         )
     )
 
-    private var keyCount = 10
+    private var keyCount = 100
 
     init {
         blockList.clear()
