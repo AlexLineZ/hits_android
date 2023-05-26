@@ -50,6 +50,9 @@ class FlowViewModel : ViewModel() {
                     _output.value = ""
                     getStop.value = false
 
+                    // Проверка последовательности блоков Begin и End
+                    checkBeginEnd(functionList)
+
                     while (blockIndex < blockList.size && !getStop.value) {
                         if (hasBody()) {
                             (blockList[blockIndex] as HasBodyBlock).setFunctionList(functionList)
