@@ -40,7 +40,7 @@ class FunctionsArgumentBlock(
 
     // Название блока
     companion object {
-        const val BLOCK_NAME = "FunctionsArgumentBlock"
+        const val BLOCK_NAME = "functionsArgumentBlock"
     }
 
     override val blockName = BLOCK_NAME
