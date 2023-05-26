@@ -165,6 +165,9 @@ class ParsingFunctions(private var tokens: List<Token>) {
                     resultStack.push((curVar.value as MutableMap<String, Variable>)[fieldName])
                 }
                 else {
+                    if (variables[nowToken.text] == null) {
+                        throw Exception("Переменная ${nowToken.text} не была задана")
+                    }
                     resultStack.push(variables[nowToken.text])
                 }
 

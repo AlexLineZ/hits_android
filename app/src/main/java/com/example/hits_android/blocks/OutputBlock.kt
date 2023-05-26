@@ -48,6 +48,50 @@ class OutputBlock(
     // Выражение, переданное блоку в качестве параметра
     var expression: String = ""
 
+    // Форматирование выывода массива
+    private fun parseArray(currentVar: Variable?): String {
+        var arr = ""
+
+        // Разделение элементов массивов запятыми
+        for (i in (currentVar?.value as Array<*>).indices) {
+            if (currentVar?.type == Type.STRUCT + "Array") {
+                arr += parseStruct(Variable("", Type.STRUCT,
+                    (currentVar.value as Array<MutableMap<String, Variable>>)[i])) + ", "
+            }
+            else {
+                arr += (currentVar.value as Array<*>)[i].toString() + ", "
+            }
+        }
+
+        // Помещение элементов массивов в фигурные скобки
+        arr = arr.slice(0..arr.length - 3)
+        return "{" + arr + "}"
+    }
+
+    // Форматирование вывода структуры
+    private fun parseStruct(currentVar: Variable): String {
+        var text = "{"
+        val struct = currentVar.value as MutableMap<String, Variable>
+
+        if (struct.keys.size == 0) {
+            return "{}"
+        }
+
+        for (key in struct.keys) {
+            if (struct[key]!!.type.length >= 5 &&
+                struct[key]!!.type.slice((struct[key]!!.type.length - 5)..(struct[key]!!.type.length - 1)) == "Array") {
+                text += key.toString() + ": " + parseArray(struct[key]) + ", "
+            }
+            else {
+                text += key.toString() + ": " + struct[key]?.value.toString() + ", "
+            }
+        }
+
+        text = text.slice(0..text.length - 3)
+
+        return text + "}"
+    }
+
     // Вывод в консоль
     override fun runCodeBlock() {
         var outputValue = ""                                // Строка вывода
@@ -67,20 +111,17 @@ class OutputBlock(
                 ParsingFunctions(LexicalComponents(argList[i]).getTokensFromCode())
             var currentValue = currentExpression.parseExpression()!!
 
-            // Вывод массивов
+            // Вывод структуры
+            if (currentValue.type == Type.STRUCT) {
+                val text = parseStruct(currentValue)
+                currentValue = Variable("", Type.STRING, text)
+            }
+
+            // Вывод массива
             if (currentValue!!.type.length >= 5 &&
                 currentValue!!.type.slice((currentValue!!.type.length - 5)..(currentValue!!.type.length - 1)) == "Array"
             ) {
-                var arr = ""
-
-                // Разделение элементов массивов запятыми
-                for (i in (currentValue.value as Array<*>).indices) {
-                    arr += (currentValue.value as Array<*>)[i].toString() + ", "
-                }
-
-                // Помещение элементов массивов в фигурные скобки
-                arr = arr.slice(0..arr.length - 3)
-                currentValue = Variable("currentValue", Type.STRING, "{" + arr + "}")
+                currentValue = Variable("currentValue", Type.STRING, parseArray(currentValue))
             }
 
             // Добавление текущего значения к строке вывода
