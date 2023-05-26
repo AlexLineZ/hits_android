@@ -354,7 +354,7 @@ class ReorderListViewModel(
                 return newBlock
             }
 
-            "InitializeArrayBlock" -> {
+            "initArrayBlock" -> {
                 val newBlock = InitializeArrayBlock(
                     key = block.key,
                     title = block.title,
@@ -421,6 +421,10 @@ class ReorderListViewModel(
                 return newBlock
             }
         }
-        return block
+        return AssignmentBlock(
+            key = block.key,
+            title = block.title,
+            isDragOverLocked = block.isDragOverLocked
+        )
     }
 }
