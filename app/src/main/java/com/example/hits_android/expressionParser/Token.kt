@@ -46,7 +46,7 @@ val tokensList = mutableMapOf<String, TokenType>(
         Identifiers.VARIABLE,
         Regex("^\"[A-Za-z0-9а-яА-Я!#\$%&'()*+,-./:;\\\\\\\\<=>?@\\\\[\\\\]^_`{|}~ ]*\"")
     ),
-    "variable" to TokenType(Name.VARIABLE, Identifiers.VARIABLE, Regex("^(?!true|false)\\w+")),
+    "variable" to TokenType(Name.VARIABLE, Identifiers.VARIABLE, Regex("^(?!true|false)[\\w\\.]+")),
     "bool" to TokenType(Name.BOOL, Identifiers.LITERAL, Regex("^(true)|(false)|0|1")),
     ";" to TokenType(Name.SEMICOLON, Identifiers.PUNCTUATION, Regex("^;")),
     ":" to TokenType(Name.COLON, Identifiers.PUNCTUATION, Regex("^:")),

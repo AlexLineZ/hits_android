@@ -41,12 +41,12 @@ class AssignmentBlock(
     var newValue: String = ""     // Новое значение изменяемой переменной
 
     // Проверка возможности перевода типов переменных
-    private fun isNotComparableType(newVariable: Variable): Boolean {
-        return variables[variableName]?.type != newVariable.type &&
-                !(variables[variableName]?.type == Type.DOUBLE && newVariable.type == Type.INT) &&
-                !(variables[variableName]?.type == Type.INT && newVariable.type == Type.DOUBLE) &&
-                !(variables[variableName]?.type == Type.STRING && newVariable.type == Type.CHAR) &&
-                !(variables[variableName]?.type == Type.CHAR && newVariable.type == Type.INT)
+    private fun isNotComparableType(oldVariabel: Variable?, newVariable: Variable): Boolean {
+        return oldVariabel?.type != newVariable.type &&
+                !(oldVariabel?.type == Type.DOUBLE && newVariable.type == Type.INT) &&
+                !(oldVariabel?.type == Type.INT && newVariable.type == Type.DOUBLE) &&
+                !(oldVariabel?.type == Type.STRING && newVariable.type == Type.CHAR) &&
+                !(oldVariabel?.type == Type.CHAR && newVariable.type == Type.INT)
     }
 
     // Проверка возможности записать в массив новое значение элемента
@@ -57,6 +57,143 @@ class AssignmentBlock(
                 !(variables[arrName]?.type == Type.STRING + "Array" && newVariable.type == Type.CHAR) &&
                 !(variables[arrName]?.type == Type.CHAR + "Array" && newVariable.type == Type.INT) &&
                 !(newVariable.type == Type.CHAR && variables[arrName]?.type == Type.STRING)
+    }
+
+    // Присвоение значения переменной
+    private fun assignVariable() {
+        val expression = ParsingFunctions(LexicalComponents(newValue + ";").getTokensFromCode())
+        val newVariable = expression.parseExpression()!!
+
+        // Проверка соответсвтия типов переменной и значения
+        if (isNotComparableType(variables[variableName], newVariable)) {
+            throw Exception("Переменной типа ${variables[variableName]?.type} присваивается значение типа ${newVariable.type}")
+        }
+
+        // Присвоение переменной типа Char значения типа Int
+        if (variables[variableName]?.type == Type.CHAR && newVariable.type == Type.INT) {
+            variables[variableName] = Variable(newVariable.name, Type.CHAR, newVariable.value.toString().toInt().toChar().toString())
+        }
+
+        // Остальные присвоения
+        else {
+            variables[variableName] = newVariable
+        }
+    }
+
+    // Присвоение значения объекту
+    private fun assignStruct(name: String) {
+        val expression = ParsingFunctions(LexicalComponents(newValue + ";").getTokensFromCode())
+        val newVariable = expression.parseExpression()!!
+
+        if (name.split('.').count() != 2) {
+            throw Exception("Некорректное обращение к полю структуры")
+        }
+
+        if (newVariable.type == Type.STRUCT) {
+            throw Exception("Присвоение полю структуры другой структуры")
+        }
+
+        val structName = name.split('.')[0]
+        val fieldName = name.split('.')[1]
+
+        // Проверка существования поля
+        var isNewField = true
+
+        for (key in (variables[structName]?.value as MutableMap<String, Variable>).keys) {
+            if (fieldName == key) {
+                isNewField = false
+                break
+            }
+        }
+
+        // Создание нового поля
+        if (isNewField) {
+            (variables[structName]?.value as MutableMap<String, Variable>)[fieldName] = newVariable
+        }
+
+        // Присвоение значения уже существующему полю
+        else {
+            val currentField = (variables[structName]?.value as MutableMap<String, Variable>)[fieldName]
+            // Проверка соответсвтия типов переменной и значения
+            if (isNotComparableType(currentField, newVariable)) {
+                throw Exception("Переменной типа ${currentField?.type} присваивается значение типа ${newVariable.type}")
+            }
+
+            // Присвоение переменной типа Char значения типа Int
+            if (currentField?.type == Type.CHAR && newVariable.type == Type.INT) {
+                (variables[structName]?.value as MutableMap<String, Variable>)[fieldName] = Variable(
+                    newVariable.name,
+                    Type.CHAR,
+                    newVariable.value.toString().toInt().toChar().toString()
+                )
+            }
+            // Остальные присвоения
+            else {
+                (variables[structName]?.value as MutableMap<String, Variable>)[fieldName] = newVariable
+            }
+        }
+    }
+
+    // Присвоение значения элементу массива
+    private fun assignArray(arrName: String, arrayIndex: Int) {
+        // Нахождение нового значения
+        val expression = ParsingFunctions(LexicalComponents(newValue + ";").getTokensFromCode())
+        val newVariable = expression.parseExpression()!!
+
+        // Проверка соответствия типов
+        if (isNotComparableArrType(newVariable, arrName)) {
+            throw Exception("Переменной типа" +
+                    " ${variables[arrName]?.type?.slice(0..(variables[arrName]?.type!!.length-6))}" +
+                    " присваивается значение типа ${newVariable.type}")
+        }
+
+        // Присвоение нового значения
+        when (variables[arrName]?.type) {
+            // Элементу Int массива
+            Type.INT + "Array" -> (variables[arrName]?.value as Array<Int>)[arrayIndex] =
+                newVariable.value.toString().toDouble().roundToInt()
+
+            // Элементу Double массива
+            Type.DOUBLE + "Array" -> (variables[arrName]?.value as Array<Double>)[arrayIndex] =
+                newVariable.value.toString().toDouble()
+
+            // Элементу Char массива
+            Type.CHAR + "Array" -> {
+                if (newVariable.type != Type.INT) {
+                    (variables[arrName]?.value as Array<String>)[arrayIndex] =
+                        newVariable.value.toString()
+                }
+                else {
+                    (variables[arrName]?.value as Array<String>)[arrayIndex] =
+                        newVariable.value.toString().toInt().toChar().toString()
+                }
+            }
+
+            // Символу из строки
+            Type.STRING -> {
+                val str = variables[arrName]?.value as String
+                variables[arrName] = Variable(arrName, Type.STRING,
+                    str.substring(0, arrayIndex) + newVariable.value.toString() + str.substring(arrayIndex + 1))
+            }
+
+            // Элементу String массива
+            Type.STRING + "Array" -> (variables[arrName]?.value as Array<String>)[arrayIndex] =
+                newVariable.value.toString()
+
+            // Элементу Bool массива
+            Type.BOOL + "Array" -> {
+                val result = newVariable.value.toString()
+
+                if (result == "0" || result == "false") {
+                    (variables[arrName]?.value as Array<String>)[arrayIndex] = "0"
+                } else {
+                    (variables[arrName]?.value as Array<String>)[arrayIndex] = "1"
+                }
+            }
+
+            // Копирование массивов
+            else -> variables[arrName] = newVariable
+        }
     }
 
     // Присваивание переменной нового значения
@@ -71,97 +208,33 @@ class AssignmentBlock(
                 variableName.slice((variableName.indexOf('[') + 1)..(variableName.indexOf(']') - 1))
             val indexExpression =
                 ParsingFunctions(LexicalComponents(index + ";").getTokensFromCode())
+            val indexVariable = (indexExpression).parseExpression()!!
 
-            arrayIndex = (indexExpression).parseExpression()!!.value.toString().toInt()
+            if (indexVariable.type != Type.INT || indexVariable < Variable("", Type.INT, 0)) {
+                throw Exception("Некорректный индекс массива")
+            }
+
+            arrayIndex = indexVariable.value.toString().toInt()
             arrName = variableName.slice(0..variableName.indexOf('[') - 1)
         }
 
         // Проверка существования переменной
-        if (variables[variableName] == null && variables[arrName] == null) {
+        if (variables[variableName] == null && variables[arrName] == null &&
+                !variableName.contains('.')) {
             throw Exception("Присваивание к несуществующей переменной")
         }
 
         // Присвоение значения переменной
-        if (arrayIndex == -1) {
-            val expression = ParsingFunctions(LexicalComponents(newValue + ";").getTokensFromCode())
-            val newVariable = expression.parseExpression()!!
-
-            // Проверка соответсвтия типов переменной и значения
-            if (isNotComparableType(newVariable)) {
-                throw Exception("Переменной типа ${variables[variableName]?.type} присваивается значение типа ${newVariable.type}")
-            }
-
-            // Присвоение переменной типа Char значения типа Int
-            if (variables[variableName]?.type == Type.CHAR && newVariable.type == Type.INT) {
-                variables[variableName] = Variable(newVariable.name, Type.CHAR, newVariable.value.toString().toInt().toChar().toString())
-            }
-
-            // Оставльные присвоения
-            else {
-                variables[variableName] = newVariable
-            }
+        if (arrayIndex == -1 && !variableName.contains('.')) {
+            assignVariable()
         }
-
+        // Присвоение значения объекту
+        else if (arrayIndex == -1 && variableName.contains('.')){
+            assignStruct(variableName)
+        }
         // Присвоение значения элементу массива
         else {
-            // Нахождение нового значения
-            val expression = ParsingFunctions(LexicalComponents(newValue + ";").getTokensFromCode())
-            val newVariable = expression.parseExpression()!!
-
-            // Проверка соответствия типов
-            if (isNotComparableArrType(newVariable, arrName)) {
-                throw Exception("Переменной типа" +
-                        " ${variables[arrName]?.type?.slice(0..(variables[arrName]?.type!!.length-6))}" +
-                        " присваивается значение типа ${newVariable.type}")
-            }
-
-            // Присвоение нового значения
-            when (variables[arrName]?.type) {
-                // Элементу Int массива
-                Type.INT + "Array" -> (variables[arrName]?.value as Array<Int>)[arrayIndex] =
-                    newVariable.value.toString().toDouble().roundToInt()
-
-                // Элементу Double массива
-                Type.DOUBLE + "Array" -> (variables[arrName]?.value as Array<Double>)[arrayIndex] =
-                    newVariable.value.toString().toDouble()
-
-                // Элементу Char массива
-                Type.CHAR + "Array" -> {
-                    if (newVariable.type != Type.INT) {
-                        (variables[arrName]?.value as Array<String>)[arrayIndex] =
-                            newVariable.value.toString()
-                    }
-                    else {
-                        (variables[arrName]?.value as Array<String>)[arrayIndex] =
-                            newVariable.value.toString().toInt().toChar().toString()
-                    }
-                }
-
-                // Символу из строки
-                Type.STRING -> {
-                    val str = variables[arrName]?.value as String
-                    variables[arrName] = Variable(arrName, Type.STRING,
-                        str.substring(0, arrayIndex) + newVariable.value.toString() + str.substring(arrayIndex + 1))
-                }
-
-                // Элементу String массива
-                Type.STRING + "Array" -> (variables[arrName]?.value as Array<String>)[arrayIndex] =
-                    newVariable.value.toString()
-
-                // Элементу Bool массива
-                Type.BOOL + "Array" -> {
-                    val result = newVariable.value.toString()
-
-                    if (result == "0" || result == "false") {
-                        (variables[arrName]?.value as Array<String>)[arrayIndex] = "0"
-                    } else {
-                        (variables[arrName]?.value as Array<String>)[arrayIndex] = "1"
-                    }
-                }
-
-                // Копирование массивов
-                else -> variables[arrName] = newVariable
-            }
+            assignArray(arrName, arrayIndex)
         }
 
         // Выполнение следующего блока

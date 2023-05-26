@@ -129,12 +129,39 @@ class ParsingFunctions(private var tokens: List<Token>) {
             // Если текущий токен является переменной
             else if (nowToken.type.name == Name.VARIABLE) {
                 // Если переменной нет, то выдать ошибку
-                if (variables[nowToken.text] == null) {
+                if (variables[nowToken.text] == null && !(variables[nowToken.text.split('.')[0]]?.type == Type.STRUCT)) {
                     throw Exception("Переменная ${nowToken.text} не была задана")
                 }
 
+                // Если следующий токен - структура
+                else if (variables[nowToken.text]?.type == Type.STRUCT) {
+                    resultStack.push(variables[nowToken.text])
+                }
+
+                // Если следующий токен - поле структуры
+                else if (variables[nowToken.text.split('.')[0]]?.type == Type.STRUCT) {
+                    if (nowToken.text.split('.').count() != 2) {
+                        throw Exception("Некорректное обращение к полю структуры")
+                    }
+
+                    val structName = nowToken.text.split('.')[0]
+                    val fieldName = nowToken.text.split('.')[1]
+
+                    if ((variables[structName]?.value as MutableMap<String, Variable>)[fieldName] == null) {
+                        throw Exception("Обращение к несуществующему полю в структуре")
+                    }
+                    resultStack.push((variables[structName]?.value as MutableMap<String, Variable>)[fieldName])
+                }
+
+                // В иных случаях закинуть значение переменной
+                else {
+                    resultStack.push(variables[nowToken.text])
+                }
+
                 // Если следующий токен - квадратная скобка, то закинуть элемент массива
-                else if (findToken(Name.L_SQUARE_BRACKET.value) != null) {
+                if (findToken(Name.L_SQUARE_BRACKET.value) != null) {
+                    val currentVar = resultStack.pop()
+
                     val index = parseExpression()!!
 
                     if (index.type != Type.INT) {
@@ -143,63 +170,63 @@ class ParsingFunctions(private var tokens: List<Token>) {
 
                     try {
                         // Элемент Int массива
-                        if (variables[nowToken.text]?.type == Type.INT + "Array") {
+                        if (currentVar?.type == Type.INT + "Array") {
                             resultStack.push(
                                 Variable(
                                     "", Type.INT,
-                                    (variables[nowToken.text]?.value as Array<Int>)[index.value.toString()
+                                    (currentVar.value as Array<Int>)[index.value.toString()
                                         .toInt()]
                                 )
                             )
 
                             // Символ строки
-                        } else if (variables[nowToken.text]?.type == Type.STRING) {
+                        } else if (currentVar?.type == Type.STRING) {
                             resultStack.push(
                                 Variable(
                                     "",
                                     Type.CHAR,
-                                    (variables[nowToken.text]?.value as String)[index.value.toString().toInt()]
+                                    (currentVar.value as String)[index.value.toString().toInt()]
                                 )
                             )
 
                             // Элемент Double массива
-                        } else if (variables[nowToken.text]?.type == Type.DOUBLE + "Array") {
+                        } else if (currentVar.type == Type.DOUBLE + "Array") {
                             resultStack.push(
                                 Variable(
                                     "", Type.DOUBLE,
-                                    (variables[nowToken.text]?.value as Array<Double>)[index.value.toString()
+                                    (currentVar.value as Array<Double>)[index.value.toString()
                                         .toInt()]
                                 )
                             )
 
                             // Элемент String массива
-                        } else if (variables[nowToken.text]?.type == Type.STRING + "Array") {
+                        } else if (currentVar.type == Type.STRING + "Array") {
                             resultStack.push(
                                 Variable(
                                     "", Type.STRING,
-                                    (variables[nowToken.text]?.value as Array<String>)[index.value.toString()
+                                    (currentVar.value as Array<String>)[index.value.toString()
                                         .toInt()]
                                 )
                             )
                         }
 
                         // Элемент Bool массива
-                        else if (variables[nowToken.text]?.type == Type.BOOL + "Array"){
+                        else if (currentVar.type == Type.BOOL + "Array"){
                             resultStack.push(
                                 Variable(
                                     "", Type.BOOL,
-                                    (variables[nowToken.text]?.value as Array<String>)[index.value.toString()
+                                    (currentVar.value as Array<String>)[index.value.toString()
                                         .toInt()]
                                 )
                             )
                         }
 
                         // Элемент Char массива
-                        else if (variables[nowToken.text]?.type == Type.CHAR + "Array"){
+                        else if (currentVar.type == Type.CHAR + "Array"){
                             resultStack.push(
                                 Variable(
                                     "", Type.CHAR,
-                                    (variables[nowToken.text]?.value as Array<String>)[index.value.toString()
+                                    (currentVar.value as Array<String>)[index.value.toString()
                                         .toInt()]
                                 )
                             )
@@ -219,9 +246,9 @@ class ParsingFunctions(private var tokens: List<Token>) {
 
                     // Нахождение символа в массиве строк
                     if (findToken(Name.L_SQUARE_BRACKET.value) != null) {
-                        val currentVar = resultStack.pop()
+                        val secondCurrentVar = resultStack.pop()
 
-                        if (currentVar.type != Type.STRING) {
+                        if (secondCurrentVar.type != Type.STRING) {
                             throw Exception("${nowToken.text} не является многомерным массивом.")
                         }
 
@@ -236,7 +263,7 @@ class ParsingFunctions(private var tokens: List<Token>) {
                                 Variable(
                                     "",
                                     Type.CHAR,
-                                    (currentVar.value as String)[secondIndex.value.toString().toInt()]
+                                    (secondCurrentVar.value as String)[secondIndex.value.toString().toInt()]
                                 )
                             )
                         }
@@ -246,10 +273,7 @@ class ParsingFunctions(private var tokens: List<Token>) {
                     }
                 }
 
-                // В иных случаях закинуть значение переменной
-                else {
-                    resultStack.push(variables[nowToken.text])
-                }
+
             }
 
             // Если текущий токен - это оператор или оператор сравнения
@@ -356,5 +380,4 @@ class ParsingFunctions(private var tokens: List<Token>) {
             return tokens[index++]
         }
     }
-
 }

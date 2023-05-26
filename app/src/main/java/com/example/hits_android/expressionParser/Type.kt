@@ -8,5 +8,6 @@ class Type {
         val STRING = "String"
         val BOOL = "Bool"
         val CHAR = "Char"
+        val STRUCT = "Struct"
     }
 }
