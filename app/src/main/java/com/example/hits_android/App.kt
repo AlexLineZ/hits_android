@@ -84,7 +84,7 @@ class App : Application() {
         val bubbleSortJson = applicationContext.assets.open("bubble_sort.json").reader().use(
             InputStreamReader::readText
         )
-        val pipecJson = applicationContext.assets.open("pipecCode.json").reader().use(
+        val cumshotJson = applicationContext.assets.open("oral_cum_shot.json").reader().use(
             InputStreamReader::readText
         )
 
@@ -92,7 +92,7 @@ class App : Application() {
             listOf(
                 Pair(fibJson, "Fibonacci"),
                 Pair(bubbleSortJson, "BubbleSort"),
-                Pair(pipecJson, "PipecCode")
+                Pair(cumshotJson, "Oral cum shot")
             )
 
         val arrayType = object : TypeToken<List<List<BlockImpl>>>() {}.type
