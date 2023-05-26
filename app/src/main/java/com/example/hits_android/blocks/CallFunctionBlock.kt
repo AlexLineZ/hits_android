@@ -70,10 +70,6 @@ class CallFunctionBlock(
             varList.add(expression.parseExpression()!!)
         }
 
-        val savedList = blockList
-        val savedIndex = blockIndex
-        val savedVariables = variables
-
         // Выполнение тела функции
         var count = 0
         var funIndex = 0
@@ -99,12 +95,15 @@ class CallFunctionBlock(
             throw Exception("Функция ${functionName} не найдена")
         }
 
+        val savedList = blockList
+        val savedIndex = blockIndex
+        val savedVariables = variables.toMap()
         funList[funIndex].setArguments(varList)
         funList[funIndex].runFunction(funList)
 
         blockList = savedList
         blockIndex = savedIndex
-        variables = savedVariables
+        variables = savedVariables.toMutableMap()
 
         blockIndex++
     }
