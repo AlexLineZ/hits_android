@@ -6,7 +6,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -18,13 +17,12 @@ import com.example.hits_android.model.ReorderListViewModelFactory
 import com.example.hits_android.ui.theme.Hits_androidTheme
 import com.example.hits_android.ui.theme.ThemePreference
 
+
 var isCreated = false
 
 class MainActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             Hits_androidTheme {
                 NavigationSystem(this@MainActivity)
@@ -34,13 +32,11 @@ class MainActivity : ComponentActivity() {
 
     override fun onPause() {
         super.onPause()
-
         setContent {}
     }
 
     override fun onResume() {
         super.onResume()
-
         setContent {
             Hits_androidTheme {
                 NavigationSystem(this@MainActivity)
@@ -48,7 +44,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
 
 @Composable
 fun NavigationSystem(context: Context) {
@@ -62,25 +57,17 @@ fun NavigationSystem(context: Context) {
                 context = context
             )
         )
-
     )
 
+
     if (isCreated) {
-        MainScreen(navController, viewModel, context)
-    }
-    else {
+        MainScreen(viewModel, context)
+    } else {
         NavHost(navController = navController, startDestination = "start") {
             composable("start") { StartScreen(navController, viewModel) }
-            composable("main") { MainScreen(navController, viewModel, context) }
+            composable("main") { MainScreen(viewModel, context) }
         }
 
-<<<<<<< HEAD
         isCreated = true
-=======
-
-    NavHost(navController = navController, startDestination = "start") {
-        composable("start") { StartScreen(navController, viewModel) }
-        composable("main") { MainScreen(viewModel, context) }
->>>>>>> 0721b5343e9528c49dbd9647de57e8c5edf33056
     }
 }
