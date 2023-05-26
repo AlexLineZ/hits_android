@@ -1,6 +1,10 @@
 package com.example.hits_android.model
 
 import android.os.Looper
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.hits_android.blocks.*
 import com.example.hits_android.expressionParser.variables
@@ -12,6 +16,8 @@ import kotlinx.coroutines.flow.asStateFlow
 var _output = MutableStateFlow("")
 var isOutputRunning = MutableStateFlow(false)
 var getStop = MutableStateFlow(false)
+var newInput = MutableStateFlow("")
+var isTextFieldVisible = MutableStateFlow(false)
 
 class FlowViewModel : ViewModel() {
     val output: StateFlow<String> = _output.asStateFlow()
@@ -20,8 +26,20 @@ class FlowViewModel : ViewModel() {
         _output.value += newValue
     }
 
-    fun setError(error: String) {
+    fun setInput(newValue: String){
+        newInput.value = newValue
+    }
+
+    fun clearInput(){
+        newInput.value = ""
+    }
+
+    private fun setError(error: String) {
         _output.value = error
+    }
+
+    fun changeVisibilityTextField(){
+        isTextFieldVisible.value = !isTextFieldVisible.value
     }
 
     // Проверка наличия блоков begin end после текущего
@@ -49,6 +67,7 @@ class FlowViewModel : ViewModel() {
                     blockIndex = 0
                     _output.value = ""
                     getStop.value = false
+                    newInput.value = ""
 
                     while (blockIndex < blockList.size && !getStop.value) {
                         if (hasBody()) {
