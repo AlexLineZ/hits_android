@@ -26,7 +26,7 @@ import java.io.InputStreamReader
 import java.util.Date
 import java.util.UUID
 
-class App: Application() {
+class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
@@ -56,7 +56,10 @@ class App: Application() {
 
                     factory {
                         AppRepositoryImpl(
-                            prefs = androidContext().getSharedPreferences("APP_SHARED_PREFS", Context.MODE_PRIVATE)
+                            prefs = androidContext().getSharedPreferences(
+                                "APP_SHARED_PREFS",
+                                Context.MODE_PRIVATE
+                            )
                         )
                     }
 
@@ -75,9 +78,22 @@ class App: Application() {
     private suspend fun initDb() {
         val repository: SaveRepository by inject()
 
-        val initDataJson = applicationContext.assets.open("fibonacci.json").reader().use(
+        val fibJson = applicationContext.assets.open("fibonacci.json").reader().use(
             InputStreamReader::readText
         )
+        val bubbleSortJson = applicationContext.assets.open("bubble_sort.json").reader().use(
+            InputStreamReader::readText
+        )
+        val pizdecJson = applicationContext.assets.open("pizdec.json").reader().use(
+            InputStreamReader::readText
+        )
+
+        val jsonList: List<Pair<String, String>> =
+            listOf(
+                Pair(fibJson, "Fibonacci"),
+                Pair(bubbleSortJson, "BubbleSort"),
+                Pair(pizdecJson, "Pizdec")
+            )
 
         val arrayType = object : TypeToken<List<List<BlockImpl>>>() {}.type
 
@@ -85,15 +101,17 @@ class App: Application() {
             .registerTypeAdapter(BlockImpl::class.java, BlockInstanceCreator())
             .create()
 
-        val functionList: List<List<BlockImpl>> = gson.fromJson(initDataJson, arrayType)
+        jsonList.forEach {
+            val functionList: List<List<BlockImpl>> = gson.fromJson(it.first, arrayType)
 
-        val saveModel = SaveModel(
-            functionsList = functionList,
-            name = UUID.randomUUID().toString(),
-            date = Date().time,
-            realName = "Fibonacci"
-        )
+            val saveModel = SaveModel(
+                functionsList = functionList,
+                name = UUID.randomUUID().toString(),
+                date = Date().time,
+                realName = it.second
+            )
 
-        repository.createSave(saveModel)
+            repository.createSave(saveModel)
+        }
     }
 }

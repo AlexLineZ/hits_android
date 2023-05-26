@@ -79,7 +79,7 @@ class WhileBlock(
         while (conditionState.value == "true") {
             // Выполнение тела while
             while (blockList[blockIndex].getNameOfBlock() != EndBlock.BLOCK_NAME &&
-                blockIndex >= blockList.size - 1) {
+                blockIndex <= blockList.size - 1) {
                 // Выход из цикла при выполнении Return блока
                 if (blockList[blockIndex].getNameOfBlock() == ReturnBlock.BLOCK_NAME) {
                     blockList[blockIndex].runCodeBlock()

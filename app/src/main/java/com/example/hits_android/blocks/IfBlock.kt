@@ -81,7 +81,7 @@ class IfBlock(
         if (conditionState.value == "true") {
             // Выполнение тела if
             while (blockList[blockIndex].getNameOfBlock() != EndBlock.BLOCK_NAME &&
-                blockIndex >= blockList.size - 1) {
+                blockIndex <= blockList.size - 1) {
                 // Выход из условия при выполнении блоков Break, Сontinue или Return
                 if (isBreaking()) {
                     blockList[blockIndex].runCodeBlock()
