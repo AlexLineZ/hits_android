@@ -129,17 +129,13 @@ class ParsingFunctions(private var tokens: List<Token>) {
             // Если текущий токен является переменной
             else if (nowToken.type.name == Name.VARIABLE) {
                 // Если переменной нет, то выдать ошибку
-                if (variables[nowToken.text] == null && !(variables[nowToken.text.split('.')[0]]?.type == Type.STRUCT)) {
+                if (variables[nowToken.text] == null && !nowToken.text.contains('.')) {
+                    //!(variables[nowToken.text.split('.')[0]]?.type == Type.STRUCT)) {
                     throw Exception("Переменная ${nowToken.text} не была задана")
                 }
 
-                // Если следующий токен - структура
-                else if (variables[nowToken.text]?.type == Type.STRUCT) {
-                    resultStack.push(variables[nowToken.text])
-                }
-
                 // Если следующий токен - поле структуры
-                else if (variables[nowToken.text.split('.')[0]]?.type == Type.STRUCT) {
+                if (variables[nowToken.text.split('.')[0]]?.type == Type.STRUCT && nowToken.text.contains('.')) {
                     if (nowToken.text.split('.').count() != 2) {
                         throw Exception("Некорректное обращение к полю структуры")
                     }
@@ -152,8 +148,22 @@ class ParsingFunctions(private var tokens: List<Token>) {
                     }
                     resultStack.push((variables[structName]?.value as MutableMap<String, Variable>)[fieldName])
                 }
+                // Поле элемента массива структур
+                else if (nowToken.text[0]=='.') {
+                    val curVar = resultStack.pop()
 
-                // В иных случаях закинуть значение переменной
+                    val fieldName = nowToken.text.slice(1..nowToken.text.length - 1)
+
+                    if (fieldName.contains('.')) {
+                        throw Exception("Некорректное обращение к полю структуры")
+                    }
+
+                    if ((curVar.value as MutableMap<String, Variable>)[fieldName] == null) {
+                        throw Exception("Обращение к несуществующему полю в структуре")
+                    }
+
+                    resultStack.push((curVar.value as MutableMap<String, Variable>)[fieldName])
+                }
                 else {
                     resultStack.push(variables[nowToken.text])
                 }
@@ -222,12 +232,24 @@ class ParsingFunctions(private var tokens: List<Token>) {
                         }
 
                         // Элемент Char массива
-                        else if (currentVar.type == Type.CHAR + "Array"){
+                        else if (currentVar.type == Type.CHAR + "Array") {
                             resultStack.push(
                                 Variable(
-                                    "", Type.CHAR,
+                                    "",
+                                    Type.CHAR,
                                     (currentVar.value as Array<String>)[index.value.toString()
                                         .toInt()]
+                                )
+                            )
+                        }
+
+                        // Элемент Struct массива
+                        else if (currentVar.type == Type.STRUCT + "Array") {
+                            resultStack.push(
+                                Variable(
+                                    "",
+                                    Type.STRUCT,
+                                    (currentVar.value as Array<MutableMap<String, Variable>>)[index.value.toString().toInt()]
                                 )
                             )
                         }
@@ -272,7 +294,6 @@ class ParsingFunctions(private var tokens: List<Token>) {
                         }
                     }
                 }
-
 
             }
 

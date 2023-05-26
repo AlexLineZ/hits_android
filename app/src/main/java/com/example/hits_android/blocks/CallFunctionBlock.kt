@@ -70,12 +70,26 @@ class CallFunctionBlock(
         val savedVariables = variables
 
         // Выполнение тела функции
+        var count = 0
+        var funIndex = 0
+
+        if (functionName == "main") {
+            throw Exception("Вызов функции main")
+        }
+
         for (j in 1..funList.size - 1) {
             if (funList[j].getName() == functionName) {
-                funList[j].setArguments(varList)
-                funList[j].runFunction(funList)
+                count++
+                funIndex = j
             }
         }
+
+        if (count > 1) {
+            throw Exception("Неопределённость при вызове функции ${functionName}")
+        }
+
+        funList[funIndex].setArguments(varList)
+        funList[funIndex].runFunction(funList)
 
         blockList = savedList
         blockIndex = savedIndex
