@@ -68,7 +68,7 @@ class IfBlock(
         val conditionState = conditionExpression.parseExpression()!!
 
         // Если условие верно
-        if (conditionState.value == "1") {
+        if (conditionState.value == "true") {
             // Выполнение тела if
             while (blockList[blockIndex].getNameOfBlock() != EndBlock.BLOCK_NAME) {
                 // Выход из условия при выполнении блоков Break, Сontinue или Return

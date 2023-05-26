@@ -103,9 +103,9 @@ class InitializeVarBlock(
         // Перевод bool значения в 1 или 0
         if (type == Type.BOOL) {
             if (newVariable.value.toString() != "0" && newVariable.value.toString() != "false") {
-                newVariable.value = "1"
+                newVariable.value = "true"
             } else {
-                newVariable.value = "0"
+                newVariable.value = "false"
             }
         }
 

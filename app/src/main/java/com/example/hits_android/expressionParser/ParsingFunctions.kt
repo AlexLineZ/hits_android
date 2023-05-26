@@ -120,9 +120,9 @@ class ParsingFunctions(private var tokens: List<Token>) {
             // Если текущий токен - это Bool
             else if (nowToken.type.name == Name.BOOL) {
                 if (nowToken.text != "0" && nowToken.text != "false") {
-                    resultStack.push(Variable("", Type.BOOL, "1"))
+                    resultStack.push(Variable("", Type.BOOL, "true"))
                 } else {
-                    resultStack.push(Variable("", Type.BOOL, "0"))
+                    resultStack.push(Variable("", Type.BOOL, "false"))
                 }
             }
 
@@ -366,23 +366,23 @@ class ParsingFunctions(private var tokens: List<Token>) {
             }
 
             "%" -> return b % a
-            "!=" -> return if (b != a) Variable(" ", Type.INT, "1") else Variable("", Type.INT, "0")
-            "==" -> return if (b == a) Variable("", Type.INT, "1") else Variable("", Type.INT, "0")
-            ">=" -> return if (b >= a) Variable("", Type.INT, "1") else Variable("", Type.INT, "0")
-            "<=" -> return if (b <= a) Variable("", Type.INT, "1") else Variable("", Type.INT, "0")
-            ">" -> return if (b > a) Variable("", Type.INT, "1") else Variable("", Type.INT, "0")
-            "<" -> return if (b < a) Variable("", Type.INT, "1") else Variable("", Type.INT, "0")
-            "||" -> return if ((b.value != "0") || (a.value != "0")) Variable(
+            "!=" -> return if (b != a) Variable(" ", Type.BOOL, "true") else Variable("", Type.BOOL, "false")
+            "==" -> return if (b == a) Variable("", Type.BOOL, "true") else Variable("", Type.BOOL, "false")
+            ">=" -> return if (b >= a) Variable("", Type.BOOL, "true") else Variable("", Type.BOOL, "false")
+            "<=" -> return if (b <= a) Variable("", Type.BOOL, "true") else Variable("", Type.BOOL, "false")
+            ">" -> return if (b > a) Variable("", Type.BOOL, "true") else Variable("", Type.BOOL, "false")
+            "<" -> return if (b < a) Variable("", Type.BOOL, "true") else Variable("", Type.BOOL, "false")
+            "||" -> return if ((b.value != "false") || (a.value != "false")) Variable(
                 "",
-                Type.INT,
-                "1"
-            ) else Variable("", Type.INT, "0")
+                Type.BOOL,
+                "true"
+            ) else Variable("", Type.BOOL, "false")
 
-            "&&" -> return if ((b.value != "0") && (a.value != "0")) Variable(
+            "&&" -> return if ((b.value != "false") && (a.value != "false")) Variable(
                 "",
-                Type.INT,
-                "1"
-            ) else Variable("", Type.INT, "0")
+                Type.BOOL,
+                "true"
+            ) else Variable("", Type.BOOL, "false")
 
             else -> throw Exception("OMG")
         }

@@ -66,7 +66,7 @@ class WhileBlock(
         var conditionState = conditionExpression.parseExpression()!!
 
         // Пока условие верно
-        while (conditionState.value == "1") {
+        while (conditionState.value == "true") {
             // Выполнение тела while
             while (blockList[blockIndex].getNameOfBlock() != EndBlock.BLOCK_NAME) {
                 // Выход из цикла при выполнении Return блока

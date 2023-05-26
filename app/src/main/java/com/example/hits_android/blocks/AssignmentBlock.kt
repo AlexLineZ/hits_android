@@ -185,9 +185,9 @@ class AssignmentBlock(
                 val result = newVariable.value.toString()
 
                 if (result == "0" || result == "false") {
-                    (variables[arrName]?.value as Array<String>)[arrayIndex] = "0"
+                    (variables[arrName]?.value as Array<String>)[arrayIndex] = "false"
                 } else {
-                    (variables[arrName]?.value as Array<String>)[arrayIndex] = "1"
+                    (variables[arrName]?.value as Array<String>)[arrayIndex] = "true"
                 }
             }
 
