@@ -18,11 +18,12 @@ import com.example.hits_android.ui.theme.Hits_androidTheme
 import com.example.hits_android.ui.theme.ThemePreference
 
 
-var isCreated = false
-
 class MainActivity : ComponentActivity() {
+    var isCreated = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             Hits_androidTheme {
                 NavigationSystem(this@MainActivity)
@@ -43,31 +44,31 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-}
 
-@Composable
-fun NavigationSystem(context: Context) {
-    val navController = rememberNavController()
-    val viewModel: ReorderListViewModel = viewModel(
-        factory = ReorderListViewModelFactory(
-            sharedPreferences = ThemePreference.getInstance(context),
-            repository = SaveRepository(
-                database = SaveRoomStorage.getInstance(context),
-                fileStorage = SaveFileStorage(context),
-                context = context
+    @Composable
+    fun NavigationSystem(context: Context) {
+        val navController = rememberNavController()
+        val viewModel: ReorderListViewModel = viewModel(
+            factory = ReorderListViewModelFactory(
+                sharedPreferences = ThemePreference.getInstance(context),
+                repository = SaveRepository(
+                    database = SaveRoomStorage.getInstance(context),
+                    fileStorage = SaveFileStorage(context),
+                    context = context
+                )
             )
         )
-    )
 
 
-    if (isCreated) {
-        MainScreen(viewModel, context)
-    } else {
-        NavHost(navController = navController, startDestination = "start") {
-            composable("start") { StartScreen(navController, viewModel) }
-            composable("main") { MainScreen(viewModel, context) }
+        if (isCreated) {
+            MainScreen(viewModel, context)
+        } else {
+            NavHost(navController = navController, startDestination = "start") {
+                composable("start") { StartScreen(navController, viewModel) }
+                composable("main") { MainScreen(viewModel, context) }
+            }
+
+            isCreated = true
         }
-
-        isCreated = true
     }
 }
