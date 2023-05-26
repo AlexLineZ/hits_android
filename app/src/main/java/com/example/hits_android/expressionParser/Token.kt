@@ -40,7 +40,11 @@ val tokensList = mutableMapOf<String, TokenType>(
         Regex("^(((-?[1-9]\\d*)|(-?0))(\\.\\d*))")
     ),
     "number" to TokenType(Name.NUMBER, Identifiers.LITERAL, Regex("^(-?0|-?[1-9]\\d*)")),
-    "char" to TokenType(Name.CHAR, Identifiers.LITERAL, Regex("^\'[A-Za-z0-9а-яА-Я!#\$%&'()*+,-./:;\\\\\\\\<=>?@\\\\[\\\\]^_`{|}~ ]\'")),
+    "char" to TokenType(
+        Name.CHAR,
+        Identifiers.LITERAL,
+        Regex("^\'[A-Za-z0-9а-яА-Я!#\$%&'()*+,-./:;\\\\\\\\<=>?@\\\\[\\\\]^_`{|}~ ]\'")
+    ),
     "string" to TokenType(
         Name.STRING,
         Identifiers.VARIABLE,

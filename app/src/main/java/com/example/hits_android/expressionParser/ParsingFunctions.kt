@@ -1,7 +1,7 @@
 package com.example.hits_android.expressionParser
 
-import com.example.hits_android.scope.Scope
 import com.example.hits_android.blocks.blockIndex
+import com.example.hits_android.scope.Scope
 import java.util.Stack
 
 var variables = mutableMapOf<String, Variable>()
@@ -82,7 +82,13 @@ class ParsingFunctions(private var tokens: List<Token>) {
 
             // Если текущий токен - это случайное число
             else if (nowToken.type.name == Name.RAND) {
-                resultStack.push(Variable("", Type.DOUBLE, (-100000..100000).random().toDouble()/100))
+                resultStack.push(
+                    Variable(
+                        "",
+                        Type.DOUBLE,
+                        (-100000..100000).random().toDouble() / 100
+                    )
+                )
             }
 
             // Если текущий токен - это число типа Int
@@ -135,7 +141,10 @@ class ParsingFunctions(private var tokens: List<Token>) {
                 }
 
                 // Если следующий токен - поле структуры
-                if (variables[nowToken.text.split('.')[0]]?.type == Type.STRUCT && nowToken.text.contains('.')) {
+                if (variables[nowToken.text.split('.')[0]]?.type == Type.STRUCT && nowToken.text.contains(
+                        '.'
+                    )
+                ) {
                     if (nowToken.text.split('.').count() != 2) {
                         throw Exception("Некорректное обращение к полю структуры")
                     }
@@ -149,7 +158,7 @@ class ParsingFunctions(private var tokens: List<Token>) {
                     resultStack.push((variables[structName]?.value as MutableMap<String, Variable>)[fieldName])
                 }
                 // Поле элемента массива структур
-                else if (nowToken.text[0]=='.') {
+                else if (nowToken.text[0] == '.') {
                     val curVar = resultStack.pop()
 
                     val fieldName = nowToken.text.slice(1..nowToken.text.length - 1)
@@ -163,8 +172,7 @@ class ParsingFunctions(private var tokens: List<Token>) {
                     }
 
                     resultStack.push((curVar.value as MutableMap<String, Variable>)[fieldName])
-                }
-                else {
+                } else {
                     if (variables[nowToken.text] == null) {
                         throw Exception("Переменная ${nowToken.text} не была задана")
                     }
@@ -224,7 +232,7 @@ class ParsingFunctions(private var tokens: List<Token>) {
                         }
 
                         // Элемент Bool массива
-                        else if (currentVar.type == Type.BOOL + "Array"){
+                        else if (currentVar.type == Type.BOOL + "Array") {
                             resultStack.push(
                                 Variable(
                                     "", Type.BOOL,
@@ -252,12 +260,11 @@ class ParsingFunctions(private var tokens: List<Token>) {
                                 Variable(
                                     "",
                                     Type.STRUCT,
-                                    (currentVar.value as Array<MutableMap<String, Variable>>)[index.value.toString().toInt()]
+                                    (currentVar.value as Array<MutableMap<String, Variable>>)[index.value.toString()
+                                        .toInt()]
                                 )
                             )
-                        }
-
-                        else {
+                        } else {
                             throw Exception("${nowToken.text} не является массивом.")
                         }
                     }
@@ -288,11 +295,11 @@ class ParsingFunctions(private var tokens: List<Token>) {
                                 Variable(
                                     "",
                                     Type.CHAR,
-                                    (secondCurrentVar.value as String)[secondIndex.value.toString().toInt()]
+                                    (secondCurrentVar.value as String)[secondIndex.value.toString()
+                                        .toInt()]
                                 )
                             )
-                        }
-                        catch (e: Exception) {
+                        } catch (e: Exception) {
                             throw Exception("Выход за пределы массива")
                         }
                     }
@@ -366,12 +373,42 @@ class ParsingFunctions(private var tokens: List<Token>) {
             }
 
             "%" -> return b % a
-            "!=" -> return if (b != a) Variable(" ", Type.BOOL, "true") else Variable("", Type.BOOL, "false")
-            "==" -> return if (b == a) Variable("", Type.BOOL, "true") else Variable("", Type.BOOL, "false")
-            ">=" -> return if (b >= a) Variable("", Type.BOOL, "true") else Variable("", Type.BOOL, "false")
-            "<=" -> return if (b <= a) Variable("", Type.BOOL, "true") else Variable("", Type.BOOL, "false")
-            ">" -> return if (b > a) Variable("", Type.BOOL, "true") else Variable("", Type.BOOL, "false")
-            "<" -> return if (b < a) Variable("", Type.BOOL, "true") else Variable("", Type.BOOL, "false")
+            "!=" -> return if (b != a) Variable(" ", Type.BOOL, "true") else Variable(
+                "",
+                Type.BOOL,
+                "false"
+            )
+
+            "==" -> return if (b == a) Variable("", Type.BOOL, "true") else Variable(
+                "",
+                Type.BOOL,
+                "false"
+            )
+
+            ">=" -> return if (b >= a) Variable("", Type.BOOL, "true") else Variable(
+                "",
+                Type.BOOL,
+                "false"
+            )
+
+            "<=" -> return if (b <= a) Variable("", Type.BOOL, "true") else Variable(
+                "",
+                Type.BOOL,
+                "false"
+            )
+
+            ">" -> return if (b > a) Variable("", Type.BOOL, "true") else Variable(
+                "",
+                Type.BOOL,
+                "false"
+            )
+
+            "<" -> return if (b < a) Variable("", Type.BOOL, "true") else Variable(
+                "",
+                Type.BOOL,
+                "false"
+            )
+
             "||" -> return if ((b.value != "false") || (a.value != "false")) Variable(
                 "",
                 Type.BOOL,

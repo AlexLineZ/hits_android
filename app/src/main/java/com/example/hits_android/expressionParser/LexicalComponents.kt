@@ -20,7 +20,8 @@ class LexicalComponents(private val expression: String) {
 
             if ((allTokens.size == 0 || allTokens[allTokens.size - 1].type.identifier == Identifiers.OPERATORS ||
                         allTokens[allTokens.size - 1].type.identifier == Identifiers.BOOLEAN) &&
-                type.name == Name.MINUS) {
+                type.name == Name.MINUS
+            ) {
                 continue
             }
 
@@ -38,6 +39,4 @@ class LexicalComponents(private val expression: String) {
         }
         return null
     }
-
-
 }

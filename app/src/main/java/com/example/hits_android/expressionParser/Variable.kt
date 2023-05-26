@@ -161,11 +161,9 @@ class Variable(var name: String, var type: String, var value: Any) {
         else if (type == Type.CHAR && otherVariable.type == Type.CHAR) {
             if (value.toString()[0].code > otherVariable.value.toString()[0].code) {
                 return 1
-            }
-            else if (value.toString()[0].code == otherVariable.value.toString()[0].code) {
+            } else if (value.toString()[0].code == otherVariable.value.toString()[0].code) {
                 return 0
-            }
-            else {
+            } else {
                 return -1
             }
         }
@@ -174,11 +172,9 @@ class Variable(var name: String, var type: String, var value: Any) {
         else if (type == Type.CHAR && otherVariable.type == Type.INT) {
             if (value.toString()[0].code > otherVariable.value.toString().toInt()) {
                 return 1
-            }
-            else if (value.toString()[0].code == otherVariable.value.toString().toInt()) {
+            } else if (value.toString()[0].code == otherVariable.value.toString().toInt()) {
                 return 0
-            }
-            else {
+            } else {
                 return -1
             }
         }
@@ -187,11 +183,9 @@ class Variable(var name: String, var type: String, var value: Any) {
         else if (type == Type.INT && otherVariable.type == Type.INT) {
             if (value.toString().toInt() > otherVariable.value.toString().toInt()) {
                 return 1
-            }
-            else if (value.toString().toInt() == otherVariable.value.toString().toInt()) {
+            } else if (value.toString().toInt() == otherVariable.value.toString().toInt()) {
                 return 0
-            }
-            else {
+            } else {
                 return -1
             }
         }

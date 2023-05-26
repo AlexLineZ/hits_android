@@ -408,6 +408,19 @@ class ReorderListViewModel(
                 newBlock.conditionText = block.conditionText
                 return newBlock
             }
+
+            "inputBlock" -> {
+                val newBlock = InputBlock(
+                    key = block.key,
+                    title = block.title,
+                    isDragOverLocked = block.isDragOverLocked
+                )
+
+                newBlock.variableName = block.variableName
+                newBlock.newValue = block.newValue
+                return newBlock
+
+            }
         }
         return AssignmentBlock(
             key = block.key,

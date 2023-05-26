@@ -1,13 +1,10 @@
 package com.example.hits_android.blocks
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -22,19 +19,13 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hits_android.expressionParser.*
 import com.example.hits_android.model.FlowViewModel
-import com.example.hits_android.model._output
 import com.example.hits_android.model.newInput
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlin.math.roundToInt
 
 class InputBlock(
@@ -83,7 +74,11 @@ class InputBlock(
 
         // Присвоение переменной типа Char значения типа Int
         if (variables[variableName]?.type == Type.CHAR && newVariable.type == Type.INT) {
-            variables[variableName] = Variable(newVariable.name, Type.CHAR, newVariable.value.toString().toInt().toChar().toString())
+            variables[variableName] = Variable(
+                newVariable.name,
+                Type.CHAR,
+                newVariable.value.toString().toInt().toChar().toString()
+            )
         }
 
         // Остальные присвоения
@@ -125,7 +120,8 @@ class InputBlock(
 
         // Присвоение значения уже существующему полю
         else {
-            val currentField = (variables[structName]?.value as MutableMap<String, Variable>)[fieldName]
+            val currentField =
+                (variables[structName]?.value as MutableMap<String, Variable>)[fieldName]
             // Проверка соответсвтия типов переменной и значения
             if (isNotComparableType(currentField, newVariable)) {
                 throw Exception("Переменной типа ${currentField?.type} присваивается значение типа ${newVariable.type}")
@@ -133,15 +129,17 @@ class InputBlock(
 
             // Присвоение переменной типа Char значения типа Int
             if (currentField?.type == Type.CHAR && newVariable.type == Type.INT) {
-                (variables[structName]?.value as MutableMap<String, Variable>)[fieldName] = Variable(
-                    newVariable.name,
-                    Type.CHAR,
-                    newVariable.value.toString().toInt().toChar().toString()
-                )
+                (variables[structName]?.value as MutableMap<String, Variable>)[fieldName] =
+                    Variable(
+                        newVariable.name,
+                        Type.CHAR,
+                        newVariable.value.toString().toInt().toChar().toString()
+                    )
             }
             // Остальные присвоения
             else {
-                (variables[structName]?.value as MutableMap<String, Variable>)[fieldName] = newVariable
+                (variables[structName]?.value as MutableMap<String, Variable>)[fieldName] =
+                    newVariable
             }
         }
     }
@@ -154,9 +152,11 @@ class InputBlock(
 
         // Проверка соответствия типов
         if (isNotComparableArrType(newVariable, arrName)) {
-            throw Exception("Переменной типа" +
-                    " ${variables[arrName]?.type?.slice(0..(variables[arrName]?.type!!.length-6))}" +
-                    " присваивается значение типа ${newVariable.type}")
+            throw Exception(
+                "Переменной типа" +
+                        " ${variables[arrName]?.type?.slice(0..(variables[arrName]?.type!!.length - 6))}" +
+                        " присваивается значение типа ${newVariable.type}"
+            )
         }
 
         // Присвоение нового значения
@@ -174,8 +174,7 @@ class InputBlock(
                 if (newVariable.type != Type.INT) {
                     (variables[arrName]?.value as Array<String>)[arrayIndex] =
                         newVariable.value.toString()
-                }
-                else {
+                } else {
                     (variables[arrName]?.value as Array<String>)[arrayIndex] =
                         newVariable.value.toString().toInt().toChar().toString()
                 }
@@ -184,8 +183,12 @@ class InputBlock(
             // Символу из строки
             Type.STRING -> {
                 val str = variables[arrName]?.value as String
-                variables[arrName] = Variable(arrName, Type.STRING,
-                    str.substring(0, arrayIndex) + newVariable.value.toString() + str.substring(arrayIndex + 1))
+                variables[arrName] = Variable(
+                    arrName, Type.STRING,
+                    str.substring(0, arrayIndex) + newVariable.value.toString() + str.substring(
+                        arrayIndex + 1
+                    )
+                )
             }
 
             // Элементу String массива
@@ -235,12 +238,13 @@ class InputBlock(
 
         // Проверка существования переменной
         if (variables[variableName] == null && variables[arrName] == null &&
-            !variableName.contains('.')) {
+            !variableName.contains('.')
+        ) {
             throw Exception("Ввод несуществующей переменной")
         }
 
         FlowViewModel().changeVisibilityTextField()
-        while (newValue == ""){
+        while (newValue == "") {
             val input: StateFlow<String> = newInput.asStateFlow()
             newValue = input.value
         }
@@ -252,7 +256,7 @@ class InputBlock(
             assignVariable()
         }
         // Присвоение значения объекту
-        else if (arrayIndex == -1 && variableName.contains('.')){
+        else if (arrayIndex == -1 && variableName.contains('.')) {
             assignStruct(variableName)
         }
         // Присвоение значения элементу массива
