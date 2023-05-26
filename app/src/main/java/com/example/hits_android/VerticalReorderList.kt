@@ -25,8 +25,6 @@ import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -65,17 +63,34 @@ fun VerticalReorderList(
                 val elevation = animateDpAsState(if (dragging) 8.dp else 0.dp)
                 val dismissState = rememberDismissState(
                     confirmValueChange = {
-                        if ((it == DismissValue.DismissedToEnd || it == DismissValue.DismissedToStart)) {
-                            if (item.isDragOverLocked && item.blockName != "FunctionNameBlock"  && item.blockName != "FunctionsArgumentBlock") {
+                        if (it == DismissValue.DismissedToEnd
+                            || it == DismissValue.DismissedToStart
+                        ) {
+                            if (item.isDragOverLocked
+                                && item.blockName != "FunctionNameBlock"
+                                && item.blockName != "FunctionsArgumentBlock"
+                            ) {
                                 vm.functionsList[id].codeBlocksList =
                                     vm.functionsList[id].codeBlocksList.toMutableList().apply {
-                                        removeIf { it.key != "0" && it.key != "1" && it.blockName != "FunctionNameBlock"  && it.blockName != "FunctionsArgumentBlock" }
+                                        removeIf {
+                                            it.key != "0"
+                                                    && it.key != "1"
+                                                    && it.blockName != "FunctionNameBlock"
+                                                    && it.blockName != "FunctionsArgumentBlock"
+                                        }
                                     }
                                 return@rememberDismissState false
-                            } else if (item.blockName == "endBlock" || item.blockName == "beginBlock" || item.blockName == "FunctionNameBlock" || item.blockName == "FunctionsArgumentBlock") {
+                            } else if (item.blockName == "endBlock"
+                                || item.blockName == "beginBlock"
+                                || item.blockName == "FunctionNameBlock"
+                                || item.blockName == "FunctionsArgumentBlock"
+                            ) {
                                 return@rememberDismissState false
                             } else {
-                                if (item.blockName == "ElseBlock" || item.blockName == "IfBlock" || item.blockName == "WhileBlock") {
+                                if (item.blockName == "ElseBlock"
+                                    || item.blockName == "IfBlock"
+                                    || item.blockName == "WhileBlock"
+                                ) {
                                     RemoveDependentBlocks(item, vm, id)
                                 } else {
                                     vm.functionsList[id].codeBlocksList =
@@ -105,7 +120,10 @@ fun VerticalReorderList(
                         )
                         val icon = Icons.Default.Delete
 
-                        if (!(item.isDragOverLocked || item.blockName == "endBlock" || item.blockName == "beginBlock")) {
+                        if (!(item.isDragOverLocked
+                                    || item.blockName == "endBlock"
+                                    || item.blockName == "beginBlock")
+                        ) {
                             Box(
                                 modifier = Modifier
                                     .fillMaxSize()
@@ -191,7 +209,11 @@ fun RemoveDependentBlocks(item: Block, vm: ReorderListViewModel, id: Int) {
             item as ElseBlock
             vm.functionsList[id].codeBlocksList =
                 vm.functionsList[id].codeBlocksList.toMutableList().apply {
-                    removeIf { it.key == item.key || it.key == item.beginKey || it.key == item.endKey }
+                    removeIf {
+                        it.key == item.key
+                                || it.key == item.beginKey
+                                || it.key == item.endKey
+                    }
                 }
         }
 
@@ -199,7 +221,11 @@ fun RemoveDependentBlocks(item: Block, vm: ReorderListViewModel, id: Int) {
             item as IfBlock
             vm.functionsList[id].codeBlocksList =
                 vm.functionsList[id].codeBlocksList.toMutableList().apply {
-                    removeIf { it.key == item.key || it.key == item.beginKey || it.key == item.endKey }
+                    removeIf {
+                        it.key == item.key
+                                || it.key == item.beginKey
+                                || it.key == item.endKey
+                    }
                 }
         }
 
@@ -207,7 +233,11 @@ fun RemoveDependentBlocks(item: Block, vm: ReorderListViewModel, id: Int) {
             item as WhileBlock
             vm.functionsList[id].codeBlocksList =
                 vm.functionsList[id].codeBlocksList.toMutableList().apply {
-                    removeIf { it.key == item.key || it.key == item.beginKey || it.key == item.endKey }
+                    removeIf {
+                        it.key == item.key
+                                || it.key == item.beginKey
+                                || it.key == item.endKey
+                    }
                 }
         }
     }
