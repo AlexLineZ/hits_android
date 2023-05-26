@@ -19,7 +19,6 @@ import com.example.hits_android.ui.theme.buildTheme
 
 @Composable
 fun MainScreen(
-    navController: NavHostController,
     vm: ReorderListViewModel,
     context: Context
 ) {

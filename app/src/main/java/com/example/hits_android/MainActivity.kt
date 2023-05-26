@@ -74,6 +74,13 @@ fun NavigationSystem(context: Context) {
             composable("main") { MainScreen(navController, viewModel, context) }
         }
 
+<<<<<<< HEAD
         isCreated = true
+=======
+
+    NavHost(navController = navController, startDestination = "start") {
+        composable("start") { StartScreen(navController, viewModel) }
+        composable("main") { MainScreen(viewModel, context) }
+>>>>>>> 0721b5343e9528c49dbd9647de57e8c5edf33056
     }
 }

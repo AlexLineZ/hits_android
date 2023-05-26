@@ -9,7 +9,7 @@ class ThemePreference(private val sharedPreferences: SharedPreferences) {
     private val KEY_THEME_COLOR = "theme_color"
 
     companion object{
-        private val PREFS_NAME = "theme_prefs"
+        private const val PREFS_NAME = "theme_prefs"
         private var instance: ThemePreference? = null
         fun getInstance(context: Context): ThemePreference {
             if (instance == null){

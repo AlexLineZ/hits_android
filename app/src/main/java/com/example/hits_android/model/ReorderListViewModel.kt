@@ -4,11 +4,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.example.hits_android.appmodel.data.filestorage.BlockImpl
-import com.example.hits_android.appmodel.data.repository.SaveRepository
 import com.example.hits_android.blocks.AssignmentBlock
 import com.example.hits_android.blocks.BeginBlock
 import com.example.hits_android.blocks.Block
+import com.example.hits_android.blocks.BlockImpl
 import com.example.hits_android.blocks.BreakBlock
 import com.example.hits_android.blocks.CallFunctionBlock
 import com.example.hits_android.blocks.ContinueBlock
@@ -35,8 +34,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import org.burnoutcrew.reorderable.ItemPosition
 
 class ReorderListViewModel(
-    private val sharedPreferences: ThemePreference,
-    private val repository: SaveRepository
+    private val sharedPreferences: ThemePreference
 ) : ViewModel() {
 
     private val savedTheme = sharedPreferences.getSavedTheme()
@@ -78,7 +76,7 @@ class ReorderListViewModel(
         )
     )
 
-    var keyCount = 10
+    private var keyCount = 10
 
     init {
         blockList.clear()
