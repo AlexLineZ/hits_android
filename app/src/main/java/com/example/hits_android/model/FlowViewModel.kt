@@ -40,7 +40,7 @@ class FlowViewModel : ViewModel() {
     private var job: Job? = null
 
     @OptIn(DelicateCoroutinesApi::class)
-    fun startProgram(functionList:  List<FunctionClass>) {
+    fun startProgram(functionList: List<FunctionClass>) {
         blockList = functionList[0].codeBlocksList.toMutableList()
         if (!isProgramRunning.value) {
             job = GlobalScope.launch {
@@ -61,7 +61,7 @@ class FlowViewModel : ViewModel() {
                         blockList[blockIndex].runCodeBlock()
                     }
 
-                    if (!isOutputRunning.value && !getStop.value){
+                    if (!isOutputRunning.value && !getStop.value) {
                         isOutputRunning.value = true
                         android.os.Handler(Looper.getMainLooper()).postDelayed({
                             setCurrentValue("\nПроцесс (${(Math.random() * 10000).toInt()}) завершил работу с кодом 0.")

@@ -4,6 +4,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.example.hits_android.appmodel.data.filestorage.BlockImpl
+import com.example.hits_android.appmodel.data.repository.SaveRepository
 import com.example.hits_android.blocks.AssignmentBlock
 import com.example.hits_android.blocks.BeginBlock
 import com.example.hits_android.blocks.Block
@@ -12,13 +14,16 @@ import com.example.hits_android.blocks.CallFunctionBlock
 import com.example.hits_android.blocks.ContinueBlock
 import com.example.hits_android.blocks.ElseBlock
 import com.example.hits_android.blocks.EndBlock
+import com.example.hits_android.blocks.FinishProgramBlock
 import com.example.hits_android.blocks.FunctionClass
 import com.example.hits_android.blocks.FunctionNameBlock
 import com.example.hits_android.blocks.FunctionsArgumentBlock
 import com.example.hits_android.blocks.IfBlock
 import com.example.hits_android.blocks.InitializeArrayBlock
 import com.example.hits_android.blocks.InitializeVarBlock
+import com.example.hits_android.blocks.MainBlock
 import com.example.hits_android.blocks.OutputBlock
+import com.example.hits_android.blocks.ReturnBlock
 import com.example.hits_android.blocks.WhileBlock
 import com.example.hits_android.blocks.blockList
 import com.example.hits_android.ui.theme.AppThemeBrightness
@@ -29,7 +34,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.burnoutcrew.reorderable.ItemPosition
 
-class ReorderListViewModel(private val sharedPreferences: ThemePreference) : ViewModel() {
+class ReorderListViewModel(
+    private val sharedPreferences: ThemePreference,
+    private val repository: SaveRepository
+) : ViewModel() {
 
     private val savedTheme = sharedPreferences.getSavedTheme()
     private var _theme = MutableStateFlow(savedTheme)
@@ -39,9 +47,9 @@ class ReorderListViewModel(private val sharedPreferences: ThemePreference) : Vie
     private var _currentScreenId = MutableStateFlow(0)
     val currentScreenId: StateFlow<Int> = _currentScreenId.asStateFlow()
 
+
     private var main: FunctionClass by mutableStateOf(
         FunctionClass(
-            functionName = "main",
             id = 0,
             mainBlockTitle = "Start program",
             finishBlockTitle = "End program"
@@ -204,6 +212,219 @@ class ReorderListViewModel(private val sharedPreferences: ThemePreference) : Vie
     fun setCurrentScreenId(newId: Int) {
         _currentScreenId.value = newId
     }
+
+    fun parseToFunctionList(savedList: List<List<BlockImpl>>) {
+
+        var newFunctionsList by mutableStateOf(listOf<FunctionClass>())
+
+        var id = 0
+        savedList.forEach { list ->
+            val newFunction: FunctionClass by mutableStateOf(
+                FunctionClass(id = id)
+            )
+            newFunction.codeBlocksList = newFunction.codeBlocksList.toMutableList()
+                .apply {
+                    removeIf { true }
+                }
+
+            list.forEach {
+                newFunction.codeBlocksList = newFunction.codeBlocksList.toMutableList().apply {
+                    add(parseBlock(it))
+                }
+            }
+
+            newFunctionsList = newFunctionsList.toMutableList().apply {
+                add(newFunction)
+            }
+
+            id++
+        }
+        functionsList = newFunctionsList
+    }
+
+    private fun parseBlock(block: BlockImpl): Block {
+        when (block.blockName) {
+            "assignmentBlock" -> {
+                val newBlock = AssignmentBlock(
+                    key = block.key,
+                    title = block.title,
+                    isDragOverLocked = block.isDragOverLocked
+                )
+                newBlock.variableName = block.variableName
+                newBlock.newValue = block.newValue
+
+                return newBlock
+            }
+
+            "beginBlock" -> {
+                return BeginBlock(
+                    key = block.key,
+                    title = block.title,
+                    isDragOverLocked = block.isDragOverLocked
+                )
+            }
+
+            "breakBlock" -> {
+                return BreakBlock(
+                    key = block.key,
+                    title = block.title,
+                    isDragOverLocked = block.isDragOverLocked
+                )
+            }
+
+            "callFunctionBlock" -> {
+                val newBlock = CallFunctionBlock(
+                    key = block.key,
+                    title = block.title,
+                    isDragOverLocked = block.isDragOverLocked
+                )
+
+                newBlock.functionName = block.functionName
+                newBlock.arguments = block.arguments
+
+                return newBlock
+            }
+
+            "continueBlock" -> {
+                return ContinueBlock(
+                    key = block.key,
+                    title = block.title,
+                    isDragOverLocked = block.isDragOverLocked,
+                )
+            }
+
+            "ElseBlock" -> {
+                return ElseBlock(
+                    key = block.key,
+                    title = block.title,
+                    isDragOverLocked = block.isDragOverLocked,
+                    beginKey = block.beginKey,
+                    endKey = block.endKey
+                )
+            }
+
+            "endBlock" -> {
+                return EndBlock(
+                    key = block.key,
+                    title = block.title,
+                    isDragOverLocked = block.isDragOverLocked,
+                )
+            }
+
+            "finishProgram" -> {
+                return FinishProgramBlock(
+                    key = block.key,
+                    title = block.title,
+                    isDragOverLocked = block.isDragOverLocked,
+                )
+            }
+
+            "FunctionNameBlock" -> {
+                val newBlock = FunctionNameBlock(
+                    key = block.key,
+                    title = block.title,
+                    isDragOverLocked = block.isDragOverLocked,
+                )
+
+                newBlock.functionName = block.functionName
+                return newBlock
+            }
+
+            "FunctionsArgumentBlock" -> {
+                val newBlock = FunctionsArgumentBlock(
+                    key = block.key,
+                    title = block.title,
+                    isDragOverLocked = block.isDragOverLocked,
+                )
+
+                newBlock.parameters = block.parameters
+                return newBlock
+            }
+
+            "IfBlock" -> {
+                val newBlock = IfBlock(
+                    key = block.key,
+                    title = block.title,
+                    isDragOverLocked = block.isDragOverLocked,
+                    beginKey = block.beginKey,
+                    endKey = block.endKey
+                )
+
+                newBlock.condition = block.condition
+                return newBlock
+            }
+
+            "initArrayBlock" -> {
+                val newBlock = InitializeArrayBlock(
+                    key = block.key,
+                    title = block.title,
+                    isDragOverLocked = block.isDragOverLocked,
+                )
+
+                newBlock.arrayName = block.arrayName
+                newBlock.arrayType = block.arrayType
+                newBlock.arraySize = block.arraySize
+                return newBlock
+            }
+
+            "initVarBlock" -> {
+                val newBlock = InitializeVarBlock(
+                    key = block.key,
+                    title = block.title,
+                    isDragOverLocked = block.isDragOverLocked,
+                )
+
+                newBlock.name = block.name
+                newBlock.type = block.type
+                newBlock.value = block.value
+                return newBlock
+            }
+
+            "mainBlock" -> {
+                return MainBlock(
+                    key = block.key,
+                    title = block.title,
+                    isDragOverLocked = block.isDragOverLocked,
+                )
+            }
+
+            "outputBlock" -> {
+                val newBlock = OutputBlock(
+                    key = block.key,
+                    title = block.title,
+                    isDragOverLocked = block.isDragOverLocked,
+                )
+
+                newBlock.expression = block.expression
+                return newBlock
+            }
+
+            "returnBlock" -> {
+                return ReturnBlock(
+                    key = block.key,
+                    title = block.title,
+                    isDragOverLocked = block.isDragOverLocked,
+                )
+            }
+
+            "WhileBlock" -> {
+                val newBlock = WhileBlock(
+                    key = block.key,
+                    title = block.title,
+                    isDragOverLocked = block.isDragOverLocked,
+                    beginKey = block.beginKey,
+                    endKey = block.endKey
+                )
+
+                newBlock.condition = block.condition
+                newBlock.conditionText = block.conditionText
+                return newBlock
+            }
+        }
+        return AssignmentBlock(
+            key = block.key,
+            title = block.title,
+            isDragOverLocked = block.isDragOverLocked
+        )
+    }
 }
-
-

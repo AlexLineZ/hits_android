@@ -27,7 +27,7 @@ class BeginBlock(
 ) : Block {
     // Название блока
     companion object {
-        val BLOCK_NAME = "beginBlock"
+        const val BLOCK_NAME = "beginBlock"
     }
 
     override val blockName = BLOCK_NAME
@@ -35,7 +35,7 @@ class BeginBlock(
     // Вход в новый блок кода
     override fun runCodeBlock() {
         // Создание новой области видимости переменных
-        var currentScope = mutableListOf<String>()
+        val currentScope = mutableListOf<String>()
 
         // Добавление всех переменных в текущую область видимости
         for (varName in variables.keys) {

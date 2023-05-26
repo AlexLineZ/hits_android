@@ -24,7 +24,7 @@ class BreakBlock(
 ) : Block {
     // Название блока
     companion object {
-        val BLOCK_NAME = "breakBlock"
+        const val BLOCK_NAME = "breakBlock"
     }
 
     override val blockName = BLOCK_NAME
