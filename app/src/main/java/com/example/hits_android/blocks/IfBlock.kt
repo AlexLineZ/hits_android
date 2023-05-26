@@ -44,6 +44,16 @@ class IfBlock(
         const val BLOCK_NAME = "ifBlock"
     }
 
+    // Проверка наличия блоков begin end после текущего
+    private fun hasBody(): Boolean {
+        return blockList[blockIndex].getNameOfBlock() in listOf(
+            CallFunctionBlock.BLOCK_NAME,
+            ElseBlock.BLOCK_NAME,
+            IfBlock.BLOCK_NAME,
+            WhileBlock.BLOCK_NAME
+        )
+    }
+
     override val blockName = BLOCK_NAME
     lateinit var funList: List<FunctionClass>
 
@@ -70,15 +80,16 @@ class IfBlock(
         // Если условие верно
         if (conditionState.value == "true") {
             // Выполнение тела if
-            while (blockList[blockIndex].getNameOfBlock() != EndBlock.BLOCK_NAME) {
+            while (blockList[blockIndex].getNameOfBlock() != EndBlock.BLOCK_NAME &&
+                blockIndex >= blockList.size - 1) {
                 // Выход из условия при выполнении блоков Break, Сontinue или Return
                 if (isBreaking()) {
                     blockList[blockIndex].runCodeBlock()
                     return
                 }
 
-                if (blockList[blockIndex].getNameOfBlock() == CallFunctionBlock.BLOCK_NAME) {
-                    (blockList[blockIndex] as CallFunctionBlock).setFunctionList(funList)
+                if (hasBody()) {
+                    (blockList[blockIndex] as HasBodyBlock).setFunctionList(funList)
                 }
 
                 // Выполнение остальных блоков

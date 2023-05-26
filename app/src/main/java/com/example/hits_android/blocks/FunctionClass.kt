@@ -21,7 +21,7 @@ class FunctionClass(
 
     // Проверка наличия блоков begin end после текущего
     private fun hasBody(): Boolean {
-        return blockList[blockIndex].getNameOfBlock() in listOf<String>(
+        return blockList[blockIndex].getNameOfBlock() in listOf(
             CallFunctionBlock.BLOCK_NAME,
             ElseBlock.BLOCK_NAME,
             IfBlock.BLOCK_NAME,

@@ -28,6 +28,16 @@ class ElseBlock(
         const val BLOCK_NAME = "elseBlock"
     }
 
+    // Проверка наличия блоков begin end после текущего
+    private fun hasBody(): Boolean {
+        return blockList[blockIndex].getNameOfBlock() in listOf(
+            CallFunctionBlock.BLOCK_NAME,
+            BLOCK_NAME,
+            IfBlock.BLOCK_NAME,
+            WhileBlock.BLOCK_NAME
+        )
+    }
+
     override val blockName = BLOCK_NAME
     lateinit var funList: List<FunctionClass>
 
@@ -71,7 +81,8 @@ class ElseBlock(
         blockIndex = savedIndex + 1
 
         // Выполнение тела блока else
-        while (blockList[blockIndex].getNameOfBlock() != EndBlock.BLOCK_NAME) {
+        while (blockList[blockIndex].getNameOfBlock() != EndBlock.BLOCK_NAME &&
+            blockIndex >= blockList.size - 1) {
             // Выход из else при выполнении блоков Break, Continue или Return
             if (isBreaking()) {
                 blockList[blockIndex].runCodeBlock()
@@ -79,8 +90,8 @@ class ElseBlock(
             }
 
             // Выполнение остальных блоков
-            if (blockList[blockIndex].getNameOfBlock() == CallFunctionBlock.BLOCK_NAME) {
-                (blockList[blockIndex] as CallFunctionBlock).setFunctionList(funList)
+            if (hasBody()) {
+                (blockList[blockIndex] as HasBodyBlock).setFunctionList(funList)
             }
 
             blockList[blockIndex].runCodeBlock()

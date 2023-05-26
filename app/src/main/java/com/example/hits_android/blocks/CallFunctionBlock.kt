@@ -50,6 +50,11 @@ class CallFunctionBlock(
 
     // Вызов функции
     override fun runCodeBlock() {
+        // Проверка названия  переменной
+        if (!(Regex("^(?!true|false|\\d)\\w+").matches(functionName))) {
+            throw Exception("Некорректное название функции")
+        }
+
         // Чтение переданных аргументов
         val argList = arguments.split(",").toMutableList()
         val varList = mutableListOf<Variable>()
@@ -89,6 +94,9 @@ class CallFunctionBlock(
 
         if (count > 1) {
             throw Exception("Undefined function call ${functionName}")
+        }
+        else if (count == 0) {
+            throw Exception("Функция ${functionName} не найдена")
         }
 
         funList[funIndex].setArguments(varList)
