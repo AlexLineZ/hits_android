@@ -191,6 +191,11 @@ class AssignmentBlock(
                 }
             }
 
+            Type.STRUCT + "Array" -> {
+                (variables[arrName]?.value as Array<MutableMap<String, Variable>>)[arrayIndex] =
+                    newVariable.value as MutableMap<String, Variable>
+            }
+
             // Копирование массивов
             else -> variables[arrName] = newVariable
         }
