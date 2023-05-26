@@ -73,8 +73,8 @@ class BlockImpl : Block {
 
     var condition: String = ""
     var conditionText: String = ""
-    val beginKey: String = ""
-    val endKey: String = ""
+    var beginKey: String = ""
+    var endKey: String = ""
 
     var expression: String = ""
 
