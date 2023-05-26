@@ -4,27 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.example.hits_android.blocks.AssignmentBlock
-import com.example.hits_android.blocks.BeginBlock
-import com.example.hits_android.blocks.Block
-import com.example.hits_android.blocks.BlockImpl
-import com.example.hits_android.blocks.BreakBlock
-import com.example.hits_android.blocks.CallFunctionBlock
-import com.example.hits_android.blocks.ContinueBlock
-import com.example.hits_android.blocks.ElseBlock
-import com.example.hits_android.blocks.EndBlock
-import com.example.hits_android.blocks.FinishProgramBlock
-import com.example.hits_android.blocks.FunctionClass
-import com.example.hits_android.blocks.FunctionNameBlock
-import com.example.hits_android.blocks.FunctionsArgumentBlock
-import com.example.hits_android.blocks.IfBlock
-import com.example.hits_android.blocks.InitializeArrayBlock
-import com.example.hits_android.blocks.InitializeVarBlock
-import com.example.hits_android.blocks.MainBlock
-import com.example.hits_android.blocks.OutputBlock
-import com.example.hits_android.blocks.ReturnBlock
-import com.example.hits_android.blocks.WhileBlock
-import com.example.hits_android.blocks.blockList
+import com.example.hits_android.blocks.*
 import com.example.hits_android.ui.theme.AppThemeBrightness
 import com.example.hits_android.ui.theme.AppThemeColor
 import com.example.hits_android.ui.theme.ThemePreference
@@ -65,14 +45,16 @@ class ReorderListViewModel(
         listOf(
             InitializeVarBlock(key = "0"),
             InitializeArrayBlock(key = "1"),
-            OutputBlock(key = "2"),
-            AssignmentBlock(key = "3"),
-            IfBlock(key = "4"),
-            ElseBlock(key = "5"),
-            WhileBlock(key = "6"),
-            CallFunctionBlock(key = "7"),
-            BreakBlock(key = "8"),
-            ContinueBlock(key = "9")
+            InputBlock(key = "2"),
+            OutputBlock(key = "3"),
+            AssignmentBlock(key = "4"),
+            IfBlock(key = "5"),
+            ElseBlock(key = "6"),
+            WhileBlock(key = "7"),
+            CallFunctionBlock(key = "8"),
+            ReturnBlock(key = "9"),
+            BreakBlock(key = "10"),
+            ContinueBlock(key = "11")
         )
     )
 
@@ -139,6 +121,10 @@ class ReorderListViewModel(
                                 InitializeVarBlock(key = "${++keyCount}")
                             }
 
+                            "inputBlock" -> {
+                                InputBlock(key = "${++keyCount}")
+                            }
+
                             "outputBlock" -> {
                                 OutputBlock(key = "${++keyCount}")
                             }
@@ -153,6 +139,10 @@ class ReorderListViewModel(
 
                             "callFunctionBlock" -> {
                                 CallFunctionBlock(key = "${++keyCount}")
+                            }
+
+                            "returnBlock" -> {
+                                ReturnBlock(key = "${++keyCount}")
                             }
 
                             else -> {
