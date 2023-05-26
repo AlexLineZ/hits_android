@@ -17,6 +17,7 @@ class FinishProgramBlock(
     override val title: String = "Main",
     override val isDragOverLocked: Boolean = false
 ) : Block {
+
     override val blockName = "finishProgram"
 
     override fun runCodeBlock() {

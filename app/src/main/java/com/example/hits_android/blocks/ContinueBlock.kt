@@ -25,7 +25,7 @@ class ContinueBlock(
 ) : Block {
     // Название блока
     companion object {
-        val BLOCK_NAME = "continueBlock"
+        const val BLOCK_NAME = "continueBlock"
     }
     override val blockName = BLOCK_NAME
 

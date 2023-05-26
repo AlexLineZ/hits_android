@@ -38,7 +38,7 @@ class InitializeArrayBlock(
 ) : Block {
     // Название блока
     companion object {
-        val BLOCK_NAME = "initArrayBlock"
+        const val BLOCK_NAME = "initArrayBlock"
     }
 
     override val blockName = BLOCK_NAME

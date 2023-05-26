@@ -1,6 +1,7 @@
 package com.example.hits_android
 
 
+import android.content.Context
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -19,10 +20,11 @@ import com.example.hits_android.ui.theme.buildTheme
 @Composable
 fun MainScreen(
     navController: NavHostController,
-    vm: ReorderListViewModel
+    vm: ReorderListViewModel,
+    context: Context
 ) {
     val theme by vm.theme.collectAsState()
     Hits_androidTheme(buildTheme(theme)) {
-        BottomNavigation(vm = vm)
+        BottomNavigation(vm = vm, context)
     }
 }
