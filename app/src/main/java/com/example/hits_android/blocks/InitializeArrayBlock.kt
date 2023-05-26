@@ -51,12 +51,12 @@ class InitializeArrayBlock(
     override fun runCodeBlock() {
         // Проверка названия массива
         if (!(Regex("^(?!true|false|\\d)\\w+").matches(arrayName))) {
-            throw Exception("Некорректное название массива")
+            throw Exception("Incorrect array name: ${arrayName}")
         }
 
         // Пересоздание массива
         if (variables[arrayName] != null) {
-            throw Exception("Происходит пересоздание переменной")
+            throw Exception("Recreating a variable ${arrayName}")
         }
 
         // Проверка размера массива
@@ -64,7 +64,7 @@ class InitializeArrayBlock(
         val size = expression.parseExpression()!!
 
         if (size.type != Type.INT || size < Variable("", Type.INT, "0")) {
-            throw Exception("Некорректный размер массива")
+            throw Exception("Incorrect array size: ${arrayName}")
         }
 
         // Создание массива с элементами типа Int

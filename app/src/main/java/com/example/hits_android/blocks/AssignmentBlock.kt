@@ -66,7 +66,7 @@ class AssignmentBlock(
 
         // Проверка соответсвтия типов переменной и значения
         if (isNotComparableType(variables[variableName], newVariable)) {
-            throw Exception("Переменной типа ${variables[variableName]?.type} присваивается значение типа ${newVariable.type}")
+            throw Exception("A variable of type ${variables[variableName]?.type} is assigned a value of type ${newVariable.type}")
         }
 
         // Присвоение переменной типа Char значения типа Int
@@ -86,11 +86,11 @@ class AssignmentBlock(
         val newVariable = expression.parseExpression()!!
 
         if (name.split('.').count() != 2) {
-            throw Exception("Некорректное обращение к полю структуры")
+            throw Exception("Incorrect access to structure field")
         }
 
         if (newVariable.type == Type.STRUCT) {
-            throw Exception("Присвоение полю структуры другой структуры")
+            throw Exception("Assigning a structure field to another structure")
         }
 
         val structName = name.split('.')[0]
@@ -116,7 +116,7 @@ class AssignmentBlock(
             val currentField = (variables[structName]?.value as MutableMap<String, Variable>)[fieldName]
             // Проверка соответсвтия типов переменной и значения
             if (isNotComparableType(currentField, newVariable)) {
-                throw Exception("Переменной типа ${currentField?.type} присваивается значение типа ${newVariable.type}")
+                throw Exception("A variable of type ${currentField?.type} is assigned a value of type ${newVariable.type}")
             }
 
             // Присвоение переменной типа Char значения типа Int
@@ -142,9 +142,9 @@ class AssignmentBlock(
 
         // Проверка соответствия типов
         if (isNotComparableArrType(newVariable, arrName)) {
-            throw Exception("Переменной типа" +
+            throw Exception("Type Variable" +
                     " ${variables[arrName]?.type?.slice(0..(variables[arrName]?.type!!.length-6))}" +
-                    " присваивается значение типа ${newVariable.type}")
+                    "the value of type ${newVariable.type} is assigned")
         }
 
         // Присвоение нового значения
@@ -216,7 +216,7 @@ class AssignmentBlock(
             val indexVariable = (indexExpression).parseExpression()!!
 
             if (indexVariable.type != Type.INT || indexVariable < Variable("", Type.INT, 0)) {
-                throw Exception("Некорректный индекс массива")
+                throw Exception("Incorrect array index")
             }
 
             arrayIndex = indexVariable.value.toString().toInt()
@@ -226,7 +226,7 @@ class AssignmentBlock(
         // Проверка существования переменной
         if (variables[variableName] == null && variables[arrName] == null &&
                 !variableName.contains('.')) {
-            throw Exception("Присваивание к несуществующей переменной")
+            throw Exception("Assignment to non-existent variable")
         }
 
         // Присвоение значения переменной

@@ -74,7 +74,7 @@ class FunctionsArgumentBlock(
                 val expression = LexicalComponents(parList[i]).getTokensFromCode()
 
                 if (expression.size != 3) {
-                    throw Exception("Некорректное указание параметров функции")
+                    throw Exception("Incorrect specification of function parameters")
                 }
 
                 val name = expression[0].text
@@ -85,13 +85,13 @@ class FunctionsArgumentBlock(
         }
         // Проверка соответствия кол-ва аргументов и параметров
         if (parametersList.size != varList.size) {
-            throw Exception("Кол-во аргументов при вызове функции не совпадает с кол-вом её параметров")
+            throw Exception("The number of arguments when calling a function does not match the number of its parameters")
         }
 
         // Проверка соответствия типов аргументов и параметров
         for (j in varList.indices) {
             if (isNotComparable(parametersList[j], varList[j])) {
-                throw Exception("Несоответствие типов аргументов и параметров")
+                throw Exception("Argument and parameter type mismatch")
             }
         }
 

@@ -136,8 +136,7 @@ class ParsingFunctions(private var tokens: List<Token>) {
             else if (nowToken.type.name == Name.VARIABLE) {
                 // Если переменной нет, то выдать ошибку
                 if (variables[nowToken.text] == null && !nowToken.text.contains('.')) {
-                    //!(variables[nowToken.text.split('.')[0]]?.type == Type.STRUCT)) {
-                    throw Exception("Переменная ${nowToken.text} не была задана")
+                    throw Exception("Variable ${nowToken.text} was not set")
                 }
 
                 // Если следующий токен - поле структуры
@@ -146,14 +145,14 @@ class ParsingFunctions(private var tokens: List<Token>) {
                     )
                 ) {
                     if (nowToken.text.split('.').count() != 2) {
-                        throw Exception("Некорректное обращение к полю структуры")
+                        throw Exception("Incorrect access to structure field")
                     }
 
                     val structName = nowToken.text.split('.')[0]
                     val fieldName = nowToken.text.split('.')[1]
 
                     if ((variables[structName]?.value as MutableMap<String, Variable>)[fieldName] == null) {
-                        throw Exception("Обращение к несуществующему полю в структуре")
+                        throw Exception("Referencing a non-existent field in the ${structName} structure")
                     }
                     resultStack.push((variables[structName]?.value as MutableMap<String, Variable>)[fieldName])
                 }
@@ -164,17 +163,17 @@ class ParsingFunctions(private var tokens: List<Token>) {
                     val fieldName = nowToken.text.slice(1..nowToken.text.length - 1)
 
                     if (fieldName.contains('.')) {
-                        throw Exception("Некорректное обращение к полю структуры")
+                        throw Exception("Incorrect access to structure field")
                     }
 
                     if ((curVar.value as MutableMap<String, Variable>)[fieldName] == null) {
-                        throw Exception("Обращение к несуществующему полю в структуре")
+                        throw Exception("Referencing a non-existent field in a struct")
                     }
 
                     resultStack.push((curVar.value as MutableMap<String, Variable>)[fieldName])
                 } else {
                     if (variables[nowToken.text] == null) {
-                        throw Exception("Переменная ${nowToken.text} не была задана")
+                        throw Exception("Variable ${nowToken.text} was not set")
                     }
                     resultStack.push(variables[nowToken.text])
                 }
@@ -186,7 +185,7 @@ class ParsingFunctions(private var tokens: List<Token>) {
                     val index = parseExpression()!!
 
                     if (index.type != Type.INT) {
-                        throw Exception("Некорректный индекс элемента массива")
+                        throw Exception("Incorrect array element index")
                     }
 
                     try {
@@ -265,15 +264,15 @@ class ParsingFunctions(private var tokens: List<Token>) {
                                 )
                             )
                         } else {
-                            throw Exception("${nowToken.text} не является массивом.")
+                            throw Exception("${nowToken.text} is not an array")
                         }
                     }
                     // Выход за пределы массива
                     catch (e: java.lang.Exception) {
-                        if (e.message == "${nowToken.text} не является массивом.") {
+                        if (e.message == "${nowToken.text} is not an array") {
                             throw Exception(e.message)
                         }
-                        throw Exception("Произошел выход за пределы массива")
+                        throw Exception("Out of range of array")
                     }
 
                     // Нахождение символа в массиве строк
@@ -281,13 +280,13 @@ class ParsingFunctions(private var tokens: List<Token>) {
                         val secondCurrentVar = resultStack.pop()
 
                         if (secondCurrentVar.type != Type.STRING) {
-                            throw Exception("${nowToken.text} не является многомерным массивом.")
+                            throw Exception("${nowToken.text} is not a multidimensional array")
                         }
 
                         val secondIndex = parseExpression()!!
 
                         if (secondIndex.type != Type.INT) {
-                            throw Exception("Некорректный индекс элемента массива")
+                            throw Exception("Incorrect array element index")
                         }
 
                         try {
@@ -300,7 +299,7 @@ class ParsingFunctions(private var tokens: List<Token>) {
                                 )
                             )
                         } catch (e: Exception) {
-                            throw Exception("Выход за пределы массива")
+                            throw Exception("Out of range of array")
                         }
                     }
                 }
@@ -327,7 +326,7 @@ class ParsingFunctions(private var tokens: List<Token>) {
                     // Иначе сосчитать операцию
                     else {
                         if (resultStack.size < 2) {
-                            throw Exception("Для применения операций в блоке ${blockIndex + 1} не хватает операндов.")
+                            throw Exception("There are not enough operands to apply operations in the block ${blockIndex}")
                         }
 
                         val result =
@@ -344,7 +343,7 @@ class ParsingFunctions(private var tokens: List<Token>) {
         // Добиваем выражения до тех пор, пока стек не пустой
         while (!operatorStack.isEmpty()) {
             if (resultStack.size < 2) {
-                throw Exception("Для применения операций в блоке ${blockIndex + 1} не хватает операндов.")
+                throw Exception("There are not enough operands to apply operations in the ${blockIndex} block")
             }
 
             val result = applyOperator(resultStack.pop(), resultStack.pop(), operatorStack.pop())
@@ -352,7 +351,7 @@ class ParsingFunctions(private var tokens: List<Token>) {
         }
 
         if (resultStack.size > 1) {
-            throw Exception("Некорректное выражение в блоке номер ${blockIndex + 1}")
+            throw Exception("Incorrect expression in block number ${blockIndex}")
         }
         return resultStack.pop()
     }
@@ -421,14 +420,14 @@ class ParsingFunctions(private var tokens: List<Token>) {
                 "true"
             ) else Variable("", Type.BOOL, "false")
 
-            else -> throw Exception("OMG")
+            else -> throw Exception("Congratulations. You were able to trigger a secret bug!!!")
         }
     }
 
     private fun getTokenOrError(vararg target: String): Token {
         val token = findToken(*target)
         if (token == null) {
-            throw Exception("Синтаксическая ошибка")
+            throw Exception("Syntax error")
         } else {
             return token
         }

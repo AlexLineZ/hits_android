@@ -69,7 +69,7 @@ class InputBlock(
 
         // Проверка соответсвтия типов переменной и значения
         if (isNotComparableType(variables[variableName], newVariable)) {
-            throw Exception("Переменной типа ${variables[variableName]?.type} присваивается значение типа ${newVariable.type}")
+            throw Exception("A variable of type ${variables[variableName]?.type} is assigned a value of type ${newVariable.type}")
         }
 
         // Присвоение переменной типа Char значения типа Int
@@ -93,11 +93,11 @@ class InputBlock(
         val newVariable = expression.parseExpression()!!
 
         if (name.split('.').count() != 2) {
-            throw Exception("Некорректное обращение к полю структуры")
+            throw Exception("Incorrect access to structure field ${name}")
         }
 
         if (newVariable.type == Type.STRUCT) {
-            throw Exception("Присвоение полю структуры другой структуры")
+            throw Exception("Assigning a structure field to another structure")
         }
 
         val structName = name.split('.')[0]
@@ -124,7 +124,7 @@ class InputBlock(
                 (variables[structName]?.value as MutableMap<String, Variable>)[fieldName]
             // Проверка соответсвтия типов переменной и значения
             if (isNotComparableType(currentField, newVariable)) {
-                throw Exception("Переменной типа ${currentField?.type} присваивается значение типа ${newVariable.type}")
+                throw Exception("A variable of type ${currentField?.type} is assigned a value of type ${newVariable.type}")
             }
 
             // Присвоение переменной типа Char значения типа Int
@@ -153,9 +153,9 @@ class InputBlock(
         // Проверка соответствия типов
         if (isNotComparableArrType(newVariable, arrName)) {
             throw Exception(
-                "Переменной типа" +
+                "To the variable of type" +
                         " ${variables[arrName]?.type?.slice(0..(variables[arrName]?.type!!.length - 6))}" +
-                        " присваивается значение типа ${newVariable.type}"
+                        "is assigned the value of type ${newVariable.type}"
             )
         }
 
@@ -229,7 +229,7 @@ class InputBlock(
             val indexVariable = (indexExpression).parseExpression()!!
 
             if (indexVariable.type != Type.INT || indexVariable < Variable("", Type.INT, 0)) {
-                throw Exception("Некорректный индекс массива")
+                throw Exception("Incorrect array index")
             }
 
             arrayIndex = indexVariable.value.toString().toInt()
@@ -240,7 +240,7 @@ class InputBlock(
         if (variables[variableName] == null && variables[arrName] == null &&
             !variableName.contains('.')
         ) {
-            throw Exception("Ввод несуществующей переменной")
+            throw Exception("Entering a non-existent variable ${variableName}")
         }
 
         FlowViewModel().changeVisibilityTextField()

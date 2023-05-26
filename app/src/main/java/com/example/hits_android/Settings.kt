@@ -41,7 +41,10 @@ fun Settings(vm: ReorderListViewModel, context: Context) {
             contentAlignment = Alignment.BottomStart
         ) {
             Text(
-                text = "Авторы:\nАлексей Ковкин\nЮрий Ситдиков\nАлександр Кирсанов",
+                text = "Authors:\n" +
+                        "Alexey Kovkin\n" +
+                        "Yuriy Sitdikov\n" +
+                        "Alexander Kirsanov",
                 modifier = Modifier.padding(15.dp),
             )
         }

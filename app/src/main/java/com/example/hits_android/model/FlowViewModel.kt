@@ -83,7 +83,7 @@ class FlowViewModel : ViewModel() {
                     if (!isOutputRunning.value && !getStop.value) {
                         isOutputRunning.value = true
                         android.os.Handler(Looper.getMainLooper()).postDelayed({
-                            setCurrentValue("\nПроцесс (${(Math.random() * 10000).toInt()}) завершил работу с кодом 0.")
+                            setCurrentValue("\nProcess (${(Math.random() * 10000).toInt()}) exited with code 0.")
                             isOutputRunning.value = false
                         }, 1000)
                     }

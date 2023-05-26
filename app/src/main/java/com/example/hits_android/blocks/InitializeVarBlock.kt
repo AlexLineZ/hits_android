@@ -60,12 +60,12 @@ class InitializeVarBlock(
     override fun runCodeBlock() {
         // Проверка названия  переменной
         if (!(Regex("^(?!true|false|\\d)[\\w\\.]+").matches(name))) {
-            throw Exception("Некорректное название переменной")
+            throw Exception("Incorrect variable name ${name}")
         }
 
         // Пересоздание переменной
         if (variables[name] != null) {
-            throw Exception("Происходит пересоздание переменной");
+            throw Exception("Recreating a variable ${name}");
         }
 
         // Вычисление значения переменной
@@ -78,20 +78,20 @@ class InitializeVarBlock(
         }
         // Проверка создания вложенных структур
         else if (type == Type.STRUCT && newVariable.type == Type.STRUCT && name.contains('.')) {
-            throw Exception("Полю структуры присваивается другая структура")
+            throw Exception("Structure ${name} field is assigned with another structure ${newVariable.name}")
         }
         // Проверка корректности создания структуры
         else if (type == Type.STRUCT && name.count{ch -> ch == '.'} != 1) {
-            throw Exception("Некорректное создание структуры")
+            throw Exception("Incorrect structure creation ${name}")
         }
         // Проверка обращения к полю структуры
         else if (type != Type.STRUCT && name.contains('.')) {
-            throw Exception("Некорректное название переменной")
+            throw Exception("Incorrect variable name ${name}")
         }
 
         // Проверка соответсвтия типов переменной и значения
         if (isNotComparableType(newVariable)) {
-            throw Exception("Переменной типа ${type} присваивается значение типа ${newVariable.type}")
+            throw Exception("A variable of type ${type} is assigned a value of type ${newVariable.type}")
         }
 
         // Обрезка дробной части у переменной типа Int
@@ -120,10 +120,10 @@ class InitializeVarBlock(
             val fieldName = name.split('.')[1]
 
             if (variables[structName] != null) {
-                throw Exception("Пересоздание структуры")
+                throw Exception("Recreating the structure ${structName}")
             }
             if (structName == "") {
-                throw Exception("Некорректное создание структуры")
+                throw Exception("Incorrect structure creation")
             }
 
             variables[structName] = Variable(structName, Type.STRUCT, mutableMapOf<String, Variable>())

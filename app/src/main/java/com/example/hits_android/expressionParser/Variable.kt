@@ -77,7 +77,7 @@ class Variable(var name: String, var type: String, var value: Any) {
             )
         }
 
-        throw Exception("Сложение переменных типов ${type} и ${otherVariable.type}")
+        throw Exception("Addition of variables of types ${type} and ${otherVariable.type}")
     }
 
     // Вычитание переменных
@@ -128,7 +128,7 @@ class Variable(var name: String, var type: String, var value: Any) {
             )
         }
 
-        throw Exception("Вычитание переменных типов ${type} и ${otherVariable.type}")
+        throw Exception("Subtraction of variables of types ${type} and ${otherVariable.type}")
     }
 
     // Сравнение переменных
@@ -190,7 +190,7 @@ class Variable(var name: String, var type: String, var value: Any) {
             }
         }
 
-        throw Exception("Сравнение переменных типов ${type} и ${otherVariable.type}")
+        throw Exception("Comparing variable types ${type} and ${otherVariable.type}")
     }
 
     // Умножение переменных
@@ -211,7 +211,7 @@ class Variable(var name: String, var type: String, var value: Any) {
             )
         }
 
-        throw Exception("Умножение переменных типов ${type} и ${otherVariable.type}")
+        throw Exception("Multiplication of variables of types ${type} and ${otherVariable.type}")
     }
 
     // Деление переменных
@@ -232,7 +232,7 @@ class Variable(var name: String, var type: String, var value: Any) {
             )
         }
 
-        throw Exception("Деление переменных типов ${type} и ${otherVariable.type}")
+        throw Exception("Division of variables of types ${type} and ${otherVariable.type}")
     }
 
     // Взятие остатка от деления
@@ -245,7 +245,7 @@ class Variable(var name: String, var type: String, var value: Any) {
             )
         }
 
-        throw Exception("Взятие остатка от деления переменных типов ${type} и ${otherVariable.type}")
+        throw Exception("Taking the remainder of the division of variables of types ${type} and ${otherVariable.type}")
     }
 
     // Сравнение переменных
@@ -279,6 +279,6 @@ class Variable(var name: String, var type: String, var value: Any) {
             return value.toString().toInt() == otherVariable.value.toString()[0].code
         }
 
-        throw Exception("Сравнение переменных типов ${type} и ${otherVariable.type}")
+        throw Exception("Comparing variable types ${type} and ${otherVariable.type}")
     }
 }

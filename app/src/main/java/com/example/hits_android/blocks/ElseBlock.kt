@@ -47,7 +47,7 @@ class ElseBlock(
         blockIndex--
 
         if (blockIndex == -1 || blockList[blockIndex].getNameOfBlock() != EndBlock.BLOCK_NAME) {
-            throw Exception("Else не относится к условию.")
+            throw Exception("\"Else\" does not apply to the condition")
         }
 
         // Проверка того, что Else идёт после If
@@ -64,7 +64,7 @@ class ElseBlock(
         } while (balance != 0 && blockIndex >= 0)
 
         if (blockIndex == -1 || blockList[blockIndex].getNameOfBlock() != IfBlock.BLOCK_NAME) {
-            throw Exception("Else не относится к условию.")
+            throw Exception("\"Else\" does not apply to the condition")
         }
 
         // Возвращение к телу блока Else

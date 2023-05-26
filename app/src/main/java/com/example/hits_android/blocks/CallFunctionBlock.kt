@@ -74,10 +74,10 @@ class CallFunctionBlock(
         var funIndex = 0
 
         if (functionName == "main") {
-            throw Exception("Вызов функции main")
+            throw Exception("Calling \"main\" function from another function")
         }
         if (functionName == "") {
-            throw Exception("Не указано название вызываемой функции")
+            throw Exception("Called function name not specified")
         }
 
         for (j in 1..funList.size - 1) {
@@ -88,7 +88,7 @@ class CallFunctionBlock(
         }
 
         if (count > 1) {
-            throw Exception("Неопределённость при вызове функции ${functionName}")
+            throw Exception("Undefined function call ${functionName}")
         }
 
         funList[funIndex].setArguments(varList)

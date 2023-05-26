@@ -42,12 +42,12 @@ class BreakBlock(
                     scopes.addScope(scopes.getScope())
                 }
             } catch (e: ArrayIndexOutOfBoundsException) {
-                throw Exception("Break не относится к циклу")
+                throw Exception("\"Break\" is not related to the loop")
             }
         }
 
         // Выход из цикла
-        (blockList[blockIndex] as WhileBlock).changeCondition("0;")
+        (blockList[blockIndex] as WhileBlock).changeCondition("false")
         blockList[++blockIndex].runCodeBlock()
         blockIndex--
         skipBlock()

@@ -99,7 +99,7 @@ class OutputBlock(
 
         // Проверка наличия выражения
         if (expression == "") {
-            throw Exception("В блоке Print нет выражения для вывода")
+            throw Exception("There is no output expression in the \"Print\" block")
         }
 
         // Вывод каждого значения

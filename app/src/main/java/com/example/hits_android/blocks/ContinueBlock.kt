@@ -42,7 +42,7 @@ class ContinueBlock(
                     scopes.addScope(scopes.getScope())
                 }
             } catch (e: ArrayIndexOutOfBoundsException) {
-                throw Exception("Continue не относится к циклу")
+                throw Exception("\"Continue\" does not refer to a loop")
             }
         }
 
