@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,89 +28,95 @@ import com.example.hits_android.ui.theme.AppThemeColor
 @Composable
 fun ThemeBuilderComposable(vm: ReorderListViewModel) {
     val theme by vm.theme.collectAsState()
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(15.dp),
-        verticalAlignment = Alignment.CenterVertically
+    Column(
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(vertical = 15.dp)
     ) {
         Text(
-            text = "Theme",
+            text = "Theme:",
             fontSize = 25.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onSurface
         )
-        Box(
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
             modifier = Modifier
-                .height(70.dp)
-                .fillMaxWidth(0.5f)
-                .clip(shape = RoundedCornerShape(24.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant)
-                .clickable {
-                    vm.setCurrentTheme(
-                        Pair(
-                            when (theme.first) {
-                                AppThemeBrightness.Light -> AppThemeBrightness.Dark
-                                AppThemeBrightness.Dark -> AppThemeBrightness.System
-                                AppThemeBrightness.System -> AppThemeBrightness.Light
-                            },
-                            theme.second
-                        )
-                    )
-                },
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = when (theme.first) {
-                    AppThemeBrightness.Light -> "Light"
-                    AppThemeBrightness.Dark -> "Dark"
-                    AppThemeBrightness.System -> "System"
-
-                },
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontWeight = FontWeight.Bold,
-                fontSize = 30.sp,
-                maxLines = 1
-            )
-        }
-        Box(
-            modifier = Modifier
-                .height(70.dp)
                 .fillMaxWidth()
-                .clip(shape = RoundedCornerShape(24.dp))
-                .background(MaterialTheme.colorScheme.primary)
-                .clickable {
-                    vm.setCurrentTheme(
-                        Pair(
-                            theme.first,
-                            when (theme.second) {
-                                AppThemeColor.Green -> AppThemeColor.Purple
-                                AppThemeColor.Purple -> AppThemeColor.Pink
-                                AppThemeColor.Pink -> AppThemeColor.Blue
-                                AppThemeColor.Blue -> AppThemeColor.Red
-                                AppThemeColor.Red -> AppThemeColor.Yellow
-                                AppThemeColor.Yellow -> AppThemeColor.Green
-                            }
-                        )
-                    )
-                },
-            contentAlignment = Alignment.Center
+                .padding(horizontal = 15.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = when (theme.second) {
-                    AppThemeColor.Green -> "Green"
-                    AppThemeColor.Purple -> "Purple"
-                    AppThemeColor.Pink -> "Pink"
-                    AppThemeColor.Blue -> "Blue"
-                    AppThemeColor.Red -> "Red"
-                    AppThemeColor.Yellow -> "Yellow"
-                },
-                color = MaterialTheme.colorScheme.onPrimary,
-                fontWeight = FontWeight.Bold,
-                fontSize = 30.sp,
-                maxLines = 1
-            )
+            Box(
+                modifier = Modifier
+                    .height(70.dp)
+                    .fillMaxWidth(0.5f)
+                    .clip(shape = RoundedCornerShape(24.dp))
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .clickable {
+                        vm.setCurrentTheme(
+                            Pair(
+                                when (theme.first) {
+                                    AppThemeBrightness.Light -> AppThemeBrightness.Dark
+                                    AppThemeBrightness.Dark -> AppThemeBrightness.System
+                                    AppThemeBrightness.System -> AppThemeBrightness.Light
+                                },
+                                theme.second
+                            )
+                        )
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = when (theme.first) {
+                        AppThemeBrightness.Light -> "Light"
+                        AppThemeBrightness.Dark -> "Dark"
+                        AppThemeBrightness.System -> "System"
+
+                    },
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 30.sp,
+                    maxLines = 1
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .height(70.dp)
+                    .fillMaxWidth()
+                    .clip(shape = RoundedCornerShape(24.dp))
+                    .background(MaterialTheme.colorScheme.primary)
+                    .clickable {
+                        vm.setCurrentTheme(
+                            Pair(
+                                theme.first,
+                                when (theme.second) {
+                                    AppThemeColor.Green -> AppThemeColor.Purple
+                                    AppThemeColor.Purple -> AppThemeColor.Pink
+                                    AppThemeColor.Pink -> AppThemeColor.Blue
+                                    AppThemeColor.Blue -> AppThemeColor.Red
+                                    AppThemeColor.Red -> AppThemeColor.Yellow
+                                    AppThemeColor.Yellow -> AppThemeColor.Green
+                                }
+                            )
+                        )
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = when (theme.second) {
+                        AppThemeColor.Green -> "Green"
+                        AppThemeColor.Purple -> "Purple"
+                        AppThemeColor.Pink -> "Pink"
+                        AppThemeColor.Blue -> "Blue"
+                        AppThemeColor.Red -> "Red"
+                        AppThemeColor.Yellow -> "Yellow"
+                    },
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 30.sp,
+                    maxLines = 1
+                )
+            }
         }
     }
 }

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
@@ -42,6 +43,111 @@ import org.koin.androidx.compose.koinViewModel
 import java.util.UUID
 
 @Composable
+fun SavesBuilderComposable(vm: ReorderListViewModel) {
+    val svm: SavesViewModel = koinViewModel()
+    var showDialog by remember { mutableStateOf(false) }
+    var enteredText by remember { mutableStateOf("") }
+    Column(
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(vertical = 15.dp)
+    ) {
+        Text(
+            text = "Saves:",
+            fontSize = 25.sp,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 15.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .height(70.dp)
+                    .fillMaxWidth(0.3f)
+                    .clip(shape = RoundedCornerShape(24.dp))
+                    .background(MaterialTheme.colorScheme.primary)
+                    .clickable {
+                        showDialog = true
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                if (showDialog) {
+                    Dialog(onDismissRequest = { showDialog = false }) {
+                        Surface(
+                            modifier = Modifier.padding(16.dp),
+                            shape = MaterialTheme.shapes.medium,
+                            tonalElevation = 24.dp,
+                            shadowElevation = 24.dp
+                        ) {
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                Text(text = "Enter save name")
+                                TextField(
+                                    value = enteredText,
+                                    onValueChange = { enteredText = it },
+                                    modifier = Modifier.padding(top = 8.dp),
+                                    singleLine = true,
+                                    placeholder = { Text(text = "name") }
+                                )
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.End
+                                ) {
+                                    Button(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(horizontal = 15.dp)
+                                            .padding(top = 15.dp),
+                                        onClick = {
+                                            showDialog = false
+                                            val customList =
+                                                createFunctionListToJSON(vm.functionsList)
+                                            val saveModel = SaveModel(
+                                                functionsList = customList,
+                                                name = UUID
+                                                    .randomUUID()
+                                                    .toString(),
+                                                date = System.currentTimeMillis(),
+                                                realName = enteredText
+                                            )
+                                            enteredText = ""
+                                            svm.startWriteSave(saveModel)
+                                        }
+                                    ) {
+                                        Text(text = "OK")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                Text(
+                    text = "Save",
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 30.sp,
+                    maxLines = 1
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .height(70.dp)
+                    .fillMaxWidth()
+                    .clip(shape = RoundedCornerShape(24.dp))
+                    .background(MaterialTheme.colorScheme.surfaceVariant),
+                contentAlignment = Alignment.Center
+            ) {
+                DropdownMenu(svm, vm)
+            }
+        }
+    }
+}
+
+@Composable
 fun DropdownMenu(svm: SavesViewModel, vm: ReorderListViewModel) {
     val selectedLoad = remember { mutableStateOf<String?>(null) }
     var loadText = "Load"
@@ -49,8 +155,6 @@ fun DropdownMenu(svm: SavesViewModel, vm: ReorderListViewModel) {
     val loadedSave = svm.loadedSave.collectAsState().value
     if (loadedSave.name != "---") {
         vm.parseToFunctionList(loadedSave.functionsList)
-
-        Log.d("a", "${loadedSave.functionsList}")
         loadedSave.name = "---"
     }
 
@@ -67,9 +171,9 @@ fun DropdownMenu(svm: SavesViewModel, vm: ReorderListViewModel) {
     ) {
         Text(
             text = selectedLoad.value ?: loadText,
-            fontSize = 25.sp,
+            fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             maxLines = 1
         )
     }
@@ -88,108 +192,17 @@ fun DropdownMenu(svm: SavesViewModel, vm: ReorderListViewModel) {
                 text = { Text(text = name.realName) },
                 trailingIcon = {
                     Icon(
-                        painter = painterResource(R.drawable.ic_close),
+                        painter = painterResource(R.drawable.ic_delete),
                         contentDescription = "deleteSave",
                         modifier = Modifier
+                            .size(20.dp)
                             .clickable {
                                 svm.startDeleteSave(name.name)
                                 expanded.value = false
-                            })
-                }
-            )
-        }
-    }
-}
-
-@Composable
-fun SavesBuilderComposable(vm: ReorderListViewModel) {
-    val svm: SavesViewModel = koinViewModel()
-    var showDialog by remember { mutableStateOf(false) }
-    var enteredText by remember { mutableStateOf("") }
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(15.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = "Saves",
-            fontSize = 25.sp,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-        Box(
-            modifier = Modifier
-                .height(70.dp)
-                .fillMaxWidth(0.5f)
-                .clip(shape = RoundedCornerShape(24.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant)
-                .clickable {
-                    showDialog = true
-                },
-            contentAlignment = Alignment.Center
-        ) {
-            if (showDialog) {
-                Dialog(onDismissRequest = { showDialog = false }) {
-                    Surface(
-                        modifier = Modifier.padding(16.dp),
-                        shape = MaterialTheme.shapes.medium,
-                        tonalElevation = 24.dp,
-                        shadowElevation = 24.dp
-                    ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            Text(text = "Введите значение")
-                            TextField(
-                                value = enteredText,
-                                onValueChange = { enteredText = it },
-                                modifier = Modifier.padding(top = 8.dp),
-                                singleLine = true
-                            )
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.End
-                            ) {
-                                Button(
-                                    onClick = {
-                                        showDialog = false
-                                        val customList = createFunctionListToJSON(vm.functionsList)
-                                        val saveModel = SaveModel(
-                                            functionsList = customList,
-                                            name = UUID
-                                                .randomUUID()
-                                                .toString(),
-                                            date = System.currentTimeMillis(),
-                                            realName = enteredText
-                                        )
-                                        svm.startWriteSave(saveModel)
-                                    },
-                                    modifier = Modifier.padding(top = 16.dp)
-                                ) {
-                                    Text(text = "ОК")
-                                }
                             }
-                        }
-                    }
+                    )
                 }
-            }
-            Text(
-                text = "Save",
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontWeight = FontWeight.Bold,
-                fontSize = 30.sp,
-                maxLines = 1
             )
-        }
-        Box(
-            modifier = Modifier
-                .height(70.dp)
-                .fillMaxWidth()
-                .clip(shape = RoundedCornerShape(24.dp))
-                .background(MaterialTheme.colorScheme.primary),
-            contentAlignment = Alignment.Center
-        ) {
-            DropdownMenu(svm, vm)
         }
     }
 }
