@@ -1,7 +1,6 @@
 package com.example.hits_android.appmodel.data.repository
 
 import android.content.Context
-import com.example.hits_android.appmodel.data.filestorage.BlockImpl
 import com.example.hits_android.appmodel.data.filestorage.SaveFileStorage
 import com.example.hits_android.appmodel.data.localstorage.SaveInfoEntity
 import com.example.hits_android.appmodel.data.localstorage.SaveRoomStorage
@@ -10,7 +9,7 @@ import com.example.hits_android.appmodel.data.model.SaveModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.util.*
+import java.util.UUID
 
 class SaveRepository(
     private val database: SaveRoomStorage,

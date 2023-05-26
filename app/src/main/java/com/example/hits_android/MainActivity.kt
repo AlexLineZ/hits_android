@@ -48,6 +48,6 @@ fun NavigationSystem(context: Context) {
 
     NavHost(navController = navController, startDestination = "start") {
         composable("start") { StartScreen(navController, viewModel) }
-        composable("main") { MainScreen(navController, viewModel, context) }
+        composable("main") { MainScreen(viewModel, context) }
     }
 }

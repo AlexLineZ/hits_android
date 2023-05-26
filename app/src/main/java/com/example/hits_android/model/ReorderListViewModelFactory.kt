@@ -11,6 +11,6 @@ class ReorderListViewModelFactory(
 ) : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return ReorderListViewModel(sharedPreferences, repository) as T
+        return ReorderListViewModel(sharedPreferences) as T
     }
 }

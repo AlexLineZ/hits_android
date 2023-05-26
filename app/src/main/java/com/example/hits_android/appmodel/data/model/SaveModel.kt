@@ -1,7 +1,6 @@
 package com.example.hits_android.appmodel.data.model
 
-import com.example.hits_android.appmodel.data.filestorage.BlockImpl
-import java.util.UUID
+import com.example.hits_android.blocks.BlockImpl
 
 data class SaveModel(
     val functionsList: List<List<BlockImpl>>,
