@@ -39,7 +39,7 @@ class CallFunctionBlock(
 ) : Block, HasBodyBlock {
     // Название блока
     companion object {
-        val BLOCK_NAME = "callFunctionBlock"
+        const val BLOCK_NAME = "callFunctionBlock"
     }
 
     override val blockName = BLOCK_NAME

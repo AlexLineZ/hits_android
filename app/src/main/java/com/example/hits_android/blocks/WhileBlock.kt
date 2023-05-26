@@ -42,7 +42,7 @@ class WhileBlock(
 ) : Block, HasBodyBlock {
     // Название блока
     companion object {
-        val BLOCK_NAME = "WhileBlock"
+        const val BLOCK_NAME = "WhileBlock"
     }
 
     override val blockName = BLOCK_NAME

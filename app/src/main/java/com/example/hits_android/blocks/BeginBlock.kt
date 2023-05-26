@@ -27,7 +27,7 @@ class BeginBlock(
 ) : Block {
     // Название блока
     companion object {
-        val BLOCK_NAME = "beginBlock"
+        const val BLOCK_NAME = "beginBlock"
     }
 
     override val blockName = BLOCK_NAME

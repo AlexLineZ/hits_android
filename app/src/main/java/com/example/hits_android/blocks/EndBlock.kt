@@ -28,7 +28,7 @@ class EndBlock(
 ) : Block {
     // Название блока
     companion object {
-        val BLOCK_NAME = "endBlock"
+        const val BLOCK_NAME = "endBlock"
     }
 
     override val blockName = BLOCK_NAME

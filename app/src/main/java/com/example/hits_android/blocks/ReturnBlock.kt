@@ -10,7 +10,7 @@ class ReturnBlock(
 ) : Block {
     // Название блока
     companion object {
-        val BLOCK_NAME = "returnBlock"
+        const val BLOCK_NAME = "returnBlock"
     }
     override val blockName = BLOCK_NAME
 

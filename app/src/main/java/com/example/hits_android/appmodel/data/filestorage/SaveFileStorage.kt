@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.Composable
 import com.example.hits_android.blocks.Block
-import com.example.hits_android.blocks.FunctionClass
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.InstanceCreator
@@ -13,7 +12,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.io.Serializable
 import java.lang.reflect.Type
 
 class SaveFileStorage(private val context: Context) {
@@ -31,7 +29,7 @@ class SaveFileStorage(private val context: Context) {
         }
     }
 
-    suspend fun loadFunctionListFromJson(fileName: String): List<List<Block>> {
+    suspend fun loadFunctionListFromJson(fileName: String): List<List<BlockImpl>> {
         return withContext(Dispatchers.Main) {
             val fileInputStream = context.openFileInput(fileName)
             val inputStreamReader = InputStreamReader(fileInputStream)
@@ -39,14 +37,12 @@ class SaveFileStorage(private val context: Context) {
             val jsonString = bufferedReader.use { it.readText() }
 
             val gson = GsonBuilder()
-                .registerTypeAdapter(Block::class.java, BlockInstanceCreator())
+                .registerTypeAdapter(BlockImpl::class.java, BlockInstanceCreator())
                 .create()
 
-            val arrayType = object : TypeToken<List<List<Block>>>() {}.type
+            val arrayType = object : TypeToken<List<List<BlockImpl>>>() {}.type
 
-            val functionList: List<List<Block>> = gson.fromJson(jsonString, arrayType)
-
-            Log.d("a", "${functionList[0][1]}")
+            val functionList: List<List<BlockImpl>> = gson.fromJson(jsonString, arrayType)
 
             fileInputStream.close()
 
@@ -55,17 +51,11 @@ class SaveFileStorage(private val context: Context) {
     }
 }
 
-class BlockImpl(
-    override val blockName: String,
-    override var key: String,
-    override val title: String,
-    override val isDragOverLocked: Boolean
-) : Block {
+class BlockImpl : Block {
     override fun runCodeBlock() {
         // Реализация метода runCodeBlock()
     }
-    val beginKey: String = ""
-    val endKey: String = ""
+
     override fun getNameOfBlock(): String {
         // Реализация метода getNameOfBlock()
         return ""
@@ -76,13 +66,38 @@ class BlockImpl(
         // Реализация метода BlockComposable()
     }
 
+    override var blockName: String = ""
+    override var key: String = ""
+    override var title: String = ""
+    override var isDragOverLocked: Boolean = false
+
     var condition: String = ""
     var conditionText: String = ""
+    val beginKey: String = ""
+    val endKey: String = ""
+
+    var expression: String = ""
+
+    var name: String = ""
+    var type: String = ""
+    var value: String = ""
+
+    var arrayName: String = ""
+    var arrayType: String = ""
+    var arraySize: String = ""
+
+    var parameters: String = ""
+
+    var functionName: String = ""
+    var arguments: String = ""
+
+    var variableName: String = ""
+    var newValue: String = ""
 }
 
 class BlockInstanceCreator : InstanceCreator<Block> {
     override fun createInstance(type: Type): Block {
-        return BlockImpl("", "", "", false)
+        return BlockImpl()
     }
 }
 

@@ -40,7 +40,7 @@ class OutputBlock(
 ) : Block {
     // Название блока
     companion object {
-        val BLOCK_NAME = "outputBlock"
+        const val BLOCK_NAME = "outputBlock"
     }
 
     override val blockName = BLOCK_NAME

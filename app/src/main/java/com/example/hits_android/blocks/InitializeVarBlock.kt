@@ -37,7 +37,7 @@ class InitializeVarBlock(
 ) : Block {
     // Название блока
     companion object {
-        val BLOCK_NAME = "initVarBlock"
+        const val BLOCK_NAME = "initVarBlock"
     }
 
     override val blockName = BLOCK_NAME

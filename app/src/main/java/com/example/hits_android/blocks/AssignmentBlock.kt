@@ -32,7 +32,7 @@ class AssignmentBlock(
 ) : Block {
     // Название блока
     companion object {
-        val BLOCK_NAME = "assignmentBlock"
+        const val BLOCK_NAME = "assignmentBlock"
     }
 
     override val blockName = BLOCK_NAME

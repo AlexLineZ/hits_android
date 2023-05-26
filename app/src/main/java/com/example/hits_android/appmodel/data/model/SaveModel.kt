@@ -1,9 +1,9 @@
 package com.example.hits_android.appmodel.data.model
 
-import com.example.hits_android.blocks.Block
+import com.example.hits_android.appmodel.data.filestorage.BlockImpl
 
 data class SaveModel(
-    val functionsList: List<List<Block>>,
+    val functionsList: List<List<BlockImpl>>,
     var name: String,
     val date: Long
 )

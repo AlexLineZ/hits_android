@@ -28,6 +28,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.hits_android.appmodel.data.filestorage.BlockImpl
 import com.example.hits_android.appmodel.data.model.SaveModel
 import com.example.hits_android.blocks.Block
 import com.example.hits_android.blocks.FunctionClass
@@ -73,7 +74,7 @@ fun Settings(vm: ReorderListViewModel, context: Context) {
 @Composable
 fun DropdownMenu(svm: SavesViewModel, vm: ReorderListViewModel) {
     val saves = svm.state.collectAsState().value
-    var loadedSave = svm.loadedSave.collectAsState().value
+    val loadedSave = svm.loadedSave.collectAsState().value
     if (loadedSave.name != "---") {
         vm.parseToFunctionList(loadedSave.functionsList)
 
@@ -172,16 +173,16 @@ fun SavesBuilderComposable(vm: ReorderListViewModel) {
     }
 }
 
-fun createFunctionListToJSON(functionList: List<FunctionClass>): List<List<Block>> {
-    var customMutableList: MutableList<List<Block>> = mutableListOf()
+fun createFunctionListToJSON(functionList: List<FunctionClass>): List<List<BlockImpl>> {
+    var customMutableList: MutableList<List<BlockImpl>> = mutableListOf()
 
     functionList.forEach {
         customMutableList = customMutableList.apply {
-            add(it.codeBlocksList)
+            add(it.codeBlocksList as List<BlockImpl>)
         }
     }
 
-    val customList: List<List<Block>> = customMutableList
+    val customList: List<List<BlockImpl>> = customMutableList
     return customList
 }
 

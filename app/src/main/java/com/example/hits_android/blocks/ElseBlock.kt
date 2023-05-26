@@ -25,7 +25,7 @@ class ElseBlock(
 ) : Block, HasBodyBlock {
     // Название блока
     companion object {
-        val BLOCK_NAME = "ElseBlock"
+        const val BLOCK_NAME = "ElseBlock"
     }
 
     override val blockName = BLOCK_NAME
