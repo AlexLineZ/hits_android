@@ -76,6 +76,9 @@ class CallFunctionBlock(
         if (functionName == "main") {
             throw Exception("Вызов функции main")
         }
+        if (functionName == "") {
+            throw Exception("Не указано название вызываемой функции")
+        }
 
         for (j in 1..funList.size - 1) {
             if (funList[j].getName() == functionName) {

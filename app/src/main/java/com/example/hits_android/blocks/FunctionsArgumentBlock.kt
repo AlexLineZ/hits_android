@@ -72,6 +72,11 @@ class FunctionsArgumentBlock(
                 parList[i] = parList[i].replace(" ", "")
 
                 val expression = LexicalComponents(parList[i]).getTokensFromCode()
+
+                if (expression.size != 3) {
+                    throw Exception("Некорректное указание параметров функции")
+                }
+
                 val name = expression[0].text
                 val type = expression[2].text
 
