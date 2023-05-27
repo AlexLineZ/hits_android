@@ -89,9 +89,9 @@ dependencies {
     def koinVersion = "3.4.0"
     def koinComposeVersion = "3.4.4"
 
-    implementation ("io.insert-koin:koin-core:${koinVersion}")
-    implementation ("io.insert-koin:koin-android:${koinVersion}")
-    implementation ("io.insert-koin:koin-androidx-compose:${koinComposeVersion}")
+    implementation("io.insert-koin:koin-core:${koinVersion}")
+    implementation("io.insert-koin:koin-android:${koinVersion}")
+    implementation("io.insert-koin:koin-androidx-compose:${koinComposeVersion}")
 }
 
 
