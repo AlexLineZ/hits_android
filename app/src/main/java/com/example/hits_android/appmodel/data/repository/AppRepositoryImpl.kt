@@ -10,12 +10,11 @@ class AppRepositoryImpl(
 
     fun isFirstLaunch(): Boolean {
         val firstLaunch = prefs.getBoolean(firstLaunchKey, true)
-        if(firstLaunch) {
+        if (firstLaunch) {
             prefs.edit().putBoolean(firstLaunchKey, false).apply()
         }
         return firstLaunch
     }
-
 
 
 }

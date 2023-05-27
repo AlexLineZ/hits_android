@@ -15,11 +15,11 @@ import androidx.room.RoomDatabase
 abstract class SaveRoomStorage : RoomDatabase() {
     abstract val dao: SaveRoomDao
 
-    companion object{
+    companion object {
         private var instance: SaveRoomStorage? = null
         fun getInstance(context: Context): SaveRoomStorage {
-            if (instance == null){
-                synchronized(this){
+            if (instance == null) {
+                synchronized(this) {
                     instance = Room.databaseBuilder(
                         context = context,
                         klass = SaveRoomStorage::class.java,

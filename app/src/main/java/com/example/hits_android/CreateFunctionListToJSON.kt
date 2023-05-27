@@ -1,20 +1,7 @@
 package com.example.hits_android
 
 import android.util.Log
-import com.example.hits_android.blocks.AssignmentBlock
-import com.example.hits_android.blocks.Block
-import com.example.hits_android.blocks.BlockImpl
-import com.example.hits_android.blocks.CallFunctionBlock
-import com.example.hits_android.blocks.ElseBlock
-import com.example.hits_android.blocks.FunctionClass
-import com.example.hits_android.blocks.FunctionNameBlock
-import com.example.hits_android.blocks.FunctionsArgumentBlock
-import com.example.hits_android.blocks.IfBlock
-import com.example.hits_android.blocks.InitializeArrayBlock
-import com.example.hits_android.blocks.InitializeVarBlock
-import com.example.hits_android.blocks.InputBlock
-import com.example.hits_android.blocks.OutputBlock
-import com.example.hits_android.blocks.WhileBlock
+import com.example.hits_android.blocks.*
 
 fun createFunctionListToJSON(functionList: List<FunctionClass>): List<List<BlockImpl>> {
     var customMutableList: MutableList<List<BlockImpl>> = mutableListOf()

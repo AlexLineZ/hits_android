@@ -15,13 +15,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.DismissDirection
-import androidx.compose.material3.DismissValue
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SwipeToDismiss
-import androidx.compose.material3.rememberDismissState
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -31,11 +25,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
-import com.example.hits_android.blocks.Block
-import com.example.hits_android.blocks.ElseBlock
-import com.example.hits_android.blocks.IfBlock
-import com.example.hits_android.blocks.WhileBlock
-import com.example.hits_android.blocks.calculatePadding
+import com.example.hits_android.blocks.*
 import com.example.hits_android.model.ReorderListViewModel
 import org.burnoutcrew.reorderable.ReorderableItem
 import org.burnoutcrew.reorderable.detectReorderAfterLongPress
@@ -54,7 +44,10 @@ fun VerticalReorderList(
     )
     LazyColumn(
         state = state.listState,
-        modifier = Modifier.reorderable(state).padding(start = 4.dp, end = 4.dp).fillMaxSize(),
+        modifier = Modifier
+            .reorderable(state)
+            .padding(start = 4.dp, end = 4.dp)
+            .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(vm.functionsList[id].codeBlocksList, { item -> item.key }) { item ->

@@ -1,13 +1,7 @@
 package com.example.hits_android.blocks
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -79,7 +73,8 @@ class WhileBlock(
         while (conditionState.value == "true") {
             // Выполнение тела while
             while (blockList[blockIndex].getNameOfBlock() != EndBlock.BLOCK_NAME &&
-                blockIndex <= blockList.size - 1) {
+                blockIndex <= blockList.size - 1
+            ) {
                 // Выход из цикла при выполнении Return блока
                 if (blockList[blockIndex].getNameOfBlock() == ReturnBlock.BLOCK_NAME) {
                     blockList[blockIndex].runCodeBlock()
@@ -122,7 +117,7 @@ class WhileBlock(
     }
 
     // Передача списка доступных функций
-    override fun setFunctionList(functionList:  List<FunctionClass>) {
+    override fun setFunctionList(functionList: List<FunctionClass>) {
         funList = functionList
     }
 

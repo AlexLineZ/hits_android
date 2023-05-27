@@ -6,11 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -81,7 +77,7 @@ class InitializeVarBlock(
             throw Exception("Structure ${name} field is assigned with another structure ${newVariable.name}")
         }
         // Проверка корректности создания структуры
-        else if (type == Type.STRUCT && name.count{ch -> ch == '.'} != 1) {
+        else if (type == Type.STRUCT && name.count { ch -> ch == '.' } != 1) {
             throw Exception("Incorrect structure creation ${name}")
         }
         // Проверка обращения к полю структуры
@@ -126,14 +122,17 @@ class InitializeVarBlock(
                 throw Exception("Incorrect structure creation")
             }
 
-            variables[structName] = Variable(structName, Type.STRUCT, mutableMapOf<String, Variable>())
+            variables[structName] =
+                Variable(structName, Type.STRUCT, mutableMapOf<String, Variable>())
             (variables[structName]!!.value as MutableMap<String, Variable>)[fieldName] =
                 Variable(fieldName, newVariable.type, newVariable.value)
-        }
-        else if (type == Type.CHAR && newVariable.type == Type.INT) {
-            variables[name] = Variable(newVariable.name, Type.CHAR, newVariable.value.toString().toInt().toChar().toString())
-        }
-        else {
+        } else if (type == Type.CHAR && newVariable.type == Type.INT) {
+            variables[name] = Variable(
+                newVariable.name,
+                Type.CHAR,
+                newVariable.value.toString().toInt().toChar().toString()
+            )
+        } else {
             variables[name] = newVariable
         }
 

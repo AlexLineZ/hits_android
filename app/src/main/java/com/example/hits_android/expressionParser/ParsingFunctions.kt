@@ -2,7 +2,7 @@ package com.example.hits_android.expressionParser
 
 import com.example.hits_android.blocks.blockIndex
 import com.example.hits_android.scope.Scope
-import java.util.Stack
+import java.util.*
 
 var variables = mutableMapOf<String, Variable>()
 var scopes = Scope()

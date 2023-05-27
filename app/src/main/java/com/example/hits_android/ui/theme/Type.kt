@@ -5,7 +5,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.font.createFontFamilyResolver
 import androidx.compose.ui.unit.sp
 import com.example.hits_android.R
 
@@ -16,6 +15,7 @@ private val Montserrat = FontFamily(
     Font(R.font.montserrat_semibold, FontWeight.W600),
     Font(R.font.montserrat_bold, FontWeight.W700),
 )
+
 // Set of Material typography styles to start with
 val Typography = Typography(
     displayLarge = TextStyle(

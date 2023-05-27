@@ -25,6 +25,7 @@ class ReturnBlock(
     companion object {
         const val BLOCK_NAME = "returnBlock"
     }
+
     override val blockName = BLOCK_NAME
 
     // Пропуск выполнения функции
@@ -36,7 +37,7 @@ class ReturnBlock(
     override fun getNameOfBlock(): String {
         return blockName
     }
-    
+
     @Composable
     override fun BlockComposable(item: Block) {
         Box(

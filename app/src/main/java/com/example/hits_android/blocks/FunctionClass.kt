@@ -32,7 +32,7 @@ class FunctionClass(
     var argsList = mutableListOf<Variable>()
 
     // Выполнение функции
-    fun runFunction(functionList:  List<FunctionClass>) {
+    fun runFunction(functionList: List<FunctionClass>) {
         blockList = codeBlocksList.toMutableList()
         blockIndex = 0
         variables.clear()
@@ -40,8 +40,7 @@ class FunctionClass(
         while (blockIndex < blockList.size && !getStop.value) {
             if (hasBody()) {
                 (blockList[blockIndex] as HasBodyBlock).setFunctionList(functionList)
-            }
-            else if (blockList[blockIndex].getNameOfBlock() == FunctionsArgumentBlock.BLOCK_NAME) {
+            } else if (blockList[blockIndex].getNameOfBlock() == FunctionsArgumentBlock.BLOCK_NAME) {
                 (blockList[blockIndex] as FunctionsArgumentBlock).setArguments(argsList)
             }
             blockList[blockIndex].runCodeBlock()

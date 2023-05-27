@@ -1,6 +1,5 @@
 package com.example.hits_android
 
-import android.content.Context
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hits_android.model.FlowViewModel
 import com.example.hits_android.model.isTextFieldVisible
-import java.util.concurrent.Flow
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable

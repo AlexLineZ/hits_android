@@ -1,13 +1,7 @@
 package com.example.hits_android.blocks
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -55,10 +49,13 @@ class OutputBlock(
         // Разделение элементов массивов запятыми
         for (i in (currentVar?.value as Array<*>).indices) {
             if (currentVar?.type == Type.STRUCT + "Array") {
-                arr += parseStruct(Variable("", Type.STRUCT,
-                    (currentVar.value as Array<MutableMap<String, Variable>>)[i])) + ", "
-            }
-            else {
+                arr += parseStruct(
+                    Variable(
+                        "", Type.STRUCT,
+                        (currentVar.value as Array<MutableMap<String, Variable>>)[i]
+                    )
+                ) + ", "
+            } else {
                 arr += (currentVar.value as Array<*>)[i].toString() + ", "
             }
         }
@@ -79,10 +76,10 @@ class OutputBlock(
 
         for (key in struct.keys) {
             if (struct[key]!!.type.length >= 5 &&
-                struct[key]!!.type.slice((struct[key]!!.type.length - 5)..(struct[key]!!.type.length - 1)) == "Array") {
+                struct[key]!!.type.slice((struct[key]!!.type.length - 5)..(struct[key]!!.type.length - 1)) == "Array"
+            ) {
                 text += key.toString() + ": " + parseArray(struct[key]) + ", "
-            }
-            else {
+            } else {
                 text += key.toString() + ": " + struct[key]?.value.toString() + ", "
             }
         }

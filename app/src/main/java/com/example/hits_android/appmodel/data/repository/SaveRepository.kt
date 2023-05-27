@@ -9,8 +9,7 @@ import com.example.hits_android.appmodel.data.model.SaveModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.io.FileOutputStream
-import java.util.UUID
+import java.util.*
 
 class SaveRepository(
     private val database: SaveRoomStorage,
@@ -18,10 +17,10 @@ class SaveRepository(
     private val context: Context
 ) {
 
-    suspend fun getSave(name: String) : SaveModel {
+    suspend fun getSave(name: String): SaveModel {
         val save: SaveModel
 
-        withContext(Dispatchers.IO){
+        withContext(Dispatchers.IO) {
             val saveInfo = database.dao.getSave(UUID.fromString(name))
             save = SaveModel(
                 name = saveInfo.name.toString(),
@@ -33,15 +32,17 @@ class SaveRepository(
         return save
     }
 
-    suspend fun getAllSaves() : List<SaveInfoModel>{
+    suspend fun getAllSaves(): List<SaveInfoModel> {
         val saveList: List<SaveInfoModel>
 
-        withContext(Dispatchers.IO){
-            saveList = database.dao.getAllSaves().map { SaveInfoModel(
-                name = it.name.toString(),
-                date = it.date,
-                realName = it.realName
-            ) }
+        withContext(Dispatchers.IO) {
+            saveList = database.dao.getAllSaves().map {
+                SaveInfoModel(
+                    name = it.name.toString(),
+                    date = it.date,
+                    realName = it.realName
+                )
+            }
         }
 
         return saveList

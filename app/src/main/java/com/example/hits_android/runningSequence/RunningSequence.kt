@@ -4,7 +4,7 @@ var blockList = mutableListOf<Block>() // Список блоков
 var blockIndex = 0                     // Индекс текущего выполняемого блока
 
 // Проверка последовательности блоков Begin и End
-fun checkBeginEnd(functionList:  List<FunctionClass>) {
+fun checkBeginEnd(functionList: List<FunctionClass>) {
     var funcIndex = 0
     var balance = 0
 
@@ -18,15 +18,15 @@ fun checkBeginEnd(functionList:  List<FunctionClass>) {
                         blockList[blockInd].getNameOfBlock() == ElseBlock.BLOCK_NAME ||
                         blockList[blockInd].getNameOfBlock() == WhileBlock.BLOCK_NAME) &&
                 (blockInd == blockList.size ||
-                        blockList[blockInd + 1].getNameOfBlock() != BeginBlock.BLOCK_NAME)){
+                        blockList[blockInd + 1].getNameOfBlock() != BeginBlock.BLOCK_NAME)
+            ) {
                 throw Exception("У блока ${blockList[blockInd].getNameOfBlock()} нет тела")
             }
 
             // Проверка соответствия блоков Begin и End
             if (blockList[blockInd].getNameOfBlock() == BeginBlock.BLOCK_NAME) {
                 balance++
-            }
-            else if (blockList[blockInd].getNameOfBlock() == EndBlock.BLOCK_NAME) {
+            } else if (blockList[blockInd].getNameOfBlock() == EndBlock.BLOCK_NAME) {
                 balance--
             }
 

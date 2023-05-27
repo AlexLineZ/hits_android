@@ -1,12 +1,7 @@
 package com.example.hits_android.blocks
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -58,7 +53,7 @@ class IfBlock(
     lateinit var funList: List<FunctionClass>
 
     // Проверка прерывания выполнения блока If
-    private fun isBreaking():Boolean {
+    private fun isBreaking(): Boolean {
         return blockList[blockIndex].getNameOfBlock() == BreakBlock.BLOCK_NAME ||
                 blockList[blockIndex].getNameOfBlock() == ContinueBlock.BLOCK_NAME ||
                 blockList[blockIndex].getNameOfBlock() == ReturnBlock.BLOCK_NAME
@@ -81,7 +76,8 @@ class IfBlock(
         if (conditionState.value == "true") {
             // Выполнение тела if
             while (blockList[blockIndex].getNameOfBlock() != EndBlock.BLOCK_NAME &&
-                blockIndex <= blockList.size - 1) {
+                blockIndex <= blockList.size - 1
+            ) {
                 // Выход из условия при выполнении блоков Break, Сontinue или Return
                 if (isBreaking()) {
                     blockList[blockIndex].runCodeBlock()
@@ -117,7 +113,7 @@ class IfBlock(
     }
 
     // Передача списка доступных функций
-    override fun setFunctionList(functionList:  List<FunctionClass>) {
+    override fun setFunctionList(functionList: List<FunctionClass>) {
         funList = functionList
     }
 

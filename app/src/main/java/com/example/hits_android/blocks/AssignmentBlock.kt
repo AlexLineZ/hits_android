@@ -71,7 +71,11 @@ class AssignmentBlock(
 
         // Присвоение переменной типа Char значения типа Int
         if (variables[variableName]?.type == Type.CHAR && newVariable.type == Type.INT) {
-            variables[variableName] = Variable(newVariable.name, Type.CHAR, newVariable.value.toString().toInt().toChar().toString())
+            variables[variableName] = Variable(
+                newVariable.name,
+                Type.CHAR,
+                newVariable.value.toString().toInt().toChar().toString()
+            )
         }
 
         // Остальные присвоения
@@ -113,7 +117,8 @@ class AssignmentBlock(
 
         // Присвоение значения уже существующему полю
         else {
-            val currentField = (variables[structName]?.value as MutableMap<String, Variable>)[fieldName]
+            val currentField =
+                (variables[structName]?.value as MutableMap<String, Variable>)[fieldName]
             // Проверка соответсвтия типов переменной и значения
             if (isNotComparableType(currentField, newVariable)) {
                 throw Exception("A variable of type ${currentField?.type} is assigned a value of type ${newVariable.type}")
@@ -121,15 +126,17 @@ class AssignmentBlock(
 
             // Присвоение переменной типа Char значения типа Int
             if (currentField?.type == Type.CHAR && newVariable.type == Type.INT) {
-                (variables[structName]?.value as MutableMap<String, Variable>)[fieldName] = Variable(
-                    newVariable.name,
-                    Type.CHAR,
-                    newVariable.value.toString().toInt().toChar().toString()
-                )
+                (variables[structName]?.value as MutableMap<String, Variable>)[fieldName] =
+                    Variable(
+                        newVariable.name,
+                        Type.CHAR,
+                        newVariable.value.toString().toInt().toChar().toString()
+                    )
             }
             // Остальные присвоения
             else {
-                (variables[structName]?.value as MutableMap<String, Variable>)[fieldName] = newVariable
+                (variables[structName]?.value as MutableMap<String, Variable>)[fieldName] =
+                    newVariable
             }
         }
     }
@@ -142,9 +149,11 @@ class AssignmentBlock(
 
         // Проверка соответствия типов
         if (isNotComparableArrType(newVariable, arrName)) {
-            throw Exception("Type Variable" +
-                    " ${variables[arrName]?.type?.slice(0..(variables[arrName]?.type!!.length-6))}" +
-                    "the value of type ${newVariable.type} is assigned")
+            throw Exception(
+                "Type Variable" +
+                        " ${variables[arrName]?.type?.slice(0..(variables[arrName]?.type!!.length - 6))}" +
+                        "the value of type ${newVariable.type} is assigned"
+            )
         }
 
         // Присвоение нового значения
@@ -162,8 +171,7 @@ class AssignmentBlock(
                 if (newVariable.type != Type.INT) {
                     (variables[arrName]?.value as Array<String>)[arrayIndex] =
                         newVariable.value.toString()
-                }
-                else {
+                } else {
                     (variables[arrName]?.value as Array<String>)[arrayIndex] =
                         newVariable.value.toString().toInt().toChar().toString()
                 }
@@ -172,8 +180,12 @@ class AssignmentBlock(
             // Символу из строки
             Type.STRING -> {
                 val str = variables[arrName]?.value as String
-                variables[arrName] = Variable(arrName, Type.STRING,
-                    str.substring(0, arrayIndex) + newVariable.value.toString() + str.substring(arrayIndex + 1))
+                variables[arrName] = Variable(
+                    arrName, Type.STRING,
+                    str.substring(0, arrayIndex) + newVariable.value.toString() + str.substring(
+                        arrayIndex + 1
+                    )
+                )
             }
 
             // Элементу String массива
@@ -225,7 +237,8 @@ class AssignmentBlock(
 
         // Проверка существования переменной
         if (variables[variableName] == null && variables[arrName] == null &&
-                !variableName.contains('.')) {
+            !variableName.contains('.')
+        ) {
             throw Exception("Assignment to non-existent variable")
         }
 
@@ -234,7 +247,7 @@ class AssignmentBlock(
             assignVariable()
         }
         // Присвоение значения объекту
-        else if (arrayIndex == -1 && variableName.contains('.')){
+        else if (arrayIndex == -1 && variableName.contains('.')) {
             assignStruct(variableName)
         }
         // Присвоение значения элементу массива

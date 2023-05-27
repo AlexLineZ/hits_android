@@ -1,13 +1,7 @@
 package com.example.hits_android.blocks
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -90,8 +84,7 @@ class CallFunctionBlock(
 
         if (count > 1) {
             throw Exception("Undefined function call ${functionName}")
-        }
-        else if (count == 0) {
+        } else if (count == 0) {
             throw Exception("Функция ${functionName} не найдена")
         }
 
@@ -114,7 +107,7 @@ class CallFunctionBlock(
     }
 
     // Передача списка функций
-    override fun setFunctionList(functionList:  List<FunctionClass>) {
+    override fun setFunctionList(functionList: List<FunctionClass>) {
         funList = functionList
     }
 

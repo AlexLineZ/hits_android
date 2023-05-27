@@ -1,6 +1,5 @@
 package com.example.hits_android.blocks
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -24,11 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.hits_android.expressionParser.LexicalComponents
-import com.example.hits_android.expressionParser.ParsingFunctions
-import com.example.hits_android.expressionParser.Type
-import com.example.hits_android.expressionParser.Variable
-import com.example.hits_android.expressionParser.variables
+import com.example.hits_android.expressionParser.*
 
 // Блок создания массива
 class InitializeArrayBlock(
@@ -104,7 +99,7 @@ class InitializeArrayBlock(
             variables[arrayName] = Variable(
                 arrayName,
                 Type.CHAR + "Array",
-                Array(size.value.toString().toInt()) {""}
+                Array(size.value.toString().toInt()) { "" }
             )
         }
 
@@ -113,7 +108,7 @@ class InitializeArrayBlock(
             variables[arrayName] = Variable(
                 arrayName,
                 Type.STRUCT + "Array",
-                Array(size.value.toString().toInt()) {mutableMapOf<String, Variable>()}
+                Array(size.value.toString().toInt()) { mutableMapOf<String, Variable>() }
             )
         }
 

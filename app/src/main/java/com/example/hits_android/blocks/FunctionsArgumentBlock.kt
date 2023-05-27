@@ -1,12 +1,6 @@
 package com.example.hits_android.blocks
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -50,7 +44,7 @@ class FunctionsArgumentBlock(
     var parametersList = mutableListOf<Variable>()
 
     // Проверка приводимости типов данных
-    private fun isNotComparable(first: Variable, second: Variable):Boolean {
+    private fun isNotComparable(first: Variable, second: Variable): Boolean {
         return first.type != second.type &&
                 !(first.type == Type.INT && second.type == Type.DOUBLE) &&
                 !(first.type == Type.DOUBLE && second.type == Type.INT) &&
@@ -103,15 +97,13 @@ class FunctionsArgumentBlock(
                     parametersList[k].type,
                     varList[k].value
                 )
-            }
-            else if (parametersList[k].type == Type.CHAR && varList[k].type == Type.INT) {
+            } else if (parametersList[k].type == Type.CHAR && varList[k].type == Type.INT) {
                 variables[parametersList[k].name] = Variable(
                     parametersList[k].name,
                     parametersList[k].type,
                     varList[k].value.toString().toInt().toChar()
                 )
-            }
-            else {
+            } else {
                 variables[parametersList[k].name] = Variable(
                     parametersList[k].name,
                     parametersList[k].type,

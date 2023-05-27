@@ -42,7 +42,7 @@ class ElseBlock(
     lateinit var funList: List<FunctionClass>
 
     // Проверка прерывания выполнения блока Else
-    private fun isBreaking():Boolean {
+    private fun isBreaking(): Boolean {
         return blockList[blockIndex].getNameOfBlock() == BreakBlock.BLOCK_NAME ||
                 blockList[blockIndex].getNameOfBlock() == ContinueBlock.BLOCK_NAME ||
                 blockList[blockIndex].getNameOfBlock() == ReturnBlock.BLOCK_NAME
@@ -82,7 +82,8 @@ class ElseBlock(
 
         // Выполнение тела блока else
         while (blockList[blockIndex].getNameOfBlock() != EndBlock.BLOCK_NAME &&
-            blockIndex <= blockList.size - 1) {
+            blockIndex <= blockList.size - 1
+        ) {
             // Выход из else при выполнении блоков Break, Continue или Return
             if (isBreaking()) {
                 blockList[blockIndex].runCodeBlock()
@@ -107,7 +108,7 @@ class ElseBlock(
     }
 
     // Передача списка доступных функций
-    override fun setFunctionList(functionList:  List<FunctionClass>) {
+    override fun setFunctionList(functionList: List<FunctionClass>) {
         funList = functionList
     }
 

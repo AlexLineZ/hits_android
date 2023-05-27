@@ -14,9 +14,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.hits_android.model.ReorderListViewModel
-import com.example.hits_android.ui.theme.AppThemeBrightness
-import com.example.hits_android.ui.theme.AppThemeColor
 
 @Composable
 fun InformationSheetComposable() {
@@ -126,8 +123,8 @@ fun HelpList() {
 
         "STRUCT\n" +
                 "To create a structure, use initVar to create a structure field in the format <structure name>.<field name> = <value>. Field type is determined automatically.",
-                "To add a new structure field, you must use Assign to assign some value to a structure field that does not yet exist: <struct name>.<new field name> = <value>.",
-                "You can also copy a structure using Assign: <structure name1> = <structure name2>.\n",
+        "To add a new structure field, you must use Assign to assign some value to a structure field that does not yet exist: <struct name>.<new field name> = <value>.",
+        "You can also copy a structure using Assign: <structure name1> = <structure name2>.\n",
 
         "ARRAY\n" +
                 "The type of an array is the type of its element, with the \"Array\" suffix. For example IntArray, BoolArray, StringArray, StructArray",
