@@ -23,7 +23,8 @@ import org.koin.core.context.GlobalContext.startKoin
 import org.koin.core.logger.Level
 import org.koin.dsl.module
 import java.io.InputStreamReader
-import java.util.*
+import java.util.Date
+import java.util.UUID
 
 class App : Application() {
 

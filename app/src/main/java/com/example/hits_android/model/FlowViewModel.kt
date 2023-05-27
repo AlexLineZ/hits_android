@@ -1,10 +1,6 @@
 package com.example.hits_android.model
 
 import android.os.Looper
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.hits_android.blocks.*
 import com.example.hits_android.expressionParser.variables
@@ -26,11 +22,11 @@ class FlowViewModel : ViewModel() {
         _output.value += newValue
     }
 
-    fun setInput(newValue: String){
+    fun setInput(newValue: String) {
         newInput.value = newValue
     }
 
-    fun clearInput(){
+    fun clearInput() {
         newInput.value = ""
     }
 
@@ -38,7 +34,7 @@ class FlowViewModel : ViewModel() {
         _output.value = error
     }
 
-    fun changeVisibilityTextField(){
+    fun changeVisibilityTextField() {
         isTextFieldVisible.value = !isTextFieldVisible.value
     }
 

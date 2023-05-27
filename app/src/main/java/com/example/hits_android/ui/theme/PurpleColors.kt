@@ -1,7 +1,5 @@
 package com.example.hits_android.ui.theme
 
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 
 val md_theme_lightPurple_primary = Color(0xFF6750A4)

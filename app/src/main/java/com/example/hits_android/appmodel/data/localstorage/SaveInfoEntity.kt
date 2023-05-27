@@ -2,7 +2,7 @@ package com.example.hits_android.appmodel.data.localstorage
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.*
+import java.util.UUID
 
 @Entity(tableName = "save_table")
 data class SaveInfoEntity(
